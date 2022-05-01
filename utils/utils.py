@@ -1,25 +1,13 @@
-import discord
+"""
+Author @Firefly#7113
+Various utility functions
+"""
+
 import json
 
+import discord
+
 import db
-
-
-# def admin_check(ctx):
-# 	"""Returns true if interaction user has admin role"""
-
-# 	admin_role = db.get_guild_info(ctx.guild.id)["AdminRole"]
-# 	if (admin_role in ctx.interaction.user.roles):
-# 		return True
-# 	return False
-
-
-# def player_check(ctx):
-# 	"""Returns true if interaction user has player role"""
-	
-# 	player_role = db.get_guild_info(ctx.guild.id)["PlayerRole"]
-# 	if (player_role in ctx.interaction.user.roles):
-# 		return True
-# 	return False
 
 
 def str_to_dict(json_str):
@@ -27,9 +15,9 @@ def str_to_dict(json_str):
 	return json.loads(json_str)
 
 
-def dict_to_str(d):
+def dict_to_str(dictionary):
 	"""Python dict to JSON compatible str"""
-	return json.dumps(d)
+	return json.dumps(dictionary)
 
 
 def hex_to_color(hex_code):
@@ -95,4 +83,3 @@ def get_gacha_embed(item):
 		embed.set_thumbnail(url=item["ThumbnailURL"])
 
 	return embed
-

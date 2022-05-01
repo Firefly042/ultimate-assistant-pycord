@@ -1,13 +1,16 @@
 """
+Author @Firefly#7113
 A UI View class that will display a list of embeds given at instantiation. A forward and a back button are provided.
 """
 
 import discord
 
 class EmbedList(discord.ui.View):
+	"""Two buttons that shift through an array of embeds"""
+
 	def __init__(self, embeds):
 		super().__init__(timeout=60)
-		
+
 		self.embeds = embeds
 
 		self.prev_button = [c for c in self.children if c.label == "Previous"][0]
@@ -20,11 +23,12 @@ class EmbedList(discord.ui.View):
 		self.max_pages = len(embeds)
 
 
-	# TODO - Figure out how to update view. interaction/message aren't accessible
+	# Cannot access interaction/message, so buttons cannot be disabled
 	async def on_timeout(self):
-		self.prev_button.disabled = True
-		self.next_button.disabled = True
-		# await interaction.response.edit_message(content="Timed out", view=self)
+		# for child in self.children:
+		# 	child.disabled = True
+
+		# await self.interaction.response.edit_message(content="Timed out", view=self)
 		self.stop()
 
 
@@ -33,7 +37,9 @@ class EmbedList(discord.ui.View):
 		style = discord.ButtonStyle.red,
 		disabled = True,
 	)
-	async def button_prev_callback(self, button, interaction):
+	async def button_prev_callback(self, _, interaction):
+		"""Previous embed"""
+
 		self.current_page -= 1
 		self.next_button.disabled = False
 		if (self.current_page == 0):
@@ -47,7 +53,9 @@ class EmbedList(discord.ui.View):
 		style = discord.ButtonStyle.green,
 		disabled = True
 	)
-	async def button_next_callback(self, button, interaction):
+	async def button_next_callback(self, _, interaction):
+		"""Next embed"""
+
 		self.current_page += 1
 		self.prev_button.disabled = False
 		if (self.current_page == len(self.embeds)-1):
