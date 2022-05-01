@@ -7,9 +7,6 @@ import os
 import shutil
 import datetime
 
-import discord
-from discord import slash_command
-from discord.commands import permissions
 from discord.ext import commands
 
 import aiocron
@@ -95,27 +92,10 @@ class DefaultCog(commands.Cog):
 # ------------------------------------------------------------------------
 # Commands
 # ------------------------------------------------------------------------
-	@slash_command(name="info")
-	async def info(self, ctx):
-		"""Displays basic info and statistics about the bot"""
+	# @slash_command(name="devtest")
+	# @permissions.is_owner()
+	# async def devtest(self, ctx):
+	# 	"""Dev scratchwork. Comment out."""
 
-		guild_list = ""
-		for guild in self.bot.guilds:
-			guild_list += guild.name+"\n"
-
-		embed = discord.Embed()
-		embed.title = f"{self.bot.user.name}"
-		embed.description = """Original code by @Firefly#7113
-		[Github](https://github.com/Firefly042), [Server](https://discord.gg/VZYKBptWFJ)"""
-		embed.add_field(name=f"Servers ({len(self.bot.guilds)})", value=guild_list)
-
-		await ctx.respond(embed=embed)
-
-
-	@slash_command(name="devtest")
-	@permissions.is_owner()
-	async def devtest(self, ctx):
-		"""Dev scratchwork. Comment out probably."""
-
-		db.remove_item(ctx.guild.id, ctx.interaction.user.id, "item 1", amount=1)
-		await ctx.respond("Dev Test", ephemeral=True)
+	# 	db.remove_item(ctx.guild.id, ctx.interaction.user.id, "item 1", amount=1)
+	# 	await ctx.respond("Dev Test", ephemeral=True)

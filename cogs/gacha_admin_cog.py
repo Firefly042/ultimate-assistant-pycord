@@ -78,7 +78,7 @@ class GachaAdminCog(commands.Cog):
 	@option("cost", int, description="1 to 999", min_value=1, max_value=999)
 	@commands.has_permissions(administrator=True)
 	async def admin_currency_cost(self, ctx, cost):
-		""""Set the cost of a single /gacha use"""
+		"""Set the cost of a single /gacha use"""
 
 		db.edit_guild(ctx.guild.id, "GachaCost", cost)
 		await ctx.respond(f"Set cost to {cost}")
@@ -229,7 +229,7 @@ class GachaAdminCog(commands.Cog):
 	@option("visible", bool, default=False, description="Set to true for permanent response.")
 	@commands.has_permissions(administrator=True)
 	async def gacha_admin_list(self, ctx, visible):
-		""""List all gacha items"""
+		"""List all gacha items"""
 
 		items = db.get_all_gacha(ctx.guild.id)
 

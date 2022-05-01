@@ -54,15 +54,6 @@ def app_died():
 	print("Removed __pycache__")
 
 
-@bot.command(name="shutdown")
-@permissions.is_owner()
-async def shutdown(ctx):
-	"""Owner kill switch."""
-
-	await ctx.respond("Logging out...", ephemeral=True)
-	await bot.close()
-
-
 # ------------------------------------------------------------------------
 # Essential event listeners
 # ------------------------------------------------------------------------
