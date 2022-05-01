@@ -6,16 +6,11 @@ Original template by @Firefly#7113, April 2022
 import os
 import shutil
 import atexit
-import sys
 
 import discord
-from discord import option
 from discord.commands import permissions
-# from discord.ext import commands
 
-# import aiocron
-
-from config import MESSAGE_CONTENT_INTENT, TESTING_SERVERS
+from config import TESTING_SERVERS
 import db
 
 
@@ -23,7 +18,6 @@ import db
 # Adjust bot intents
 # ------------------------------------------------------------------------
 bot_intents = discord.Intents.default()
-bot_intents.message_content = MESSAGE_CONTENT_INTENT
 
 
 # ------------------------------------------------------------------------
@@ -37,6 +31,8 @@ bot = discord.Bot(debug_guilds=TESTING_SERVERS, intents=bot_intents)
 # ------------------------------------------------------------------------
 @atexit.register
 def app_died():
+	"""Called on exit"""
+
 	db.disconnect()
 
 	# Remove __pycache__

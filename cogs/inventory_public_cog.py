@@ -1,22 +1,20 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Player inventory management
 """
-import re
+
 import math
 
 import discord
-from discord import slash_command, option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord import option
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-# import aiocron
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
 import db
 
 from utils import utils
 from utils.embed_list import EmbedList
+
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -27,10 +25,9 @@ from utils.embed_list import EmbedList
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(InventoryPublicCog(bot))
 
-# pylint: disable=no-self-use
+# pylint: disable=no-self-use, too-many-arguments
 class InventoryPublicCog(commands.Cog):
 	"""Inventory management for players"""
 
@@ -122,7 +119,7 @@ class InventoryPublicCog(commands.Cog):
 
 		# Check item availibility
 		try:
-			item_info = sender_inv[item]
+			_ = sender_inv[item]
 		except KeyError:
 			await ctx.respond(f"You are not carrying {item}!", ephemeral=True)
 			return
@@ -150,7 +147,7 @@ class InventoryPublicCog(commands.Cog):
 	@option("visible", bool, default=False, description="Set to true for permanent response.")
 	async def view(self, ctx, visible):
 		"""View your inventory"""
-		
+
 		try:
 			inventory = db.get_inventory(ctx.guild.id, ctx.interaction.user.id)
 			hex_color = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)["HexColor"]
@@ -172,7 +169,7 @@ class InventoryPublicCog(commands.Cog):
 
 		keys = list(inventory.keys())
 		for i in range(0, n_embeds):
-			for j in range(10):
+			for _ in range(10):
 				try:
 					item_name = keys.pop(0)
 					item = inventory.pop(item_name)

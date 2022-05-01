@@ -1,22 +1,20 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Admin inventory commands
 """
-import re
+
 import math
 
 import discord
-from discord import slash_command, option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord import option
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-# import aiocron
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
 import db
 
 from utils import utils
 from utils.embed_list import EmbedList
+
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -27,10 +25,9 @@ from utils.embed_list import EmbedList
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(InventoryAdminCog(bot))
 
-# pylint: disable=no-self-use
+# pylint: disable=no-self-use, too-many-arguments
 class InventoryAdminCog(commands.Cog):
 	"""Inventory management for admins"""
 
@@ -116,7 +113,7 @@ class InventoryAdminCog(commands.Cog):
 	@commands.has_permissions(administrator=True)
 	async def view(self, ctx, player, visible):
 		"""View a specified player's inventory (active character only)"""
-		
+
 		try:
 			inventory = db.get_inventory(ctx.guild.id, player.id)
 			hex_color = db.get_active_char(ctx.guild.id, player.id)["HexColor"]
@@ -138,7 +135,7 @@ class InventoryAdminCog(commands.Cog):
 
 		keys = list(inventory.keys())
 		for i in range(0, n_embeds):
-			for j in range(10):
+			for _ in range(10):
 				try:
 					item_name = keys.pop(0)
 					item = inventory.pop(item_name)

@@ -1,5 +1,6 @@
-""""
-Original code by @Firefly#7113, April 2022
+"""
+Author @Firefly#7113
+Necessary bot functions
 """
 
 import os
@@ -16,8 +17,15 @@ import aiocron
 import db
 
 
+# ------------------------------------------------------------------------
+# COMPONENT CLASSES AND CONSTANTS
+# ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------
+# COG
+# ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup"""
 	bot.add_cog(DefaultCog(bot))
 
 # pylint: disable=no-self-use

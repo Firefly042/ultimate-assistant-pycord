@@ -3,7 +3,7 @@ Original template by @Firefly#7113, Nov 2021
 """
 
 import sqlite3
-from datetime import datetime
+# import math
 from datetime import timedelta
 from utils import utils
 
@@ -27,21 +27,21 @@ print(f"Connected to {DB_NAME}")
 
 def disconnect():
 	"""Called when the shutdown command is used for proper practice"""
-	
+
 	conn.close()
 	print("Database connection closed")
 
 
 def get_all_guild_ids():
 	"""Returns dictionary of all IDs recorded in db"""
-	
+
 	cs.execute("SELECT GuildID FROM GuildInfo;")
 	return [row["GuildID"] for row in cs.fetchall()]
 
 
 def add_guilds(guild_ids):
 	"""Called when bot joins a guild, or when it is restarted and has been added to guilds"""
-	
+
 	guilds = [(i,) for i in guild_ids]
 	cs.executemany("INSERT INTO GuildInfo ('GuildID') VALUES (?);", guilds)
 	conn.commit()
@@ -49,7 +49,7 @@ def add_guilds(guild_ids):
 
 def remove_guilds(guild_ids):
 	"""Called on start, removing guilds that the bot has been taken out of since last start"""
-	
+
 	guilds = list(guild_ids)
 	cs.executemany("DELETE FROM GuildInfo WHERE GuildID = ?;", guilds)
 	conn.commit()
@@ -57,19 +57,19 @@ def remove_guilds(guild_ids):
 
 def edit_guild(guild_id, field, value):
 	"""Edit any existing field in the db. Definitely do not allow direct user access to this."""
-	
+
 	cs.execute(f"UPDATE GuildInfo SET {field} = ? WHERE GuildID = ?;", (value, guild_id))
 	conn.commit()
 
 
 def get_guild_info(guild_id):
 	"""Returns dictionary of guild"""
-	
+
 	cs.execute("SELECT * FROM GuildInfo WHERE GuildID = ? LIMIT 1;", (guild_id,))
 	return cs.fetchone()
 
 def get_player_roles():
-	"""Returns array of all player role IDs""" 
+	"""Returns array of all player role IDs"""
 
 	cs.execute("SELECT PlayerRole FROM GuildInfo;")
 	roles = [entry["PlayerRole"] for entry in cs.fetchall() if entry["PlayerRole"]]
@@ -165,7 +165,7 @@ def decrease_currency_single(guild_id, player_id, amount):
 		cs.execute("UPDATE Characters SET Currency = Currency - ? WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (amount, guild_id, player_id))
 	except sqlite3.IntegrityError:
 		cs.execute("UPDATE Characters SET Currency = 0 WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
-	
+
 	conn.commit()
 
 	return (cs.rowcount > 0)
@@ -219,7 +219,7 @@ def remove_gacha_item(guild_id, name):
 def remove_all_gacha(guild_id):
 	"""Removes all gacha items for a guild"""
 
-	cas.execute("DELETE FROM Gacha WHERE GuildID = ?;", (guild_id,))
+	cs.execute("DELETE FROM Gacha WHERE GuildID = ?;", (guild_id,))
 	conn.commit()
 
 
@@ -244,7 +244,7 @@ def get_random_item(guild_id):
 		# Reduction case
 		cs.execute("UPDATE Gacha SET AmountRemaining = ? WHERE GuildID = ? AND Name = ? LIMIT 1;", (new_amount, guild_id, item["Name"]))
 		conn.commit()
-	
+
 	return item
 
 
@@ -252,7 +252,8 @@ def get_random_item(guild_id):
 # Inventory
 # ------------------------------------------------------------------------
 def add_item(guild_id, player_id, item, amount=1, desc=None):
-	
+	"""Adds item to inventory JSON string"""
+
 	# Get current inventory dictionary string
 	cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
 
@@ -283,10 +284,11 @@ def add_item(guild_id, player_id, item, amount=1, desc=None):
 
 
 def remove_item(guild_id, player_id, item, amount=1):
-	
+	"""Removes item from JSON string"""
+
 	# Get current inventory dictionary string
 	cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
-	
+
 	# Convert string to dict (error if nonexistent)
 	try:
 		inventory = utils.str_to_dict(cs.fetchone()["Inventory"])
@@ -317,8 +319,10 @@ def remove_item(guild_id, player_id, item, amount=1):
 
 
 def get_inventory(guild_id, player_id):
+	"""Return dictionary"""
+
 	cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
-	
+
 	# Convert string to dict (error if nonexistent)
 	return utils.str_to_dict(cs.fetchone()["Inventory"])
 
@@ -327,7 +331,8 @@ def get_inventory(guild_id, player_id):
 # Dice
 # ------------------------------------------------------------------------
 def add_roll(guild_id, player_id, name, roll):
-	
+	"""Edits JSON compatible string in database"""
+
 	# Get current roll dictionary string
 	cs.execute("SELECT CustomRolls FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
 
@@ -356,20 +361,22 @@ def add_roll(guild_id, player_id, name, roll):
 
 
 def rm_roll(guild_id, player_id, name):
+	"""Edits JSON compatible string in database"""
+
 	# Get current roll dictionary string
 	cs.execute("SELECT CustomRolls FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
 
 	# Convert string to dict (error if nonexistent)
 	try:
 		rolls = utils.str_to_dict(cs.fetchone()["CustomRolls"])
-	except TypeError:
-		raise TypeError
+	except TypeError as error:
+		raise TypeError from error
 
 	# Add or edit amount
 	try:
 		rolls.pop(name.lower())
-	except KeyError:
-		raise KeyError
+	except KeyError as error:
+		raise KeyError from error
 
 	# String to dictionary
 	rolls_str = utils.dict_to_str(rolls)
@@ -385,13 +392,16 @@ def rm_roll(guild_id, player_id, name):
 # ------------------------------------------------------------------------
 # Announcements
 # ------------------------------------------------------------------------
-def add_announcement(id, guild_id, channel_id, message, interval, start_time):
-	cs.execute("INSERT INTO Announcements ('ID', 'GuildID', 'ChannelID', 'Message', 'Interval', 'NextPosting') VALUES (?, ?, ?, ?, ?, ?);", (id, guild_id, channel_id, message, interval, start_time))
+def add_announcement(announcement_id, guild_id, channel_id, message, interval, start_time):
+	"""Insert new automatic post into database"""
+
+	cs.execute("INSERT INTO Announcements ('ID', 'GuildID', 'ChannelID', 'Message', 'Interval', 'NextPosting') VALUES (?, ?, ?, ?, ?, ?);", (announcement_id, guild_id, channel_id, message, interval, start_time))
 	conn.commit()
-	return
 
 
 def get_guild_announcements(guild_id):
+	"""Return all automatic posts for a single guild"""
+
 	cs.execute("SELECT * FROM Announcements WHERE GuildID = ?;", (guild_id,))
 	return cs.fetchall()
 
@@ -407,11 +417,12 @@ def get_current_announcements(utc_time):
 	# Increment
 	params = []
 	for announcement in announcements:
-		ID = announcement["ID"]
+		announcement_id = announcement["ID"]
+
 		next_posting_datetime = utc_time + timedelta(announcement["Interval"])
-		print(next_posting_datetime)
 		next_posting_int = int(next_posting_datetime.strftime("%Y%m%d%H%M"))
-		params.append((next_posting_int, ID))
+
+		params.append((next_posting_int, announcement_id))
 
 	# Update
 	cs.executemany("UPDATE Announcements SET NextPosting = ? WHERE ID = ?;", params)
@@ -421,6 +432,8 @@ def get_current_announcements(utc_time):
 
 
 def remove_announcement(guild_id, announcement_id):
+	"""Remove automatic post from database"""
+
 	cs.execute("DELETE FROM Announcements WHERE GuildID = ? AND ID = ? LIMIT 1;", (guild_id, announcement_id))
 	conn.commit()
 
@@ -432,3 +445,27 @@ def toggle_guild_announcements(guild_id, val):
 
 	cs.execute("UPDATE GuildInfo SET AnnouncementsEnabled = ? WHERE GuildID = ? LIMIT 1;", (val, guild_id))
 	conn.commit()
+
+
+# def update_passed_announcements(utc_time):
+# 	"""Update announcements where NextPosting < utc_time"""
+
+# 	utc_int = int(utc_time.strftime("%Y%m%d%H%M"))
+# 	cs.execute("SELECT * FROM Announcements WHERE NextPosting <= ?;", (utc_int,))
+
+# 	announcements = cs.fetchall()
+
+# 	params = []
+# 	for announcement in announcements:
+# 		ID = announcement["ID"]
+# 		interval = announcement["Interval"]
+# 		hours_missed = math.ceil(utc_time)
+
+# 		next_posting_datetime = utc_time + cycles*timedelta(announcement["Interval"])
+# 		next_posting_int = int(next_posting_datetime.strftime("%Y%m%d%H%M"))
+
+# 		params.append((next_posting_int, ID))
+
+# 	# Update
+# 	cs.executemany("UPDATE Announcements SET NextPosting = ? WHERE ID = ?;", params)
+# 	conn.commit()

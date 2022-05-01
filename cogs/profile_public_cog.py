@@ -1,12 +1,13 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Player/Public ommands for character profile management
 """
+
 import re
 
 import discord
 from discord import option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 # import aiocron
@@ -25,10 +26,9 @@ from utils import utils
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(ProfilePublicCog(bot))
 
-# pylint: disable=no-self-use
+# pylint: disable=no-self-use, bare-except
 class ProfilePublicCog(commands.Cog):
 	"""Profile commands for public or player use"""
 
@@ -205,7 +205,7 @@ class ProfilePublicCog(commands.Cog):
 		try:
 			await ctx.respond(f"You are currently playing as **{char['Name']}**", ephemeral=not visible)
 		except TypeError:
-			await ctx.respond(f"You do not currently have an active character!", ephemeral=True)
+			await ctx.respond("You do not currently have an active character!", ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /profile view
@@ -219,9 +219,9 @@ class ProfilePublicCog(commands.Cog):
 
 		embed = utils.get_profile_embed(ctx.guild.id, player.id, name)
 		await ctx.respond(embed=embed, ephemeral=not visible)
-	
+
 	@profile_view.error
-	async def profile_view_error(self, ctx, error):
+	async def profile_view_error(self, ctx, _):
 		"""Won't catch exception in normal method for some reason. So it's here."""
 		await ctx.respond("Cannot find that character for that player!", ephemeral=True)
 

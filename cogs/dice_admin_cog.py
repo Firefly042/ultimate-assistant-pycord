@@ -1,20 +1,17 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Admin dice commands
 """
 
 import discord
-from discord import slash_command, option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord import option
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-# import aiocron
-import d20
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
 import db
 
 from utils import utils
+
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -25,7 +22,6 @@ from utils import utils
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(DiceAdminCog(bot))
 
 # pylint: disable=no-self-use

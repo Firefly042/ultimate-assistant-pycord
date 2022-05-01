@@ -1,13 +1,11 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Player messaging commands
 """
-import re
-import math
 
 import discord
-from discord import slash_command, option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord import option
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 # import aiocron
@@ -16,7 +14,7 @@ from discord.ext import commands
 import db
 
 from utils import utils
-from utils.embed_list import EmbedList
+
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -27,7 +25,6 @@ from utils.embed_list import EmbedList
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(MessagePublicCog(bot))
 
 # pylint: disable=no-self-use
@@ -85,7 +82,7 @@ class MessagePublicCog(commands.Cog):
 			await ctx.respond(f"Missing or invalid channel for {recipient['Name']}!", ephemeral=True)
 			return
 		except TypeError:
-			await ctx.respond(f"That user does not have an active character!", ephemeral=True)
+			await ctx.respond("That user does not have an active character!", ephemeral=True)
 			return
 
 		# Attempt to fetch channel (sender)
@@ -96,15 +93,15 @@ class MessagePublicCog(commands.Cog):
 			await ctx.respond(f"Missing or invalid channel for {sender['Name']}!", ephemeral=True)
 			return
 		except TypeError:
-			await ctx.respond(f"You do not have an active character!", ephemeral=True)
+			await ctx.respond("You do not have an active character!", ephemeral=True)
 			return
-		
+
 		# Attempt to send to recipient channel
 		embed_r = discord.Embed(color=embed_s_color, title=f"Message from {sender['Name']}", description=message[:1500])
 		try:
 			await channel_r.send(content=f"<@{player.id}>", embed=embed_r)
 		except discord.Forbidden:
-			await ctx.respond(f"Missing permissions in recipient channel!", ephemeral=True)
+			await ctx.respond("Missing permissions in recipient channel!", ephemeral=True)
 			return
 
 		# Receipt to sender channel
@@ -146,7 +143,7 @@ class MessagePublicCog(commands.Cog):
 			await ctx.respond(f"Missing or invalid channel for {recipient['Name']}!", ephemeral=True)
 			return
 		except TypeError:
-			await ctx.respond(f"That user does not have an active character!", ephemeral=True)
+			await ctx.respond("That user does not have an active character!", ephemeral=True)
 			return
 
 		# Attempt to fetch channel (sender)
@@ -156,15 +153,15 @@ class MessagePublicCog(commands.Cog):
 			await ctx.respond(f"Missing or invalid channel for {sender['Name']}!", ephemeral=True)
 			return
 		except TypeError:
-			await ctx.respond(f"You do not have an active character!", ephemeral=True)
+			await ctx.respond("You do not have an active character!", ephemeral=True)
 			return
-		
+
 		# Attempt to send to recipient channel
-		embed_r = discord.Embed(title=f"Anonymous message!", description=message[:1500])
+		embed_r = discord.Embed(title="Anonymous message!", description=message[:1500])
 		try:
 			await channel_r.send(content=f"<@{player.id}>", embed=embed_r)
 		except discord.Forbidden:
-			await ctx.respond(f"Missing permissions in recipient channel!", ephemeral=True)
+			await ctx.respond("Missing permissions in recipient channel!", ephemeral=True)
 			return
 
 		# Receipt to sender channel

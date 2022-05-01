@@ -1,22 +1,20 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Admin gacha management
 """
-import re
+
 import math
 
 import discord
 from discord import option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-# import aiocron
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
 import db
 
 from utils import utils
 from utils.embed_list import EmbedList
+
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -27,7 +25,6 @@ from utils.embed_list import EmbedList
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(GachaAdminCog(bot))
 
 # pylint: disable=no-self-use
@@ -80,7 +77,7 @@ class GachaAdminCog(commands.Cog):
 	@currency.command(name="cost")
 	@option("cost", int, description="1 to 999", min_value=1, max_value=999)
 	@commands.has_permissions(administrator=True)
-	async def admin_currency_name(self, ctx, cost):
+	async def admin_currency_cost(self, ctx, cost):
 		""""Set the cost of a single /gacha use"""
 
 		db.edit_guild(ctx.guild.id, "GachaCost", cost)
@@ -113,7 +110,7 @@ class GachaAdminCog(commands.Cog):
 	@commands.has_permissions(administrator=True)
 	async def admin_currency_take(self, ctx, player, amount):
 		"""Take currency from an active character"""
-		
+
 		char_updated = db.decrease_currency_single(ctx.guild.id, player.id, amount)
 
 		if (not char_updated):
@@ -134,7 +131,7 @@ class GachaAdminCog(commands.Cog):
 		chars_updated = db.increase_currency_all(ctx.guild.id, amount)
 
 		if (not chars_updated):
-			await ctx.respond(f"Could not find any active characters for this server!", ephemeral=True)
+			await ctx.respond("Could not find any active characters for this server!", ephemeral=True)
 			return
 
 		await ctx.respond(f"Gave {amount} to all active characters.")
@@ -153,7 +150,7 @@ class GachaAdminCog(commands.Cog):
 		currency_name = db.get_guild_info(ctx.guild.id)["CurrencyName"]
 		try:
 			await ctx.respond(f"{char['Name']} has {char['Currency']} {currency_name}", ephemeral=not visible)
-		except Exception as error:
+		finally:
 			await ctx.respond(f"{player.name} does not have an active character!", ephemeral=True)
 
 # ------------------------------------------------------------------------
@@ -221,7 +218,7 @@ class GachaAdminCog(commands.Cog):
 
 		if (not item_removed):
 			await ctx.respond("Could not find that item!", ephemeral=True)
-			return 
+			return
 
 		await ctx.respond(f"Removed {name}.")
 
@@ -233,7 +230,7 @@ class GachaAdminCog(commands.Cog):
 	@commands.has_permissions(administrator=True)
 	async def gacha_admin_list(self, ctx, visible):
 		""""List all gacha items"""
-		
+
 		items = db.get_all_gacha(ctx.guild.id)
 
 		# Handle no items case
@@ -250,7 +247,7 @@ class GachaAdminCog(commands.Cog):
 
 		for i in range(0, n_embeds):
 			msg_i = ""
-			for j in range(35):
+			for _ in range(35):
 				try:
 					item = items.pop(0)
 				except IndexError:
@@ -266,4 +263,3 @@ class GachaAdminCog(commands.Cog):
 			embeds[i].description = msg_i[:3900]
 
 		await ctx.respond(view=EmbedList(embeds), ephemeral=not visible, embed=embeds[0])
-

@@ -1,5 +1,5 @@
 """
-Original template by @Firefly#7113, April 2022
+Author @Firefly#7113
 Commands for character registration and profile management
 """
 
@@ -8,13 +8,8 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-# import aiocron
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
 import db
-import sqlite3
 
-# from utils import utils
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -25,10 +20,9 @@ import sqlite3
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup."""
 	bot.add_cog(ProfileAdminCog(bot))
 
-# pylint: disable=no-self-use
+# pylint: disable=no-self-use, too-many-arguments
 class ProfileAdminCog(commands.Cog):
 	"""Admin profile registration and editing"""
 
@@ -162,7 +156,7 @@ class ProfileAdminCog(commands.Cog):
 
 		if (not char_removed):
 			await ctx.respond("Could not find that character under that player!", ephemeral=True)
-			return 
+			return
 
 		await ctx.respond(f"Removed {name}. This player may not have an active character anymore, but can `/profile swap` to another!")
 

@@ -1,22 +1,14 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Help and info
 """
-import re
-import math
 
-import discord
-from discord import slash_command, option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord import option
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-# import aiocron
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
 import db
 
-from utils import utils
-from utils.embed_list import EmbedList
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -27,7 +19,6 @@ from utils.embed_list import EmbedList
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(MessageAdminCog(bot))
 
 # pylint: disable=no-self-use

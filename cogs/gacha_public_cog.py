@@ -1,21 +1,17 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Public gacha commands
 """
-import re
-import math
 
 import discord
 from discord import slash_command, option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-# import aiocron
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
 import db
 
 from utils import utils
+
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -26,7 +22,6 @@ from utils import utils
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(GachaPublicCog(bot))
 
 # pylint: disable=no-self-use
@@ -101,7 +96,7 @@ class GachaPublicCog(commands.Cog):
 		# No items
 		except TypeError as error:
 			print(error)
-			await ctx.respond(f"This server has no gacha items!", ephemeral=True)
+			await ctx.respond("This server has no gacha items!", ephemeral=True)
 			return
 
 		# Add to player inventory
@@ -157,7 +152,7 @@ class GachaPublicCog(commands.Cog):
 
 		# Check if recipient is valid
 		try:
-			recipient_amount = receiver['Currency']
+			_ = receiver['Currency']
 		except TypeError:
 			await ctx.respond(f"{recipient.name} does not have an active character in this server!", ephemeral=True)
 			return
@@ -168,5 +163,3 @@ class GachaPublicCog(commands.Cog):
 
 		# Send response
 		await ctx.respond(f"{sender['Name']} gives {receiver['Name']} {amount} {currency_name}", ephemeral=not visible)
-
-

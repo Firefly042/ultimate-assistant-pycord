@@ -1,22 +1,20 @@
 """
-Original template by @Firefly#7113, April 2022
-Commands for character registration and profile management
+Author @Firefly#7113
+Commands for automated posting management
 """
 
-import discord
-from discord import slash_command, option
-from discord.commands import permissions, SlashCommandGroup, CommandPermission
-from discord.ext import commands
-
-import aiocron
-import asyncio
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
-import db
 from datetime import datetime
 from datetime import timedelta
 
-from utils import utils
+import discord
+from discord import option
+from discord.commands import SlashCommandGroup
+from discord.ext import commands
+
+import aiocron
+
+import db
+
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -27,7 +25,6 @@ DATE_STRING = "%Y%m%d%H%M"
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
-	"""Setup. Change TemplateCog to Class name"""
 	bot.add_cog(AnnouncementsAdminCog(bot))
 
 # pylint: disable=no-self-use
@@ -59,47 +56,55 @@ class AnnouncementsAdminCog(commands.Cog):
 # Do not need to be explicitly started
 # ------------------------------------------------------------------------
 	async def send_announcements(self):
-			"""Send out announcements to channels"""
+		"""Send out announcements to channels"""
 
-			utc_now = datetime.utcnow()
-			announcements = db.get_current_announcements(utc_now)
-			
-			for announcement in announcements:
-				# Check if announcements enabled
-				guild_id = announcement["GuildID"]
-				enabled = db.get_guild_info(guild_id)["AnnouncementsEnabled"]
+		utc_now = datetime.utcnow()
+		announcements = db.get_current_announcements(utc_now)
 
-				# Skip if disabled
-				if (not enabled):
-					continue
+		for announcement in announcements:
+			# Check if announcements enabled
+			guild_id = announcement["GuildID"]
+			enabled = db.get_guild_info(guild_id)["AnnouncementsEnabled"]
 
-				# Attempt to fetch channel
-				try:
-					channel = await self.bot.fetch_channel(announcement["ChannelID"])
-				except discord.HTTPException:
-					continue
-				except discord.NotFound:
-					continue
-				except discord.Forbidden:
-					continue
-				except Exception as error:
-					print(error)
-					continue
+			# Skip if disabled
+			if (not enabled):
+				continue
 
-				# Attempt to post
-				try:
-					await channel.send(content=announcement["Message"])
-				except discord.HTTPException:
-					continue
-				except discord.Forbidden:
-					continue
-				except Exception as error:
-					print(error)
-					continue
+			# Attempt to fetch channel
+			try:
+				channel = await self.bot.fetch_channel(announcement["ChannelID"])
+			except discord.NotFound:
+				continue
+			except discord.Forbidden:
+				continue
+			except discord.HTTPException:
+				continue
+			finally:
+				continue
+
+			# Attempt to post
+			try:
+				await channel.send(content=announcement["Message"])
+			except discord.Forbidden:
+				continue
+			except discord.HTTPException:
+				continue
+			finally:
+				continue
+
+
+	# @aiocron.crontab('@reboot')
+	# def catch_up():
+	# 	"""Updates NextPostings if bot went offline"""
+	# 	print("Catch Up")
 
 # ------------------------------------------------------------------------
 # Listeners
 # ------------------------------------------------------------------------
+	@commands.Cog.listener()
+	async def on_connect(self):
+		"""Updates NextPostings if bot went offline"""
+		return
 
 
 # ------------------------------------------------------------------------
@@ -111,11 +116,11 @@ class AnnouncementsAdminCog(commands.Cog):
 	@announcements.command(name="tz")
 	@option("utc_offset", int, description="Your offset from UTC/GMT.", min_value=-12, max_value=14)
 	@commands.has_permissions(administrator=True)
-	async def tz(self, ctx, utc_offset):
+	async def timezone(self, ctx, utc_offset):
 		"""Set timezone for server relative to UTC/GMT. Half/Quarter hours not supported"""
 
 		db.edit_guild(ctx.guild.id, "Timezone", utc_offset)
-		
+
 		if (utc_offset >= 0):
 			tz_str = f"UTC+{utc_offset}"
 		else:
@@ -143,14 +148,14 @@ class AnnouncementsAdminCog(commands.Cog):
 		existing_announcements = db.get_guild_announcements(ctx.guild.id)
 
 		if (len(existing_announcements) == 25):
-			await ctx.respond("You may not have more than 25 announcements!", ephemeral=True)
+			await ctx.respond("You may not have more than 25 automatic posts!", ephemeral=True)
 			return
 
 		# Get guild timezone
 		guild_info = db.get_guild_info(ctx.guild.id)
 		guild_tz = guild_info["Timezone"]
 
-		# Create datetime object in guild's tz. Exception for ValueError 
+		# Create datetime object in guild's tz. Exception for ValueError
 		try:
 			guild_time = datetime(year=start_year, month=start_month, day=start_day, hour=start_hour, minute=start_minute)
 		except ValueError:
@@ -177,7 +182,7 @@ class AnnouncementsAdminCog(commands.Cog):
 	@announcements.command(name="rm")
 	@option("announcement_id", str, description="The id associated with the announcement (can be found with list command)")
 	@commands.has_permissions(administrator=True)
-	async def rm(self, ctx, announcement_id):
+	async def remove(self, ctx, announcement_id):
 		"""Remove an announcement by its id (obtained with /announcements list)"""
 
 		announcement_removed = db.remove_announcement(ctx.guild.id, int(announcement_id))
@@ -211,7 +216,7 @@ class AnnouncementsAdminCog(commands.Cog):
 		announcements = sorted(announcements, key=lambda d: d["NextPosting"])
 
 		# Embed
-		embed = discord.Embed(title=f"Automatic posts in {ctx.guild.name}"[:128])
+		embed = discord.Embed(title=f"Automatic Posts in {ctx.guild.name}"[:128])
 		for announcement in announcements:
 			post_time_utc = datetime.strptime(str(announcement['NextPosting']), DATE_STRING)
 			post_time_guild = post_time_utc + timedelta(hours=timezone)
@@ -230,14 +235,14 @@ class AnnouncementsAdminCog(commands.Cog):
 	@announcements.command(name="toggle")
 	@option("state", str, choices=["RUN", "PAUSE"], description="Run or Pause")
 	@commands.has_permissions(administrator=True)
-	async def list(self, ctx, state):
+	async def toggle(self, ctx, state):
 		"""Disable announcements from being posted until turned back on"""
 
 		if (state == "RUN"):
-			val =1 
+			val =1
 		else:
 			val = 0
 
 		db.toggle_guild_announcements(ctx.guild.id, val)
 
-		await ctx.respond(f"Announcements set to {state}")
+		await ctx.respond(f"Automatic posts set to {state}")
