@@ -35,7 +35,7 @@ Linted with pylint 2.13.5
 
 
 # Hosting
-1. Set up python (virtual environment)[https://docs.python.org/3.8/library/venv.html]
+1. Set up python [virtual environment](https://docs.python.org/3.8/library/venv.html)
 2. Start your virtual environment with `source /path/to/venv`.
 3. Install dependencies with `pip install aiocron py-cord d20`, check that your versions are up to date with the dependencies.
 4. In the top directory, create a file called `TOKEN.txt` and paste your bots token as a single line.
@@ -45,7 +45,7 @@ Linted with pylint 2.13.5
 
 
 # Support the Developer
-Github contributions are always welcome! Buy the developer a [coffee](https://ko-fi.com/firefly42), or [commission](https://docs.google.com/document/d/1kM7qFBWqGsHktgrQHdCSf0HYJCfrTAa9MVsGPE8xF6A/edit?usp=sharing) the developer.
+Github contributions are always welcome! Buy the developer a [coffee](https://ko-fi.com/firefly42), or [commission](https://docs.google.com/document/d/1kM7qFBWqGsHktgrQHdCSf0HYJCfrTAa9MVsGPE8xF6A/edit?usp=sharing) them.
 
 # References
 https://docs.pycord.dev/en/master/index.html
