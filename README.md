@@ -44,6 +44,10 @@ Linted with pylint 2.13.5
 7. Run with `python main.py`
 
 
+## Cloning and Forking
+Follow the license and don't be evil, that is all.
+
+
 # Support the Developer
 Github contributions are always welcome! Buy the developer a [coffee](https://ko-fi.com/firefly42), or [commission](https://docs.google.com/document/d/1kM7qFBWqGsHktgrQHdCSf0HYJCfrTAa9MVsGPE8xF6A/edit?usp=sharing) them.
 
