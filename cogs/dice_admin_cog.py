@@ -1,0 +1,85 @@
+"""
+Original template by @Firefly#7113, April 2022
+Commands for character registration and profile management
+"""
+
+import discord
+from discord import slash_command, option
+from discord.commands import permissions, SlashCommandGroup, CommandPermission
+from discord.ext import commands
+
+# import aiocron
+import d20
+
+# from config import ADMIN_ROLE, PLAYER_ROLE
+import db
+
+from utils import utils
+
+# ------------------------------------------------------------------------
+# COMPONENT CLASSES AND CONSTANTS
+# ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------
+# COG
+# ------------------------------------------------------------------------
+def setup(bot):
+	"""Setup. Change TemplateCog to Class name"""
+	bot.add_cog(DiceAdminCog(bot))
+
+# pylint: disable=no-self-use
+class DiceAdminCog(commands.Cog):
+	"""Massaging management for mods"""
+
+	def __init__(self, bot):
+		self.bot = bot
+		print(f"Added {self.__class__.__name__}")
+
+
+# ------------------------------------------------------------------------
+# Command groups
+# Change the decorator to @<name>.command()
+# ------------------------------------------------------------------------
+	dice_admin = SlashCommandGroup("roll_admin", "Dice rolling (admin)")
+
+
+# ------------------------------------------------------------------------
+# Crontabs
+# https://crontab.cronhub.io/
+# Crontabs appear to execute in a LIFO stack order
+# Do not need to be explicitly started
+# ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------
+# Listeners
+# ------------------------------------------------------------------------
+
+
+# ------------------------------------------------------------------------
+# Commands
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+# /roll list
+# ------------------------------------------------------------------------
+	@dice_admin.command(name="list")
+	@option("player", discord.Member, description="Active character to view")
+	@option("visible", bool, default=False, description="Set to True for permanent response")
+	@commands.has_permissions(administrator=True)
+	async def roll_list(self, ctx, player, visible):
+		"""View a player's active character's custom rolls"""
+
+		char = db.get_active_char(ctx.guild.id, player.id)
+
+		try:
+			rolls = utils.str_to_dict(char['CustomRolls'])
+		except TypeError:
+			await ctx.respond("That player does not have an active character!", ephemeral=True)
+			return
+
+		msg = f"__Custom Rolls for {char['Name']}__"
+		for name in sorted(rolls.keys()):
+			msg += f"\n**{name}**: {rolls[name]}"
+
+		await ctx.respond(msg[:1500], ephemeral=not visible)
