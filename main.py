@@ -67,7 +67,7 @@ async def on_ready():
 # Cog handling
 # ------------------------------------------------------------------------
 for fname in os.listdir('./cogs'):
-	if (fname.endswith('.py') and fname != 'template_cog.py' and fname != '__init__.py'):
+	if (fname.endswith('.py') and fname != '__init__.py'):
 		bot.load_extension(f"cogs.{fname[:-3]}")
 
 

@@ -38,10 +38,9 @@ Linted with pylint 2.13.5
 1. Set up python [virtual environment](https://docs.python.org/3.8/library/venv.html)
 2. Start your virtual environment with `source /path/to/venv`.
 3. Install dependencies with `pip install -r requirements.txt`.
-4. In the top directory, create a file called `TOKEN.txt` and paste your bots token as a single line.
-5. Paste bot token in a new file named `TOKEN.txt`
-6. Add any testing servers to `config.py`. Commands can take up to an hour to register to other servers.
-7. Run with `python main.py`
+4. In the top directory, create a file called `TOKEN.txt` and paste your bot's token as a single line.
+5. Add any testing servers to `config.py`. Commands can take up to an hour to register to other servers.
+6. Run with `python main.py`
 
 
 ## Cloning and Forking
