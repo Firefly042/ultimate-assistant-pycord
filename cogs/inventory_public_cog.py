@@ -17,11 +17,6 @@ from utils.embed_list import EmbedList
 
 
 # ------------------------------------------------------------------------
-# COMPONENT CLASSES AND CONSTANTS
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
@@ -48,11 +43,6 @@ class InventoryPublicCog(commands.Cog):
 # https://crontab.cronhub.io/
 # Crontabs appear to execute in a LIFO stack order
 # Do not need to be explicitly started
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Listeners
 # ------------------------------------------------------------------------
 
 
@@ -187,4 +177,4 @@ class InventoryPublicCog(commands.Cog):
 
 				embeds[i].add_field(name=title, value=desc, inline=False)
 
-		await ctx.respond(view=EmbedList(embeds), ephemeral=not visible, embed=embeds[0])
+		await ctx.respond(view=EmbedList(embeds, ctx.interaction), ephemeral=not visible, embed=embeds[0])
