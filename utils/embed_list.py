@@ -8,10 +8,11 @@ import discord
 class EmbedList(discord.ui.View):
 	"""Two buttons that shift through an array of embeds"""
 
-	def __init__(self, embeds):
+	def __init__(self, embeds, interaction):
 		super().__init__(timeout=60)
 
 		self.embeds = embeds
+		self.interaction = interaction
 
 		self.prev_button = [c for c in self.children if c.label == "Previous"][0]
 		self.next_button = [c for c in self.children if c.label == "Next"][0]
@@ -23,13 +24,11 @@ class EmbedList(discord.ui.View):
 		self.max_pages = len(embeds)
 
 
-	# Cannot access interaction/message, so buttons cannot be disabled
 	async def on_timeout(self):
-		# for child in self.children:
-		# 	child.disabled = True
+		"""Disable and stop listening for interaction"""
 
-		# await self.interaction.response.edit_message(content="Timed out", view=self)
-		self.stop()
+		self.disable_all_items()
+		await self.interaction.edit_original_message(view=self)
 
 
 	# Previous page

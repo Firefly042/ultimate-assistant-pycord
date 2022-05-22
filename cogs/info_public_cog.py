@@ -22,6 +22,7 @@ HELP_EMBEDS = {
 			"Support the Developer": "[Ko-fi](https://ko-fi.com/firefly42)",
 
 			"Commissions": "[I can make other things too.](https://docs.google.com/document/d/1kM7qFBWqGsHktgrQHdCSf0HYJCfrTAa9MVsGPE8xF6A/edit?usp=sharing)",
+
 			"Basic Usage": "1. Set application permissions for moderator and player roles in your server settings (Integrations). Here's an official [guide](https://discord.com/blog/slash-commands-permissions-discord-apps-bots) from Discord.\n\n2. Set up character profiles with `/profile_admin` commands. If you plan to use the Messaging features, you will need designated player channels.\n\n3. Players may customize their profiles further with `/profile` commands.\n\n4. Multiple characters can be registered for a single player, but only one may be active at a time (set with `/profile swap`).",
 
 			"Optional Parameters": "Many commands have optional arguments that may be of interest! Make note of the `visible` parameter that makes use of temporary/single-user messages."
@@ -83,6 +84,15 @@ HELP_EMBEDS = {
 		"Fields": {
 			"Admin": "`/announcements` - Add, remove, and view automated posts. Toggle them on or off. PAUSED announcements will still tick forward in time, but will not be posted."
 		}
+	},
+
+	"Investigations": {
+		"Description": "Set up investigatable objects by specifying a channel, names, and a description. Moderators may mark an item as 'stealable', which allows a player to take the item.",
+		"Fields": {
+			"Admin": "`/investigate_admin` - Add, remove, and view investigations. Items cannot be taken by default",
+
+			"Player": "`/investigate` - Investigate or take an item within a channel (visible only to player by default)"
+		}
 	}
 }
 
@@ -90,19 +100,18 @@ HELP_EMBEDS = {
 class HelpMenu(discord.ui.View):
 	"""Menu of embeds and associated buttons"""
 
-	def __init__(self, embeds):
+	def __init__(self, embeds, interaction):
 		# Is it possible to generate button callbacks according to embed titles?
 		super().__init__(timeout=120)
 		self.embeds = embeds
+		self.interaction = interaction
 
 
-	# Cannot access interaction/message, so buttons cannot be disabled
 	async def on_timeout(self):
-		# for child in self.children:
-		# 	child.disabled = True
+		"""Disable and stop listening for interaction"""
 
-		# await self.interaction.response.edit_message(content="Timed out", view=self)
-		self.stop()
+		self.disable_all_items()
+		await self.interaction.edit_original_message(view=self)
 
 
 	# Row 0 - Info, Profiles, Gacha, Inventory
@@ -125,20 +134,25 @@ class HelpMenu(discord.ui.View):
 	async def inventory_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Inventory"], view=self)
 
-	# Row 1 - Messaging, Dice, Automated Posts
+	# Row 1 - Messaging, Dice, Automated Posts, Investigations
 	@discord.ui.button(label="Messaging", row=1, style = discord.ButtonStyle.green)
 	async def messaging_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Messaging"], view=self)
 
-	# Row 1 - Messaging, Dice, Automated Posts
+	# Row 1 - Messaging, Dice, Automated Posts, Investigations
 	@discord.ui.button(label="Dice", row=1, style = discord.ButtonStyle.green)
 	async def dice_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Dice"], view=self)
 
-	# Row 1 - Messaging, Dice, Automated Posts
+	# Row 1 - Messaging, Dice, Automated Posts, Investigations
 	@discord.ui.button(label="Automated Posts", row=1, style = discord.ButtonStyle.green)
 	async def posting_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Automated Posts"], view=self)
+
+	# Row 1 - Messaging, Dice, Automated Posts, Investigations
+	@discord.ui.button(label="Investigations", row=1, style = discord.ButtonStyle.green)
+	async def investigations_button_callback(self, _, interaction):
+		await interaction.response.edit_message(embed=self.embeds["Investigations"], view=self)
 
 
 # ------------------------------------------------------------------------
@@ -149,7 +163,7 @@ def setup(bot):
 
 # pylint: disable=no-self-use, unnecessary-dict-index-lookup
 class InfoPublicCog(commands.Cog):
-	"""Change Class name and add description here"""
+	"""Information commands"""
 
 	def __init__(self, bot):
 		self.bot = bot
@@ -174,34 +188,11 @@ class InfoPublicCog(commands.Cog):
 
 
 # ------------------------------------------------------------------------
-# Command groups
-# Change the decorator to @<name>.command()
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Crontabs
-# https://crontab.cronhub.io/
-# Crontabs appear to execute in a LIFO stack order
-# Do not need to be explicitly started
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Listeners
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
 # Commands
 # ------------------------------------------------------------------------
-	@slash_command(name="help")
+	@slash_command(name="help", guild_only=False)
 	@option("visible", bool, default=False, description="Set True for public response")
 	async def help(self, ctx, visible):
 		"""Helpful information and links"""
 
-		await ctx.respond(embed=self.embeds["Info"], view=HelpMenu(self.embeds), ephemeral=not visible)
-
-	# @test.error
-	# async def test_error(self, ctx, error):
-	#   return
+		await ctx.respond(embed=self.embeds["Info"], view=HelpMenu(self.embeds, ctx.interaction), ephemeral=not visible)

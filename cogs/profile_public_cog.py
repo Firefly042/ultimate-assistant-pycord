@@ -1,6 +1,6 @@
 """
 Author @Firefly#7113
-Player/Public ommands for character profile management
+Player/Public commands for character profile management
 """
 
 import re
@@ -16,11 +16,6 @@ from discord.ext import commands
 import db
 
 from utils import utils
-
-# ------------------------------------------------------------------------
-# COMPONENT CLASSES AND CONSTANTS
-# ------------------------------------------------------------------------
-
 
 # ------------------------------------------------------------------------
 # COG
@@ -43,19 +38,6 @@ class ProfilePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 	profile = SlashCommandGroup("profile", "Character profiles")
 	profile_embed = profile.create_subgroup("embed", "Profile editing")
-
-
-# ------------------------------------------------------------------------
-# Crontabs
-# https://crontab.cronhub.io/
-# Crontabs appear to execute in a LIFO stack order
-# Do not need to be explicitly started
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Listeners
-# ------------------------------------------------------------------------
 
 
 # ------------------------------------------------------------------------

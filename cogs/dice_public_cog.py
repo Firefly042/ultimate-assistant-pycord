@@ -28,7 +28,7 @@ def setup(bot):
 
 # pylint: disable=no-self-use
 class DicePublicCog(commands.Cog):
-	"""Massaging management for mods"""
+	"""Player/public dice commands"""
 
 	def __init__(self, bot):
 		self.bot = bot
@@ -40,19 +40,6 @@ class DicePublicCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	dice = SlashCommandGroup("roll", "Dice rolling")
-
-
-# ------------------------------------------------------------------------
-# Crontabs
-# https://crontab.cronhub.io/
-# Crontabs appear to execute in a LIFO stack order
-# Do not need to be explicitly started
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Listeners
-# ------------------------------------------------------------------------
 
 
 # ------------------------------------------------------------------------

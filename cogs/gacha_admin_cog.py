@@ -17,11 +17,6 @@ from utils.embed_list import EmbedList
 
 
 # ------------------------------------------------------------------------
-# COMPONENT CLASSES AND CONSTANTS
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
@@ -42,19 +37,6 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	gacha_admin = SlashCommandGroup("gacha_admin", "Admin Gacha management")
 	currency = gacha_admin.create_subgroup("currency", "Currency management")
-
-# ------------------------------------------------------------------------
-# Crontabs
-# https://crontab.cronhub.io/
-# Crontabs appear to execute in a LIFO stack order
-# Do not need to be explicitly started
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Listeners
-# ------------------------------------------------------------------------
-
 
 # ------------------------------------------------------------------------
 # Commands
@@ -262,4 +244,4 @@ class GachaAdminCog(commands.Cog):
 
 			embeds[i].description = msg_i[:3900]
 
-		await ctx.respond(view=EmbedList(embeds), ephemeral=not visible, embed=embeds[0])
+		await ctx.respond(view=EmbedList(embeds, ctx.interaction), ephemeral=not visible, embed=embeds[0])

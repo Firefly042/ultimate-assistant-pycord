@@ -67,20 +67,15 @@ class DefaultCog(commands.Cog):
 	async def on_ready(self):
 		"""
 		Adds guilds to db if bot was added to them while offline
-		Flushes out guilds that removed bot since it was last online
 		"""
 
 		bot_guilds = [guild.id for guild in self.bot.guilds]
-
 		db_guilds = db.get_all_guild_ids()
-
 		bot_guilds_not_in_db = [i for i in bot_guilds if i not in db_guilds]
-		db_guilds_not_in_bot = [i for i in db_guilds if i not in bot_guilds]
-		db.add_guilds(bot_guilds_not_in_db)
-		db.remove_guilds(db_guilds_not_in_bot)
 
-		print(f"Added {len(bot_guilds_not_in_db)} guilds to database and" \
-			f" removed {len(db_guilds_not_in_bot)}")
+		db.add_guilds(bot_guilds_not_in_db)
+
+		print(f"Added {len(bot_guilds_not_in_db)} guilds to database")
 
 
 	@commands.Cog.listener()
@@ -92,10 +87,3 @@ class DefaultCog(commands.Cog):
 # ------------------------------------------------------------------------
 # Commands
 # ------------------------------------------------------------------------
-	# @slash_command(name="devtest")
-	# @permissions.is_owner()
-	# async def devtest(self, ctx):
-	# 	"""Dev scratchwork. Comment out."""
-
-	# 	db.remove_item(ctx.guild.id, ctx.interaction.user.id, "item 1", amount=1)
-	# 	await ctx.respond("Dev Test", ephemeral=True)
