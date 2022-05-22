@@ -8,7 +8,6 @@ import shutil
 import atexit
 
 import discord
-from discord.commands import permissions
 
 from config import TESTING_SERVERS
 import db
@@ -69,6 +68,12 @@ async def on_ready():
 for fname in os.listdir('./cogs'):
 	if (fname.endswith('.py') and fname != '__init__.py'):
 		bot.load_extension(f"cogs.{fname[:-3]}")
+
+# ------------------------------------------------------------------------
+# Update announcements
+# ------------------------------------------------------------------------
+passed_announcements = db.update_passed_announcements()
+print(f"{passed_announcements} announcements updated")
 
 
 # ------------------------------------------------------------------------

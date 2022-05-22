@@ -3,7 +3,8 @@ Original template by @Firefly#7113, Nov 2021
 """
 
 import sqlite3
-# import math
+import math
+from datetime import datetime
 from datetime import timedelta
 from utils import utils
 
@@ -47,12 +48,25 @@ def add_guilds(guild_ids):
 	conn.commit()
 
 
-def remove_guilds(guild_ids):
-	"""Called on start, removing guilds that the bot has been taken out of since last start"""
+def remove_guilds(existing_guilds):
+	"""Called on dev command with a list of guilds to preserve"""
 
-	guilds = list(guild_ids)
-	cs.executemany("DELETE FROM GuildInfo WHERE GuildID = ?;", guilds)
+	guild_list = ", ".join(existing_guilds)
+
+	# GuildInfo
+	cs.execute(f"DELETE FROM GuildInfo WHERE GuildID NOT IN ({guild_list});")
 	conn.commit()
+
+	removed_guilds = cs.rowcount
+
+	# The other tables
+	cs.execute(f"DELETE FROM Announcements WHERE GuildID NOT IN ({guild_list});")
+	cs.execute(f"DELETE FROM Characters WHERE GuildID NOT IN ({guild_list});")
+	cs.execute(f"DELETE FROM Gacha WHERE GuildID NOT IN ({guild_list});")
+	cs.execute(f"DELETE FROM Investigations WHERE GuildID NOT IN ({guild_list});")
+	conn.commit()
+
+	return removed_guilds
 
 
 def edit_guild(guild_id, field, value):
@@ -447,25 +461,77 @@ def toggle_guild_announcements(guild_id, val):
 	conn.commit()
 
 
-# def update_passed_announcements(utc_time):
-# 	"""Update announcements where NextPosting < utc_time"""
+def update_passed_announcements():
+	"""Update announcements where NextPosting < utc_time"""
 
-# 	utc_int = int(utc_time.strftime("%Y%m%d%H%M"))
-# 	cs.execute("SELECT * FROM Announcements WHERE NextPosting <= ?;", (utc_int,))
+	parse_str = "%Y%m%d%H%M"
+	
+	utc_time = datetime.utcnow()
+	utc_int = int(utc_time.strftime(parse_str))
+	cs.execute("SELECT * FROM Announcements WHERE NextPosting <= ?;", (utc_int,))
 
-# 	announcements = cs.fetchall()
+	announcements = cs.fetchall()
 
-# 	params = []
-# 	for announcement in announcements:
-# 		ID = announcement["ID"]
-# 		interval = announcement["Interval"]
-# 		hours_missed = math.ceil(utc_time)
+	params = []
+	for announcement in announcements:
+		ID = announcement["ID"]
+		interval = announcement["Interval"]
+		
+		outdated_posting_str = str(announcement["NextPosting"])
+		outdated_posting_datetime = datetime.strptime(outdated_posting_str, parse_str)
 
-# 		next_posting_datetime = utc_time + cycles*timedelta(announcement["Interval"])
-# 		next_posting_int = int(next_posting_datetime.strftime("%Y%m%d%H%M"))
+		hours_missed = (utc_time - outdated_posting_datetime).total_seconds() / 3600
+		cycles_missed = math.ceil(hours_missed/interval)
 
-# 		params.append((next_posting_int, ID))
+		next_posting_datetime = outdated_posting_datetime + timedelta(hours=cycles_missed*interval)
+		next_posting_int = int(next_posting_datetime.strftime(parse_str))
 
-# 	# Update
-# 	cs.executemany("UPDATE Announcements SET NextPosting = ? WHERE ID = ?;", params)
-# 	conn.commit()
+		params.append((next_posting_int, ID))
+
+	# Update
+	cs.executemany("UPDATE Announcements SET NextPosting = ? WHERE ID = ?;", params)
+	conn.commit()
+
+	return cs.rowcount
+
+
+# ------------------------------------------------------------------------
+# Investigations
+# ------------------------------------------------------------------------
+def add_investigation(guild_id, channel_id, names, desc, stealable):
+	"""Add investigatable item. Does not check for repeats"""
+
+	stealable = int(stealable)
+
+	cs.execute("INSERT INTO Investigations ('GuildID', 'ChannelID', 'Names', 'Desc', 'Stealable') VALUES (?, ?, json(?), ?, ?);", (guild_id, channel_id, names, desc, stealable))
+	conn.commit()
+
+
+def get_investigation(guild_id, channel_id, name):
+	"""Get an investigatable item by name"""
+
+	cs.execute("SELECT * FROM Investigations WHERE GuildID = ? AND ChannelID = ? AND Names LIKE ? LIMIT 1;", (guild_id, channel_id, f"%\"{name}\"%"))
+	return cs.fetchone()
+
+
+def set_investigation_taken(guild_id, channel_id, name, player_id):
+	"""Sets TakenBy to player ID"""
+
+	cs.execute("UPDATE Investigations SET TakenBy = ? WHERE GuildID = ? AND ChannelID = ? AND Names LIKE ? LIMIT 1;", (player_id, guild_id, channel_id, f"%\"{name}\"%"))
+	conn.commit()
+
+
+def remove_investigation(guild_id, channel_id, name):
+	"""Remove an item by name"""
+
+	cs.execute("DELETE FROM Investigations WHERE GuildID = ? AND ChannelID = ? AND Names LIKE ? LIMIT 1;", (guild_id, channel_id, f"%\"{name}\"%"))
+	conn.commit()
+
+	return (cs.rowcount > 0)
+
+
+def get_all_investigations(guild_id):
+	"""Return all investigations for guild"""
+
+	cs.execute("SELECT * FROM Investigations WHERE GuildID = ?;", (guild_id,))
+	return cs.fetchall()
