@@ -14,11 +14,6 @@ from utils import utils
 
 
 # ------------------------------------------------------------------------
-# COMPONENT CLASSES AND CONSTANTS
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
 # COG
 # ------------------------------------------------------------------------
 def setup(bot):
@@ -26,7 +21,7 @@ def setup(bot):
 
 # pylint: disable=no-self-use
 class DiceAdminCog(commands.Cog):
-	"""Massaging management for mods"""
+	"""Dice viewing for mods"""
 
 	def __init__(self, bot):
 		self.bot = bot
@@ -38,19 +33,6 @@ class DiceAdminCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	dice_admin = SlashCommandGroup("roll_admin", "Dice rolling (admin)")
-
-
-# ------------------------------------------------------------------------
-# Crontabs
-# https://crontab.cronhub.io/
-# Crontabs appear to execute in a LIFO stack order
-# Do not need to be explicitly started
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Listeners
-# ------------------------------------------------------------------------
 
 
 # ------------------------------------------------------------------------

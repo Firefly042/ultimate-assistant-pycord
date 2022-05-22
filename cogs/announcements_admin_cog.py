@@ -21,6 +21,7 @@ import db
 # ------------------------------------------------------------------------
 DATE_STRING = "%Y%m%d%H%M"
 
+
 # ------------------------------------------------------------------------
 # COG
 # ------------------------------------------------------------------------
@@ -29,7 +30,7 @@ def setup(bot):
 
 # pylint: disable=no-self-use
 class AnnouncementsAdminCog(commands.Cog):
-	"""Messaging management for mods"""
+	"""Announcement management for mods"""
 
 	def __init__(self, bot):
 		self.bot = bot
@@ -93,17 +94,12 @@ class AnnouncementsAdminCog(commands.Cog):
 				continue
 
 
-	# @aiocron.crontab('@reboot')
-	# def catch_up():
-	# 	"""Updates NextPostings if bot went offline"""
-	# 	print("Catch Up")
-
 # ------------------------------------------------------------------------
 # Listeners
 # ------------------------------------------------------------------------
 	@commands.Cog.listener()
 	async def on_connect(self):
-		"""Updates NextPostings if bot went offline"""
+		"""TODO Updates NextPostings if bot went offline"""
 		return
 
 
@@ -222,7 +218,7 @@ class AnnouncementsAdminCog(commands.Cog):
 			post_time_guild = post_time_utc + timedelta(hours=timezone)
 			post_time_str = post_time_guild.strftime("%d %b %Y, %H:%M")
 
-			title = f"{post_time_str}, every {announcement['Interval']} hours, (id: {announcement['ID']})"
+			title = f"{post_time_str}, every {announcement['Interval']} hours (id: {announcement['ID']})"
 			value = f"In <#{announcement['ChannelID']}>\n" + announcement['Message'][:128]
 			embed.add_field(name=title, value=value, inline=False)
 

@@ -1,6 +1,6 @@
 """
 Author @Firefly#7113
-Help and info
+Admin messaging commands
 """
 
 from discord import option
@@ -8,11 +8,6 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 import db
-
-
-# ------------------------------------------------------------------------
-# COMPONENT CLASSES AND CONSTANTS
-# ------------------------------------------------------------------------
 
 
 # ------------------------------------------------------------------------
@@ -35,19 +30,6 @@ class MessageAdminCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	message_admin = SlashCommandGroup("msg_admin", "Admin messaging management")
-
-
-# ------------------------------------------------------------------------
-# Crontabs
-# https://crontab.cronhub.io/
-# Crontabs appear to execute in a LIFO stack order
-# Do not need to be explicitly started
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Listeners
-# ------------------------------------------------------------------------
 
 
 # ------------------------------------------------------------------------
