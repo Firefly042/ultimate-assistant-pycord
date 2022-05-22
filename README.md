@@ -1,4 +1,4 @@
-Last updated: 1 May 2022
+Last updated: 22 May 2022
 
 # Credits
 Discord user @Firefly#7113.
@@ -16,7 +16,7 @@ Check the [Discord server](https://discord.gg/VZYKBptWFJ)!
 # Dependencies
 Built and tested on Ubuntu 20.04 (WSL) with 
 - python 3.8.10
-- py-cord 2.0.0b5
+- py-cord 2.0.0rc1
 - aiocron 1.8
 - d20 1.1.2
 
