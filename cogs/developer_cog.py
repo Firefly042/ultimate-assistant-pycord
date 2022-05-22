@@ -3,23 +3,13 @@ Author @Firefly#7113
 Developer-only commands
 """
 
-import os
-
 import discord
 from discord import option
-from discord.commands import SlashCommandGroup, CommandPermission
+from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-from config import DEVELOPER_SERVER
 import db
-
-from utils import utils
-from utils.embed_list import EmbedList
-
-
-# ------------------------------------------------------------------------
-# COMPONENT CLASSES AND CONSTANTS
-# ------------------------------------------------------------------------
+from config import DEVELOPER_SERVER
 
 
 # ------------------------------------------------------------------------
@@ -30,7 +20,7 @@ def setup(bot):
 
 # pylint: disable=no-self-use, too-many-arguments
 class DeveloperCog(commands.Cog):
-	"""Inventory management for admins"""
+	"""Developer utilities"""
 
 	def __init__(self, bot):
 		self.bot = bot
@@ -41,20 +31,7 @@ class DeveloperCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	dev = SlashCommandGroup("dev", "Developer only", permissions=[CommandPermission("owner", 2, True)], guild_ids=[DEVELOPER_SERVER])
-
-
-# ------------------------------------------------------------------------
-# Crontabs
-# https://crontab.cronhub.io/
-# Crontabs appear to execute in a LIFO stack order
-# Do not need to be explicitly started
-# ------------------------------------------------------------------------
-
-
-# ------------------------------------------------------------------------
-# Listeners
-# ------------------------------------------------------------------------
+	dev = SlashCommandGroup("dev", "Developer only", guild_ids=[DEVELOPER_SERVER])
 
 
 # ------------------------------------------------------------------------
@@ -63,10 +40,34 @@ class DeveloperCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /dev status
 # ------------------------------------------------------------------------
-	@dev.command(name="status", guild_only=False)
+	@dev.command(name="status")
 	@option("message", str, description="Short status")
 	async def status(self, ctx, message):
 		"""Set bot's playing status"""
 
 		await self.bot.change_presence(activity=discord.Game(name=message))
 		await ctx.respond("Changed presence")
+
+
+# ------------------------------------------------------------------------
+# /dev rm_guilds
+# ------------------------------------------------------------------------
+	@dev.command(name="rm_guilds")
+	async def rm_guilds(self, ctx):
+		"""Removes all info associated with guilds that the bot is no longer in"""
+
+		bot_guild_ids = [str(guild.id) for guild in self.bot.guilds]
+
+		n_removed = db.remove_guilds(bot_guild_ids)
+
+		await ctx.respond(f"Removed {n_removed} non-member guilds from database")
+
+
+# ------------------------------------------------------------------------
+# /dev test
+# ------------------------------------------------------------------------
+	@dev.command(name="test")
+	async def test(self, ctx):
+		"""Dev test"""
+
+		await ctx.respond("dev test")
