@@ -46,7 +46,6 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@currency.command(name="name")
 	@option("name", str, description="Plural form recommended")
-	@commands.has_permissions(administrator=True)
 	async def admin_currency_name(self, ctx, name):
 		"""Set the name of your game's currency"""
 
@@ -58,7 +57,6 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@currency.command(name="cost")
 	@option("cost", int, description="1 to 999", min_value=1, max_value=999)
-	@commands.has_permissions(administrator=True)
 	async def admin_currency_cost(self, ctx, cost):
 		"""Set the cost of a single /gacha use"""
 
@@ -71,7 +69,6 @@ class GachaAdminCog(commands.Cog):
 	@currency.command(name="give")
 	@option("player", discord.Member)
 	@option("amount", int, description="Amount to give", min_value=1, max_value=999)
-	@commands.has_permissions(administrator=True)
 	async def admin_currency_give(self, ctx, player, amount):
 		"""Give currency to an active character"""
 
@@ -89,7 +86,6 @@ class GachaAdminCog(commands.Cog):
 	@currency.command(name="take")
 	@option("player", discord.Member, description="User must have an active character")
 	@option("amount", int, description="Amount to take", min_value=1, max_value=999)
-	@commands.has_permissions(administrator=True)
 	async def admin_currency_take(self, ctx, player, amount):
 		"""Take currency from an active character"""
 
@@ -106,7 +102,6 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@currency.command(name="give_all")
 	@option("amount", int, description="Amount to give", min_value=1, max_value=999)
-	@commands.has_permissions(administrator=True)
 	async def admin_currency_give_all(self, ctx, amount):
 		"""Give currency to all active characters"""
 
@@ -124,7 +119,6 @@ class GachaAdminCog(commands.Cog):
 	@currency.command(name="view")
 	@option("player", discord.Member)
 	@option("visible", bool, default=False, description="Set to True for permanent response")
-	@commands.has_permissions(administrator=True)
 	async def admin_currency_view(self, ctx, player, visible):
 		"""View currency of an active character"""
 
@@ -140,7 +134,6 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@currency.command(name="view_all")
 	@option("visible", bool, default=False, description="Set to True for permanent response")
-	@commands.has_permissions(administrator=True)
 	async def admin_currency_view_all(self, ctx, visible):
 		"""View currency for all characters (active and inactive)"""
 
@@ -161,7 +154,6 @@ class GachaAdminCog(commands.Cog):
 	@option("desc", str, description="Item's description. 1024 character maximum")
 	@option("amount", int, default=None, min_value=1, max_value=99999, description="Enter a number to make the item limited.")
 	@option("thumbnail", str, default=None, description="Optional thumbnail image URL")
-	@commands.has_permissions(administrator=True)
 	async def gacha_admin_add(self, ctx, name, desc, amount, thumbnail):
 		"""Register a new item to gacha, optional item limits and thumbnail"""
 
@@ -192,7 +184,6 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@gacha_admin.command(name="rm")
 	@option("name", str, description="The display name of item to remove")
-	@commands.has_permissions(administrator=True)
 	async def gacha_admin_rm(self, ctx, name):
 		"""Remove an item from gacha by name"""
 
@@ -209,7 +200,6 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@gacha_admin.command(name="list")
 	@option("visible", bool, default=False, description="Set to true for permanent response.")
-	@commands.has_permissions(administrator=True)
 	async def gacha_admin_list(self, ctx, visible):
 		"""List all gacha items"""
 

@@ -49,7 +49,6 @@ class InventoryAdminCog(commands.Cog):
 	@option("item", str, description="Case sensitive item name, 64 character maximum")
 	@option("amount", int, default=1, min_value=1, max_value=9999, description="Amount to take, default 1")
 	@option("visible", bool, default=False, description="Set to True for public response")
-	@commands.has_permissions(administrator=True)
 	async def take(self, ctx, player, item, amount, visible):
 		"""Take one or more of an item from a player's inventory"""
 
@@ -70,7 +69,6 @@ class InventoryAdminCog(commands.Cog):
 	@option("amount", int, default=1, description="How much you will give, default 1", min_value=1, max_value=999)
 	@option("desc", str, default=None, description="Short description of item")
 	@option("visible", bool, default=False, description="Set True for public response")
-	@commands.has_permissions(administrator=True)
 	async def give(self, ctx, recipient, item, amount, desc, visible):
 		"""Add one or more of an item to a player's inventory. Description optional"""
 
@@ -92,7 +90,6 @@ class InventoryAdminCog(commands.Cog):
 	@inventory_admin.command(name="view")
 	@option("player", discord.Member, description="Player with an active character")
 	@option("visible", bool, default=False, description="Set to true for permanent response.")
-	@commands.has_permissions(administrator=True)
 	async def view(self, ctx, player, visible):
 		"""View a specified player's inventory (active character only)"""
 
