@@ -45,7 +45,6 @@ class ProfileAdminCog(commands.Cog):
 	@option("name", str, description="The character's given/default name to display. 32 character max")
 	@option("surname", str, description="The rest of the character's name, if any. 32 character max", default=None)
 	@option("channel", discord.TextChannel, description="Where anonymous messages and whispers will be sent.", default=None)
-	@commands.has_permissions(administrator=True)
 	async def profile_admin_new(self, ctx, player, name, surname, channel):
 		"""Register a player, character, and name to the bot"""
 
@@ -81,7 +80,6 @@ class ProfileAdminCog(commands.Cog):
 	@option("name", str, description="Character's display name.")
 	@option("field_to_change", str, choices=["Name", "Surname"], description="Specify Name or Surname.")
 	@option("new_value", str, description="New name or surname. 32 character maximum")
-	@commands.has_permissions(administrator=True)
 	async def profile_admin_edit_text(self, ctx, player, name, field_to_change, new_value):
 		"""Edit a character's name or surname"""
 
@@ -109,7 +107,6 @@ class ProfileAdminCog(commands.Cog):
 	@option("player", discord.Member)
 	@option("name", str)
 	@option("channel", discord.TextChannel)
-	@commands.has_permissions(administrator=True)
 	async def profile_admin_edit_channel(self, ctx, player, name, channel):
 		"""Add or edit a character's associated channel"""
 
@@ -130,7 +127,6 @@ class ProfileAdminCog(commands.Cog):
 	@profile_admin.command(name="rm")
 	@option("player", discord.Member, description="Who played this character")
 	@option("name", str, description="The character's display name")
-	@commands.has_permissions(administrator=True)
 	async def profile_admin_rm(self, ctx, player, name):
 		"""Unregister a character"""
 
@@ -148,7 +144,6 @@ class ProfileAdminCog(commands.Cog):
 	@profile_admin.command(name="disable")
 	@option("player", discord.Member)
 	@option("name", str)
-	@commands.has_permissions(administrator=True)
 	async def profile_admin_disable(self, ctx, player, name):
 		"""Set a character to inactive (disabling the player's ability to use commands)"""
 

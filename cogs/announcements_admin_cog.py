@@ -111,7 +111,6 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@announcements.command(name="tz")
 	@option("utc_offset", int, description="Your offset from UTC/GMT.", min_value=-12, max_value=14)
-	@commands.has_permissions(administrator=True)
 	async def timezone(self, ctx, utc_offset):
 		"""Set timezone for server relative to UTC/GMT. Half/Quarter hours not supported"""
 
@@ -136,7 +135,6 @@ class AnnouncementsAdminCog(commands.Cog):
 	@option("start_minute", int, choices=[0, 30], description="On the hour or on the half hour")
 	@option("interval", int, min_value=1, max_value=5040, description="Posting interval between 1 hour and 30 days (5040 hours)")
 	@option("message", str, description="Message, maximum 1024 characters")
-	@commands.has_permissions(administrator=True)
 	async def new(self, ctx, channel, start_year, start_month, start_day, start_hour, start_minute, interval, message):
 		"""Define a new scheduled/repeated announcement (using your server's set timezone)"""
 
@@ -177,7 +175,6 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@announcements.command(name="rm")
 	@option("announcement_id", str, description="The id associated with the announcement (can be found with list command)")
-	@commands.has_permissions(administrator=True)
 	async def remove(self, ctx, announcement_id):
 		"""Remove an announcement by its id (obtained with /announcements list)"""
 
@@ -194,7 +191,6 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@announcements.command(name="list")
 	@option("visible", bool, default=False, description="Set True for permanent response")
-	@commands.has_permissions(administrator=True)
 	async def list(self, ctx, visible):
 		"""List your server's automated posts in chronological order"""
 
@@ -230,7 +226,6 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@announcements.command(name="toggle")
 	@option("state", str, choices=["RUN", "PAUSE"], description="Run or Pause")
-	@commands.has_permissions(administrator=True)
 	async def toggle(self, ctx, state):
 		"""Disable announcements from being posted until turned back on"""
 

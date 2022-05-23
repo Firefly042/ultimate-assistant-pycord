@@ -40,7 +40,6 @@ class MessageAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@message_admin.command(name="anon")
 	@option("toggle", str, choices=["ON", "OFF"], description="Select permission")
-	@commands.has_permissions(administrator=True)
 	async def toggle(self, ctx, toggle):
 		"""Enable or disable anonymous messaging. All players will need a private channel to use these."""
 
@@ -68,7 +67,6 @@ class MessageAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@message_admin.command(name="channels")
 	@option("visible", bool, default=False, description="Set to True for permanent response")
-	@commands.has_permissions(administrator=True)
 	async def channels(self, ctx, visible):
 		"""List characters and their associated messaging channels"""
 

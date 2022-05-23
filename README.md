@@ -24,7 +24,7 @@ Linted with pylint 2.13.5
 
 
 # Setting up your server
-1. Admin commands will not work for non-admins, but will not be greyed out by default. To grey out commands for non-players and admins, moderators should consider using the Integration settings in your server settings like so:
+1. With discord's permissions v2 update, admin permissions are now in the hands of server moderators. To grey out commands for non-players and non-admins, moderators should *heavily* consider using the Integration settings in their server settings like so:
 ![ex 1](./images/perms_example1.PNG)
 ![ex 2](./images/perms_example2.PNG)
 ![ex 3](./images/perms_example3.PNG)

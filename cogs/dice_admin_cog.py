@@ -44,7 +44,6 @@ class DiceAdminCog(commands.Cog):
 	@dice_admin.command(name="list")
 	@option("player", discord.Member, description="Active character to view")
 	@option("visible", bool, default=False, description="Set to True for permanent response")
-	@commands.has_permissions(administrator=True)
 	async def roll_list(self, ctx, player, visible):
 		"""View a player's active character's custom rolls"""
 
