@@ -1,16 +1,16 @@
 strings = {
     "common": {
         "no-character": {
-            "en-US": "You do not have an active character in this server! Do you need to use `/profile swap`?",
-            "it": "<it>"
+            "en-US": "You do not have an active character in this server! Do you need to use `/profile scambio`?",
+            "it": "Non hai un personaggio attivo in questo server! Hai bisogno di usare `/profile scambio`?"
         },
         "visible-desc": {
             "en-US": "Set to 'True' for a permanent, visible response.",
-            "it": "<it>"
+            "it": "Imposta a 'True' per una risposta visibile e permanente."
         },
         "visible-name": {
             "en-US": "visible",
-            "it": "<it>"
+            "it": "visibile"
         }
     },
 
@@ -18,38 +18,38 @@ strings = {
         "view": {
             "name": {
                 "en-US": "view",
-                "it": "<it>"
+                "it": "visualizza"
             },
             "description": {
                 "en-US": "View a character's profile",
-                "it": "<it>"
+                "it": "Visualizza il profilo di un personaggio"
             },
             "options": {
                 "player": {
                     "name": {
                         "en-US": "name",
-                        "it": "<it>"
+                        "it": "nome"
                     },
                     "description": {
                         "en-US": "The user who plays this character",
-                        "it": "<it>"
+                        "it": "L'utente che usa questo personaggio"
                     }
                 },
                 "name": {
                     "name": {
                         "en-US": "name",
-                        "it": "<it>"
+                        "it": "nome"
                     },
                     "description": {
                         "en-US": "Character's display name (usually given name)",
-                        "it": "<it>"
+                        "it": "Il nome da display del personaggio"
                     }
                 }
             },
             "responses": {
                 "error1": {
                     "en-US": "Cannot find that character for that player!",
-                    "it": "<it>"
+                    "it": "Non riesco a trovare quel personaggio per quel giocatore!"
                 }
             }
         },
@@ -57,20 +57,20 @@ strings = {
         "list": {
             "name": {
                 "en-US": "list",
-                "it": "<it>"
+                "it": "lista"
             },
             "description": {
                 "en-US": "List all registered characters for this server",
-                "it": "<it>"
+                "it": "Lista tutti i personaggi registrati per questo server"
             },
             "responses": {
                 "res1": {
                     "en-US": "Characters in {}",
-                    "it": "<it>"
+                    "it": "Personaggi in {}"
                 },
                 "error1": {
                     "en-US": "This server has no registered characters!",
-                    "it": "<it>"
+                    "it": "Questo server non ha personaggi registrati!"
                 }
             }
         }
