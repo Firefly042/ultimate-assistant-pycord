@@ -78,7 +78,6 @@ strings = {
 }
 
 
-
 def command_names(group, command):
 	return strings[group][command]["name"]
 
