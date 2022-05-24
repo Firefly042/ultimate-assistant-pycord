@@ -69,6 +69,7 @@ for fname in os.listdir('./cogs'):
 	if (fname.endswith('.py') and fname != '__init__.py'):
 		bot.load_extension(f"cogs.{fname[:-3]}")
 
+
 # ------------------------------------------------------------------------
 # Update announcements
 # ------------------------------------------------------------------------
