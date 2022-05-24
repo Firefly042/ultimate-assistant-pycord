@@ -110,7 +110,7 @@ class AnnouncementsAdminCog(commands.Cog):
 # /announcements tz
 # ------------------------------------------------------------------------
 	@announcements.command(name="tz")
-	@option("utc_offset", int, description="Your offset from UTC/GMT.", min_value=-12, max_value=14)
+	@option("utc_offset", int, description="Your offset from UTC/GMT", min_value=-12, max_value=14)
 	async def timezone(self, ctx, utc_offset):
 		"""Set timezone for server relative to UTC/GMT. Half/Quarter hours not supported"""
 
