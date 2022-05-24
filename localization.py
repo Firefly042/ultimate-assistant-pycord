@@ -76,3 +76,28 @@ strings = {
         }
     }
 }
+
+
+def command_names(group, command):
+	return strings[group][command]["name"]
+
+
+def command_descriptions(group, command):
+	return strings[group][command]["description"]
+
+
+def option_names(group, command, option):
+	return strings[group][command]["options"][option]["name"]
+
+
+def option_descriptions(group, command, option):
+	return strings[group][command]["options"][option]["description"]
+
+
+def response(group, command, res_tag, locale):
+	res = strings[group][command]["responses"][res_tag][locale]
+
+	if (not res):
+		return strings[group][command]["responses"][res_tag]["en-US"]
+
+	return res
