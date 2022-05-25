@@ -1,3 +1,5 @@
+<a href='https://ko-fi.com/X8X4C9DD1' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
 Last updated: 23 May 2022
 
 # Introduction
@@ -26,7 +28,7 @@ Further information can be found on this repository's wiki including:
 
 
 # Support the Developer
-Github contributions are always welcome! Buy the developer a [coffee](https://ko-fi.com/firefly42), or [commission](https://docs.google.com/document/d/1kM7qFBWqGsHktgrQHdCSf0HYJCfrTAa9MVsGPE8xF6A/edit?usp=sharing) them.
+Github contributions are always welcome! Or [commission](https://docs.google.com/document/d/1kM7qFBWqGsHktgrQHdCSf0HYJCfrTAa9MVsGPE8xF6A/edit?usp=sharing) them.
 
 # References
 https://docs.pycord.dev/en/master/index.html
