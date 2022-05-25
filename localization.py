@@ -175,7 +175,7 @@ strings = {
 					"error1": {
 						"en-US": "Could not find a character with that name for you!"
 					},
-					"error2": {
+					"error-url": {
 						"en-US": "I cannot display that image URL! Reverting."
 					},
 					"res1": {
@@ -217,7 +217,7 @@ strings = {
 						}
 					}
 				},
-				"responses" {
+				"responses": {
 					"error-limit": {
 						"en-US": "You must remove a field before adding a new one!"
 					},

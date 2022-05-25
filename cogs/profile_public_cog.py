@@ -49,7 +49,6 @@ class ProfilePublicCog(commands.Cog):
 # /profile embed edit
 # ------------------------------------------------------------------------
 	@profile_embed.command(name="edit",
-		description="Your character's display name",
 		name_localizations=loc.command_names("profile_embed", "edit"),
 		description_localizations=loc.command_descriptions("profile_embed", "edit"))
 	@option("name", str,
@@ -94,17 +93,28 @@ class ProfilePublicCog(commands.Cog):
 			res = loc.response("profile_embed", "edit", "res1", ctx.interaction.locale)
 			await ctx.respond(res, embed=embed, ephemeral=True)
 		except discord.HTTPException:
-			error = loc.response("profile_embed", "edit", "error2", ctx.interaction.locale)
+			error = loc.response("profile_embed", "edit", "error-url", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			db.update_character(ctx.guild.id, ctx.interaction.user.id, name, field_to_change, previous_content)
 
 # ------------------------------------------------------------------------
 # /profile embed field
 # ------------------------------------------------------------------------
-	@profile_embed.command(name="field")
-	@option("name", str, description="Your character's display name")
-	@option("field_title", str, description="Up to 256 characters")
-	@option("field_content", str, description="Up to 1024 characters")
+	@profile_embed.command(name="field",
+		name_localizations=loc.command_names("profile_embed", "field"),
+		description_localizations=loc.command_descriptions("profile_embed", "field"))
+	@option("name", str,
+		description="Your character's display name",
+		name_localizations=loc.option_names("profile_embed", "field", "name"),
+		description_localizations=loc.option_descriptions("profile_embed", "field", "name"))
+	@option("field_title", str,
+		description="Up to 256 characters",
+		name_localizations=loc.option_names("profile_embed", "field", "field_title"),
+		description_localizations=loc.option_descriptions("profile_embed", "field", "field_title"))
+	@option("field_content", str,
+		description="Up to 1024 characters",
+		name_localizations=loc.option_names("profile_embed", "field", "field_content"),
+		description_localizations=loc.option_descriptions("profile_embed", "field", "field_content"))
 	async def profile_embed_field(self, ctx, name, field_title, field_content):
 		"""Add or edit up to 25 fields to your character's profile embed"""
 
@@ -118,7 +128,8 @@ class ProfilePublicCog(commands.Cog):
 
 		# Enforce limit of 25 fields
 		if (field_title not in fields.keys() and len(fields) == 25):
-			await ctx.respond("You must remove a field before adding a new one!", ephemeral=True)
+			error = loc.response("profile_embed", "field", "error-limit", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Make changes to dict
@@ -129,25 +140,36 @@ class ProfilePublicCog(commands.Cog):
 
 		# Notify if char not found
 		if (not char_updated):
-			await ctx.respond("Could not find a character with that name for you!", ephemeral=True)
+			error = loc.response("profile_embed", "field", "error1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 
 		# Attempt to send embed and warn if limits have been exceeded
 		try:
 			embed = utils.get_profile_embed(ctx.guild.id, ctx.interaction.user.id, name)
-			await ctx.respond("Updated", embed=embed, ephemeral=True)
+			res = loc.response("profile_embed", "field", "res1", ctx.interaction.locale)
+			await ctx.respond(res, embed=embed, ephemeral=True)
 		except:
-			await ctx.respond("Your embed has exceeded the maximum length of 6000. Reverting.", ephemeral=True)
+			error = loc.response("profile_embed", "field", "error-length", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			fields.pop(field_title)
 			db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileFields", utils.dict_to_str(fields))
 
 # ------------------------------------------------------------------------
 # /profile embed desc
 # ------------------------------------------------------------------------
-	@profile_embed.command(name="desc")
-	@option("name", str, description="Your character's display name")
-	@option("content", str, description="Up to 4096 characters")
+	@profile_embed.command(name="desc",
+		name_localizations=loc.command_names("profile_embed", "desc"),
+		description_localizations=loc.command_descriptions("profile_embed", "desc"))
+	@option("name", str,
+		description="Your character's display name",
+		name_localizations=loc.option_names("profile_embed", "desc", "name"),
+		description_localizations=loc.option_descriptions("profile_embed", "desc", "name"))
+	@option("content", str,
+		description="Up to 4096 characters",
+		name_localizations=loc.option_names("profile_embed", "desc", "content"),
+		description_localizations=loc.option_descriptions("profile_embed", "desc", "content"))
 	async def profile_embed_desc(self, ctx, name, content):
 		"""Add or edit profile embed description"""
 
@@ -162,16 +184,19 @@ class ProfilePublicCog(commands.Cog):
 
 		# Notify if char not found
 		if (not char_updated):
-			await ctx.respond("Could not find a character with that name for you!", ephemeral=True)
+			error = loc.response("profile_embed", "desc", "error1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 
 		# Attempt to send embed and warn if limits have been exceeded
 		try:
-			embed = utils.get_profile_embed(ctx.guild.id, ctx.interaction.user.id, name)
-			await ctx.respond("Updated", embed=embed, ephemeral=True)
+			res = loc.response("profile_embed", "desc", "res1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			await ctx.respond(res, embed=embed, ephemeral=True)
 		except:
-			await ctx.respond("Your embed has exceeded the maximum length of 6000. Reverting.", ephemeral=True)
+			error = loc.response("profile_embed", "desc", "error-length", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileDesc", previous_content)
 
 # ------------------------------------------------------------------------
@@ -265,7 +290,7 @@ class ProfilePublicCog(commands.Cog):
 		description_localizations=loc.common("visible-desc"))
 	async def profile_list(self, ctx, visible):
 		"""Lists all registered characters for this server"""
-		
+
 		all_chars = db.get_all_chars(ctx.guild.id)
 
 		title = loc.response("profile", "list", "res1", ctx.interaction.locale).format(ctx.guild.name)
