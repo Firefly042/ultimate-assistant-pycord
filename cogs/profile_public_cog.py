@@ -10,11 +10,8 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-# import aiocron
-
-# from config import ADMIN_ROLE, PLAYER_ROLE
 import db
-
+import localization as loc
 from utils import utils
 
 # ------------------------------------------------------------------------
@@ -36,8 +33,13 @@ class ProfilePublicCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	profile = SlashCommandGroup("profile", "Character profiles")
+	profile = SlashCommandGroup("profile", "Character profiles",
+		name_localizations=loc.group_names("profile"),
+		description_localizations=loc.group_descriptions("profile"))
+
 	profile_embed = profile.create_subgroup("embed", "Profile editing")
+	profile_embed.name_localizations = loc.group_names("profile_embed")
+	profile_embed.description_localizations = loc.group_descriptions("profile_embed")
 
 
 # ------------------------------------------------------------------------
@@ -46,10 +48,20 @@ class ProfilePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /profile embed edit
 # ------------------------------------------------------------------------
-	@profile_embed.command(name="edit")
-	@option("name", str, description="Your character's display name")
-	@option("field_to_change", str, choices=["HexColor", "ThumbnailURL", "ImageURL"])
-	@option("new_value", str, description="Hex code (without #) or image url")
+	@profile_embed.command(name="edit",
+		description="Your character's display name",
+		name_localizations=loc.command_names("profile_embed", "edit"),
+		description_localizations=loc.command_descriptions("profile_embed", "edit"))
+	@option("name", str,
+		description="Your character's display name",
+		name_localizations=loc.option_names("profile_embed", "edit", "name"),
+		description_localizations=loc.option_descriptions("profile_embed", "edit", "name"))
+	@option("field_to_change", str,
+		choices=["HexColor", "ThumbnailURL", "ImageURL"])
+	@option("new_value", str,
+		description="Hex code (without #) or image url",
+		name_localizations=loc.option_names("profile_embed", "edit", "new_value"),
+		description_localizations=loc.option_descriptions("profile_embed", "edit", "new_value"))
 	async def profile_embed_edit(self, ctx, name, field_to_change, new_value):
 		"""Edit profile embed fields (color, thumbnail, or image)"""
 
@@ -57,7 +69,8 @@ class ProfilePublicCog(commands.Cog):
 		if (field_to_change == "HexColor"):
 			match = re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', new_value)
 			if (not match):
-				await ctx.respond(f"#{new_value} is not a valid hex!", ephemeral=True)
+				error = loc.response("profile_embed", "edit", "error-hex", ctx.interaction.locale).format(new_value)
+				await ctx.respond(error, ephemeral=True)
 				return
 
 		# Get previous image content
@@ -71,15 +84,18 @@ class ProfilePublicCog(commands.Cog):
 
 		# Notify if no changes (char not found)
 		if (not char_updated):
-			await ctx.respond("Could not find a character with that name for you!", ephemeral=True)
+			error = loc.response("profile_embed", "edit", "error1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Preview embed, warn and revert if malformed image URL
 		try:
 			embed = utils.get_profile_embed(ctx.guild.id, ctx.interaction.user.id, name)
-			await ctx.respond("Updated", embed=embed, ephemeral=True)
+			res = loc.response("profile_embed", "edit", "res1", ctx.interaction.locale)
+			await ctx.respond(res, embed=embed, ephemeral=True)
 		except discord.HTTPException:
-			await ctx.respond("I cannot display that image URL! Reverting.", ephemeral=True)
+			error = loc.response("profile_embed", "edit", "error2", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			db.update_character(ctx.guild.id, ctx.interaction.user.id, name, field_to_change, previous_content)
 
 # ------------------------------------------------------------------------
@@ -161,43 +177,71 @@ class ProfilePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /profile swap
 # ------------------------------------------------------------------------
-	@profile.command(name="swap")
-	@option("name", str, description="Display name of character to swap to")
-	@option("visible", bool, default=False, description="Set to True for a permanent reply")
+	@profile.command(name="swap",
+		name_localizations=loc.command_names("profile", "swap"),
+		description_localizations=loc.command_descriptions("profile", "swap"))
+	@option("name", str,
+		description="Display name of character to swap to",
+		name_localizations=loc.option_names("profile", "swap", "name"),
+		description_localizations=loc.option_descriptions("profile", "swap", "name"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def profile_swap(self, ctx, name, visible):
 		"""Set your active character"""
 
 		try:
 			db.set_active_character(ctx.guild.id, ctx.interaction.user.id, name)
 		except:
-			await ctx.respond(f"Cannot find a character named {name} for you!", ephemeral=True)
+			error = loc.response("profile", "swap", "error1", ctx.interaction.locale).format(name)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Swapped character to {name}", ephemeral=not visible)
+		res = loc.response("profile", "swap", "res1", ctx.interaction.locale).format(name)
+		await ctx.respond(res, ephemeral=not visible)
 
 # ------------------------------------------------------------------------
 # /profile current
 # ------------------------------------------------------------------------
-	@profile.command(name="current")
-	@option("visible", bool, default=False, description="Set to True for a permanent reply")
+	@profile.command(name="current",
+		name_localizations=loc.command_names("profile", "current"),
+		description_localizations=loc.command_descriptions("profile", "current"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def profile_current(self, ctx, visible):
 		"""Check your active character"""
 
 		char = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 		try:
-			await ctx.respond(f"You are currently playing as **{char['Name']}**", ephemeral=not visible)
+			res = loc.response("profile", "current", "res1", ctx.interaction.locale).format(char["Name"])
+			await ctx.respond(res, ephemeral=not visible)
 		except TypeError:
-			await ctx.respond("You do not currently have an active character!", ephemeral=True)
+			error = loc.common("no-character")
+			await ctx.respond(error, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /profile view
 # ------------------------------------------------------------------------
-	@profile.command(name="view")
-	@option("player", discord.Member, description="The user")
-	@option("name", str, description="The character's display (first) name")
-	@option("visible", bool, default=False, description="Set to True for a permanent reply")
+	@profile.command(name="view",
+		name_localizations=loc.command_names("profile", "view"),
+		description_localizations=loc.command_descriptions("profile", "view"))
+	@option("player", discord.Member,
+		description="The user who plays this character",
+		name_localizations=loc.option_names("profile", "view", "player"),
+		description_localizations=loc.option_descriptions("profile", "view", "player"))
+	@option("name", str,
+		description="Character's display name (usually given name)",
+		name_localizations=loc.option_names("profile", "view", "name"),
+		description_localizations=loc.option_descriptions("profile", "view", "name"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def profile_view(self, ctx, player, name, visible):
-		"""View a character's profile. Invisible by default"""
+		"""View a character's profile"""
 
 		embed = utils.get_profile_embed(ctx.guild.id, player.id, name)
 		await ctx.respond(embed=embed, ephemeral=not visible)
@@ -205,24 +249,34 @@ class ProfilePublicCog(commands.Cog):
 	@profile_view.error
 	async def profile_view_error(self, ctx, _):
 		"""Won't catch exception in normal method for some reason. So it's here."""
-		await ctx.respond("Cannot find that character for that player!", ephemeral=True)
+
+		error = loc.response("profile", "view", "error1", ctx.interaction.locale)
+		await ctx.respond(error, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /profile list
 # ------------------------------------------------------------------------
-	@profile.command(name="list", )
-	@option("visible", bool, default=False, description="Set to True for a permanent reply")
+	@profile.command(name="list",
+		name_localizations=loc.command_names("profile", "list"),
+		description_localizations=loc.command_descriptions("profile", "list"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def profile_list(self, ctx, visible):
-		"""Lists all registered characters for server"""
+		"""Lists all registered characters for this server"""
+		
 		all_chars = db.get_all_chars(ctx.guild.id)
 
-		embed = discord.Embed(title=f"Characters in {ctx.guild.name}")
+		title = loc.response("profile", "list", "res1", ctx.interaction.locale).format(ctx.guild.name)
+		embed = discord.Embed(title=title)
 
 		# Order chars by name, error if no characters
 		try:
 			all_chars = sorted(all_chars, key=lambda d: d["Name"])
 		except TypeError:
-			await ctx.respond("This server has no registered characters!")
+			error = loc.response("profile", "list", "error1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		msg = ""
