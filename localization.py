@@ -124,4 +124,3 @@ def response(group, command, res_tag, locale):
 
     return res
 
-print(group_names("profile"))
