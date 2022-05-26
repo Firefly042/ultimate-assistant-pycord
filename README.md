@@ -1,6 +1,6 @@
-<a href='https://discord.com/api/oauth2/authorize?client_id=517165856933937153&permissions=275146411008&scope=bot+applications.commands' target='_blank'><img height='36' style='border:0px;height:48px;' src='./images/badge-invite.png' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-<a href='https://ko-fi.com/X8X4C9DD1' target='_blank'><img height='36' style='border:0px;height:48px;' src='./images/badge-donation.png' border='0' alt='Invite to your server' /></a>
-<a href='https://discord.gg/VZYKBptWFJ' target='_blank'><img height='36' style='border:0px;height:48px;' src='./images/badge-server.png' border='0' alt='Support server' /></a>
+<a href='https://discord.com/api/oauth2/authorize?client_id=517165856933937153&permissions=275146411008&scope=bot+applications.commands' target='_blank'><img style='border:0px;height:48px;' src='./images/badge-invite.png' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href='https://ko-fi.com/X8X4C9DD1' target='_blank'><img style='border:0px;height:48px;' src='./images/badge-donation.png' border='0' alt='Invite to your server' /></a>
+<a href='https://discord.gg/VZYKBptWFJ' target='_blank'><img style='border:0px;height:48px;' src='./images/badge-server.png' border='0' alt='Support server' /></a>
 
 *Last updated: 26 May 2022*
 
