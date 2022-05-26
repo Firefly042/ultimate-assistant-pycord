@@ -1,6 +1,8 @@
-<a href='https://ko-fi.com/X8X4C9DD1' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href='https://discord.com/api/oauth2/authorize?client_id=517165856933937153&permissions=275146411008&scope=bot+applications.commands' target='_blank'><img height='36' style='border:0px;height:64px;' src='./images/badge-invite.png' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href='https://ko-fi.com/X8X4C9DD1' target='_blank'><img height='36' style='border:0px;height:64px;' src='./images/badge-donation.png' border='0' alt='Invite to your server' /></a>
+<a href='https://discord.gg/VZYKBptWFJ' target='_blank'><img height='36' style='border:0px;height:64px;' src='./images/badge-server.png' border='0' alt='Support server' /></a>
 
-Last updated: 23 May 2022
+*Last updated: 26 May 2022*
 
 # Introduction
 Ultimate Assistant is a discord bot maintained by user @Firefly#7113. It aims to provide simple yet versatile utilities for discord-hosted rpgs ranging from asynchronous thread-style games to traditional sitdown tabletops. The bot includes a highly customizable profile system, automated/scheduled posting, flexible dice commands, inventories, and investigatable objects. 
@@ -10,10 +12,6 @@ Further information can be found on this repository's wiki including:
 * Hosting instructions
 * Contribution guidelines 
 * Privacy Policy and Terms of Service
-
-
-# Invite
-[Invite to your server](https://discord.com/api/oauth2/authorize?client_id=517165856933937153&permissions=275146435600&scope=bot%20applications.commands)
 
 
 # Setting up your server
