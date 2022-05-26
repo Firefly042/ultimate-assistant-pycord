@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="badges.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-center="true"
+     inkscape:snap-others="true"
+     inkscape:zoom="1.5287037"
+     inkscape:cx="104.33677"
+     inkscape:cy="433.37371"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <clipPath
+       id="clip0">
+      <rect
+         width="71"
+         height="55"
+         fill="white"
+         id="rect27375" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#87e082;fill-opacity:1;stroke:#222222;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect846"
+       width="108.34615"
+       height="20.162878"
+       x="21.115387"
+       y="103.1483"
+       ry="7.169024"
+       rx="0"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-donation.png"
+       inkscape:export-xdpi="76.887932"
+       inkscape:export-ydpi="76.887932" />
+    <text
+       xml:space="preserve"
+       style="font-size:11.2889px;line-height:0.85;font-family:sans-serif;stroke-width:0.264583"
+       x="43.847111"
+       y="117.10207"
+       id="text5657"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-donation.png"
+       inkscape:export-xdpi="76.887932"
+       inkscape:export-ydpi="76.887932"><tspan
+         sodipodi:role="line"
+         id="tspan5655"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:11.2889px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift Semi-Bold';stroke-width:0.264583"
+         x="43.847111"
+         y="117.10207">Buy me a coffee</tspan></text>
+    <rect
+       style="fill:#5865f2;fill-opacity:1;stroke:#222222;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect846-2"
+       width="108.34615"
+       height="20.162878"
+       x="21.115387"
+       y="125.95702"
+       ry="7.169024"
+       rx="0"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-server.png"
+       inkscape:export-xdpi="76.887932"
+       inkscape:export-ydpi="76.887932" />
+    <text
+       xml:space="preserve"
+       style="font-size:11.2889px;line-height:0.85;font-family:sans-serif;stroke-width:0.264583"
+       x="44.662376"
+       y="139.98642"
+       id="text5657-4"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-server.png"
+       inkscape:export-xdpi="76.887932"
+       inkscape:export-ydpi="76.887932"><tspan
+         sodipodi:role="line"
+         id="tspan5655-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:11.2889px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift Semi-Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         x="44.662376"
+         y="139.98642">Support Server</tspan></text>
+    <g
+       style="fill:none"
+       id="g27388"
+       transform="matrix(0.20381825,0,0,0.20381825,26.665,130.51272)"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-server.png"
+       inkscape:export-xdpi="76.887932"
+       inkscape:export-ydpi="76.887932">
+      <path
+         d="M 60.1045,4.8978 C 55.5792,2.8214 50.7265,1.2916 45.6527,0.41542 45.5603,0.39851 45.468,0.440769 45.4204,0.525289 44.7963,1.6353 44.105,3.0834 43.6209,4.2216 38.1637,3.4046 32.7345,3.4046 27.3892,4.2216 26.905,3.0581 26.1886,1.6353 25.5617,0.525289 25.5141,0.443589 25.4218,0.40133 25.3294,0.41542 20.2584,1.2888 15.4057,2.8186 10.8776,4.8978 10.8384,4.9147 10.8048,4.9429 10.7825,4.9795 1.57795,18.7309 -0.943561,32.1443 0.293408,45.3914 c 0.005597,0.0648 0.041978,0.1268 0.092353,0.1662 6.072899,4.4598 11.955539,7.1673 17.728939,8.9619 0.0924,0.0282 0.1903,-0.0056 0.2491,-0.0817 1.3657,-1.865 2.5831,-3.8315 3.6269,-5.8995 0.0616,-0.1211 0.0028,-0.2648 -0.1231,-0.3127 -1.931,-0.7325 -3.7697,-1.6256 -5.5384,-2.6398 -0.1399,-0.0817 -0.1511,-0.2818 -0.0224,-0.3776 0.3722,-0.2789 0.7445,-0.5691 1.0999,-0.8621 0.0643,-0.0535 0.1539,-0.0648 0.2295,-0.031 11.6196,5.3051 24.1992,5.3051 35.6817,0 0.0756,-0.0366 0.1652,-0.0253 0.2323,0.0282 0.3555,0.293 0.7277,0.586 1.1027,0.8649 0.1287,0.0958 0.1203,0.2959 -0.0196,0.3776 -1.7687,1.0339 -3.6074,1.9073 -5.5412,2.637 -0.1259,0.0479 -0.1819,0.1944 -0.1203,0.3155 1.0662,2.0651 2.2836,4.0316 3.6241,5.8967 0.056,0.0789 0.1567,0.1127 0.2491,0.0845 5.8014,-1.7946 11.684,-4.5021 17.7569,-8.9619 0.0532,-0.0394 0.0868,-0.0986 0.0924,-0.1634 C 72.1747,30.0791 68.2147,16.7757 60.1968,4.9823 60.1772,4.9429 60.1437,4.9147 60.1045,4.8978 Z M 23.7259,37.3253 c -3.4983,0 -6.3808,-3.2117 -6.3808,-7.156 0,-3.9443 2.8266,-7.156 6.3808,-7.156 3.5821,0 6.4367,3.2399 6.3807,7.156 0,3.9443 -2.8266,7.156 -6.3807,7.156 z m 23.5919,0 c -3.4982,0 -6.3807,-3.2117 -6.3807,-7.156 0,-3.9443 2.8265,-7.156 6.3807,-7.156 3.5822,0 6.4367,3.2399 6.3808,7.156 0,3.9443 -2.7986,7.156 -6.3808,7.156 z"
+         fill="#ffffff"
+         id="path27371" />
+    </g>
+    <rect
+       style="fill:#5865f2;fill-opacity:1;stroke:#222222;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       id="rect846-2-0"
+       width="77.174721"
+       height="20.318367"
+       x="20.870619"
+       y="151.33577"
+       ry="7.2243094"
+       rx="0"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-invite.png"
+       inkscape:export-xdpi="76.354599"
+       inkscape:export-ydpi="76.354599" />
+    <text
+       xml:space="preserve"
+       style="font-size:11.2889px;line-height:0.85;font-family:sans-serif;stroke-width:0.264583"
+       x="44.495354"
+       y="165.44292"
+       id="text5657-4-8"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-invite.png"
+       inkscape:export-xdpi="76.354599"
+       inkscape:export-ydpi="76.354599"><tspan
+         sodipodi:role="line"
+         id="tspan5655-0-1"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:11.2889px;font-family:Bahnschrift;-inkscape-font-specification:'Bahnschrift Semi-Bold';fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         x="44.495354"
+         y="165.44292">Invite Bot</tspan></text>
+    <g
+       style="fill:none"
+       id="g27388-0"
+       transform="matrix(0.20381825,0,0,0.20381825,26.49798,155.96926)"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-invite.png"
+       inkscape:export-xdpi="76.354599"
+       inkscape:export-ydpi="76.354599">
+      <path
+         d="M 60.1045,4.8978 C 55.5792,2.8214 50.7265,1.2916 45.6527,0.41542 45.5603,0.39851 45.468,0.440769 45.4204,0.525289 44.7963,1.6353 44.105,3.0834 43.6209,4.2216 38.1637,3.4046 32.7345,3.4046 27.3892,4.2216 26.905,3.0581 26.1886,1.6353 25.5617,0.525289 25.5141,0.443589 25.4218,0.40133 25.3294,0.41542 20.2584,1.2888 15.4057,2.8186 10.8776,4.8978 10.8384,4.9147 10.8048,4.9429 10.7825,4.9795 1.57795,18.7309 -0.943561,32.1443 0.293408,45.3914 c 0.005597,0.0648 0.041978,0.1268 0.092353,0.1662 6.072899,4.4598 11.955539,7.1673 17.728939,8.9619 0.0924,0.0282 0.1903,-0.0056 0.2491,-0.0817 1.3657,-1.865 2.5831,-3.8315 3.6269,-5.8995 0.0616,-0.1211 0.0028,-0.2648 -0.1231,-0.3127 -1.931,-0.7325 -3.7697,-1.6256 -5.5384,-2.6398 -0.1399,-0.0817 -0.1511,-0.2818 -0.0224,-0.3776 0.3722,-0.2789 0.7445,-0.5691 1.0999,-0.8621 0.0643,-0.0535 0.1539,-0.0648 0.2295,-0.031 11.6196,5.3051 24.1992,5.3051 35.6817,0 0.0756,-0.0366 0.1652,-0.0253 0.2323,0.0282 0.3555,0.293 0.7277,0.586 1.1027,0.8649 0.1287,0.0958 0.1203,0.2959 -0.0196,0.3776 -1.7687,1.0339 -3.6074,1.9073 -5.5412,2.637 -0.1259,0.0479 -0.1819,0.1944 -0.1203,0.3155 1.0662,2.0651 2.2836,4.0316 3.6241,5.8967 0.056,0.0789 0.1567,0.1127 0.2491,0.0845 5.8014,-1.7946 11.684,-4.5021 17.7569,-8.9619 0.0532,-0.0394 0.0868,-0.0986 0.0924,-0.1634 C 72.1747,30.0791 68.2147,16.7757 60.1968,4.9823 60.1772,4.9429 60.1437,4.9147 60.1045,4.8978 Z M 23.7259,37.3253 c -3.4983,0 -6.3808,-3.2117 -6.3808,-7.156 0,-3.9443 2.8266,-7.156 6.3808,-7.156 3.5821,0 6.4367,3.2399 6.3807,7.156 0,3.9443 -2.8266,7.156 -6.3807,7.156 z m 23.5919,0 c -3.4982,0 -6.3807,-3.2117 -6.3807,-7.156 0,-3.9443 2.8265,-7.156 6.3807,-7.156 3.5822,0 6.4367,3.2399 6.3808,7.156 0,3.9443 -2.7986,7.156 -6.3808,7.156 z"
+         fill="#ffffff"
+         id="path27371-2" />
+    </g>
+    <image
+       width="17.496843"
+       height="12.119764"
+       preserveAspectRatio="none"
+       style="image-rendering:optimizeQuality"
+       xlink:href="data:image/png;base64,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
+gg==
+"
+       id="image39970"
+       x="25.152126"
+       y="107.29772"
+       inkscape:export-filename="D:\Projects\Discord Bots\ultimate_assistant_pycord\images\badge-donation.png"
+       inkscape:export-xdpi="76.887932"
+       inkscape:export-ydpi="76.887932" />
+  </g>
+</svg>
