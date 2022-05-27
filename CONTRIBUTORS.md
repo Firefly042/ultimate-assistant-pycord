@@ -17,5 +17,5 @@ Thank you to all who have put their time into improving this project. This has a
 > No one yet
 
 # Joining this List
-Check [the wiki](https://github.com/Firefly042/ultimate-assistant-pycord/wiki/Contributing) for contribution guidelines. Localization can be done entirely in-browser with zero coding experience!
+Check [CONTRIBUTING](./CONTRIBUTING.md) for contribution guidelines. Localization can be done entirely in-browser with zero coding experience!
 For further help, join the [support server](https://discord.gg/VZYKBptWFJ) on Discord.
