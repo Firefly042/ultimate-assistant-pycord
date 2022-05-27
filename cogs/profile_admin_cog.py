@@ -9,6 +9,7 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 import db
+import localization as loc
 
 
 # ------------------------------------------------------------------------
@@ -40,11 +41,25 @@ class ProfileAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /profile_admin new
 # ------------------------------------------------------------------------
-	@profile_admin.command(name="new")
-	@option("player", discord.Member, description="Who will play this character")
-	@option("name", str, description="The character's given/default name to display. 32 character max")
-	@option("surname", str, description="The rest of the character's name, if any. 32 character max", default=None)
-	@option("channel", discord.TextChannel, description="Where anonymous messages and whispers will be sent.", default=None)
+	@profile_admin.command(name="new",
+		name_localizations=loc.command_names("profile_admin", "new"),
+		description_localizations=loc.command_descriptions("profile_admin", "new"))
+	@option("player", discord.Member,
+		description="Who will play this character",
+		name_localizations=loc.option_names("profile_admin", "new", "player"),
+		description_localizations=loc.option_descriptions("profile_admin", "new", "player"))
+	@option("name", str,
+		description="The character's given/default name to display. 32 character max",
+		name_localizations=loc.option_names("profile_admin", "new", "name"),
+		description_localizations=loc.option_names("profile_admin", "new", "name"))
+	@option("surname", str, default=None,
+		description="The rest of the character's name, if any. 32 character max",
+		name_localizations=loc.option_names("profile_admin", "new", "surname"),
+		description_localizations=loc.option_names("profile_admin", "new", "surname"))
+	@option("channel", discord.TextChannel, default=None,
+		description="Where anonymous messages and whispers will be sent",
+		name_localizations=loc.option_names("profile_admin", "new", "channel"),
+		description_localizations=loc.option_names("profile_admin", "new", "channel"))
 	async def profile_admin_new(self, ctx, player, name, surname, channel):
 		"""Register a player, character, and name to the bot"""
 
@@ -61,7 +76,8 @@ class ProfileAdminCog(commands.Cog):
 		try:
 			db.new_character(ctx.guild.id, player.id, name, surname, channel_id)
 		except:
-			await ctx.respond(f"Cannot add {name} without causing a duplicate!", ephemeral=True)
+			error = loc.response("profile_admin", "new", "error1", ctx.interaction.locale).format(name)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Set it as active character for the player
@@ -70,16 +86,33 @@ class ProfileAdminCog(commands.Cog):
 		# Discord response (success)
 		if (not surname):
 			surname = ""
-		await ctx.respond(f"Added {name} {surname}")
+
+		res = loc.response("profile_admin", "new", "res1", ctx.interaction.locale).format(name, surname)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /profile_admin edit text
 # ------------------------------------------------------------------------
-	@profile_admin_edit.command(name="text")
-	@option("player", discord.Member, description="The player")
-	@option("name", str, description="Character's display name.")
-	@option("field_to_change", str, choices=["Name", "Surname"], description="Specify Name or Surname.")
-	@option("new_value", str, description="New name or surname. 32 character maximum")
+	@profile_admin_edit.command(name="text",
+		name_localizations=loc.command_names("profile_admin_edit", "text"),
+		description_localizations=loc.command_descriptions("profile_admin_edit", "text"))
+	@option("player", discord.Member,
+		description="Who plays this character",
+		name_localizations=loc.option_names("profile_admin_edit", "text", "player"),
+		description_localizations=loc.option_names("profile_admin_edit", "text", "player"))
+	@option("name", str,
+		description="The character's display name",
+		name_localizations=loc.option_names("profile_admin_edit", "text", "name"),
+		description_localizations=loc.option_names("profile_admin_edit", "text", "name"))
+	@option("field_to_change", str,
+		choices=["Name", "Surname"],
+		description="Specify Name or Surname.",
+		name_localizations=loc.option_names("profile_admin_edit", "text", "field_to_change"),
+		description_localizations=loc.option_names("profile_admin_edit", "text", "field_to_change"))
+	@option("new_value", str,
+		description="New name or surname. 32 character maximum",
+		name_localizations=loc.option_names("profile_admin_edit", "text", "new_value"),
+		description_localizations=loc.option_names("profile_admin_edit", "text", "new_value"))
 	async def profile_admin_edit_text(self, ctx, player, name, field_to_change, new_value):
 		"""Edit a character's name or surname"""
 
@@ -89,23 +122,34 @@ class ProfileAdminCog(commands.Cog):
 		try:
 			char_updated = db.update_character(ctx.guild.id, player.id, name, field_to_change, new_value)
 		except:
-			await ctx.respond(f"Cannot edit {name} without causing a duplicate!", ephemeral=True)
+			error = loc.response("profile_admin_edit", "text", "error-duplicate", ctx.interaction.locale).format(name)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Notify if nothing was changed (char not found)
 		if (not char_updated):
-			await ctx.respond("Could not find a character with that name for that player!", ephemeral=True)
+			error = loc.response("profile_admin_edit", "text", "error1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Discord response (success)
-		await ctx.respond(f"Updated character for {player.name}.")
+		res = loc.response("profile_admin_edit", "text", "res1", ctx.interaction.locale).format(player.name)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /profile_admin edit channel
 # ------------------------------------------------------------------------
-	@profile_admin_edit.command(name="channel",)
-	@option("player", discord.Member)
-	@option("name", str)
+	@profile_admin_edit.command(name="channel",
+		name_localizations=loc.command_names("profile_admin_edit", "channel"),
+		description_localizations=loc.command_descriptions("profile_admin_edit", "channel"))
+	@option("player", discord.Member,
+		description="Who plays this character",
+		name_localizations=loc.option_names("profile_admin_edit", "channel", "player"),
+		description_localizations=loc.option_names("profile_admin_edit", "channel", "player"))
+	@option("name", str,
+		description="The character's display name",
+		name_localizations=loc.option_names("profile_admin_edit", "channel", "name"),
+		description_localizations=loc.option_names("profile_admin_edit", "channel", "name"))
 	@option("channel", discord.TextChannel)
 	async def profile_admin_edit_channel(self, ctx, player, name, channel):
 		"""Add or edit a character's associated channel"""
@@ -115,35 +159,55 @@ class ProfileAdminCog(commands.Cog):
 
 		# Notify if nothing was changed (char not found)
 		if (not char_updated):
-			await ctx.respond("Could not find a character with that name for that player!", ephemeral=True)
+			error = loc.response("profile_admin_edit", "channel", "error1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		# Discord response
-		await ctx.respond(f"Updated character for {player.name}")
+		# Discord response (success)
+		res = loc.response("profile_admin_edit", "channel", "res1", ctx.interaction.locale).format(player.name)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /profile_admin rm
 # ------------------------------------------------------------------------
-	@profile_admin.command(name="rm")
-	@option("player", discord.Member, description="Who played this character")
-	@option("name", str, description="The character's display name")
+	@profile_admin.command(name="rm",
+		name_localizations=loc.command_names("profile_admin", "rm"),
+		description_localizations=loc.command_descriptions("profile_admin", "rm"))
+	@option("player", discord.Member,
+		description="Who played this character",
+		name_localizations=loc.option_names("profile_admin", "rm", "player"),
+		description_localizations=loc.option_descriptions("profile_admin", "rm", "player"))
+	@option("name", str,
+		description="The character's display name",
+		name_localizations=loc.option_names("profile_admin", "rm", "name"),
+		description_localizations=loc.option_descriptions("profile_admin", "rm", "name"))
 	async def profile_admin_rm(self, ctx, player, name):
 		"""Unregister a character"""
 
 		char_removed = db.remove_character(ctx.guild.id, player.id, name)
 
 		if (not char_removed):
-			await ctx.respond("Could not find that character under that player!", ephemeral=True)
+			error = loc.response("profile_admin", "rm", "error1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Removed {name}. This player may not have an active character anymore, but can `/profile swap` to another!")
+		res = loc.response("profile_admin", "rm", "res1", ctx.interaction.locale).format(name)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /profile_admin disable
 # ------------------------------------------------------------------------
-	@profile_admin.command(name="disable")
-	@option("player", discord.Member)
-	@option("name", str)
+	@profile_admin.command(name="disable",
+		name_localizations=loc.command_names("profile_admin", "disable"),
+		description_localizations=loc.command_descriptions("profile_admin", "disable"))
+	@option("player", discord.Member,
+		description="Who plays this character",
+		name_localizations=loc.option_names("profile_admin", "disable", "player"),
+		description_localizations=loc.option_descriptions("profile_admin", "disable", "player"))
+	@option("name", str,
+		description="The character's display name",
+		name_localizations=loc.option_names("profile_admin", "disable", "name"),
+		description_localizations=loc.option_descriptions("profile_admin", "disable", "player"))
 	async def profile_admin_disable(self, ctx, player, name):
 		"""Set a character to inactive (disabling the player's ability to use commands)"""
 
@@ -152,8 +216,10 @@ class ProfileAdminCog(commands.Cog):
 
 		# Notify if nothing was changed (char not found)
 		if (not char_updated):
-			await ctx.respond("Could not find a character with that name for that player!", ephemeral=True)
+			error = loc.response("profile_admin", "disable", "error1", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Discord response
-		await ctx.respond(f"Disabled character for {player.name}")
+		res = loc.response("profile_admin", "disable", "res1", ctx.interaction.locale).format(player.name)
+		await ctx.respond(res)
