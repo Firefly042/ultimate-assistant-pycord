@@ -1,5 +1,5 @@
 ### Bug or Request addressed
-[#xxxx](https://issue-link)
+#xxxx
 
 ### Demonstration
 Optional screenshot(s) of feature or bug fix
