@@ -1,5 +1,5 @@
 ### Addressed issue
-[#xxxx](https://issue-link)
+#xxxx
 
 ### Checklist
 *`[X]` to mark as complete*
