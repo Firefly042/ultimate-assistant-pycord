@@ -2,8 +2,8 @@
 This is a very small and casual project. Do your best to follow the established format if adding anything. The code is linted with pylint to the best of abilities. All contributions are welcome, even if it's a simple typo correction or clarification! Feature requests can be made in Issues with an appropriate tag, or brought to the [support server](https://discord.gg/VZYKBptWFJ).
 
 
-# Getting Credit
-If you are not comfortable with github, simply ask the developer (@Firefly#7113) for proof via the support server or DM! Be ready to provide proof of your work.
+## Getting Credit
+If you are not comfortable with github, simply ask the developer (@Firefly#7113) for credit via the support server or DM! Be ready to provide proof of your work.
 
 If you are comfortable with github, you may submit a pull request with the 'credit request' label. The template will have a space to provide proof of your work. The steps to do this are:
 
@@ -14,7 +14,7 @@ If you are comfortable with github, you may submit a pull request with the 'cred
 5. Submit a **pull request** to the **main** branch of this repository (Firefly042) following the provided template. Be sure to use the **credit request** label.
 
 
-## For Translators
+# For Translators
 All translators can request access to [this crowdin project](https://crowdin.com/project/ultimate-assistant). Joining the support server is highly recommended to get the fastest response to your request or any question (you'll also get a fancy role).
 
 **Guidelines**
@@ -23,15 +23,15 @@ All translators can request access to [this crowdin project](https://crowdin.com
 * Do *not* directly edit any localization files in the repository. They are overwritten by the crowdin build.
 
 
-## For Writers
-If you would like to propose a change to names, descriptions, or responses, either create an **Issue** or mention it in the support server. If you are comfortable with github, you may also edit the strings directly in `localizations/en-US.json` and the corresponding command file(s). 
+# For Writers
+If you would like to propose a change to names, descriptions, or responses, either create an **Issue** or mention it in the support server. If you are comfortable with github forking, branching, and pull requests, you may also edit the strings directly in `localizations/en-US.json` and the corresponding command file(s). [Here](https://github.com/firstcontributions/first-contributions/blob/master/gui-tool-tutorials/github-desktop-tutorial.md) is a good guide that can be adjusted to work entirely in-browser. 
 
-1. If you are submitting a pull request, you must create an **Issue** with the **string rewording** tag. Discussing in the support server is also recommended.
-2. Follow the steps above to make your changes. You *must* edit the default strings in the corresponding command files.
-3. You can include your contribution credit in this as well, be sure to add the 'credit request' label if you do so.
+1. If you are submitting a pull request, you must create an **Issue** with the **string rewording** tag. Discussing in the support server is also recommended if you are proposing more than a spelling/grammar fix.
+2. Follow the guide to make your changes. You *must* edit the default strings in the corresponding command files.
+3. You can include your contribution credit in this as well. Be sure to add the 'credit request' label if you do so.
 
 
-## For Coders
+# For Coders
 You are likely familiar enough with Github's fork and branch workflow. If not, follow the linked guide in the Translator section. If you're not familiar with discord bots, follow the Hosting instructions on the wiki's Home page.
 
 1. Submit an Issue (bug or feature request) if there isn't one yet. 
