@@ -11,7 +11,8 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 import db
-import localization as loc
+from localization import loc
+
 from utils import utils
 
 # ------------------------------------------------------------------------
@@ -83,7 +84,7 @@ class ProfilePublicCog(commands.Cog):
 
 		# Notify if no changes (char not found)
 		if (not char_updated):
-			error = loc.response("profile_embed", "edit", "error1", ctx.interaction.locale)
+			error = loc.response("profile_embed", "edit", "error-missing", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -140,7 +141,7 @@ class ProfilePublicCog(commands.Cog):
 
 		# Notify if char not found
 		if (not char_updated):
-			error = loc.response("profile_embed", "field", "error1", ctx.interaction.locale)
+			error = loc.response("profile_embed", "field", "error-missing", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -184,7 +185,7 @@ class ProfilePublicCog(commands.Cog):
 
 		# Notify if char not found
 		if (not char_updated):
-			error = loc.response("profile_embed", "desc", "error1", ctx.interaction.locale)
+			error = loc.response("profile_embed", "desc", "error-missing", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -192,7 +193,7 @@ class ProfilePublicCog(commands.Cog):
 		# Attempt to send embed and warn if limits have been exceeded
 		try:
 			res = loc.response("profile_embed", "desc", "res1", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
+			embed = utils.get_profile_embed(ctx.guild.id, ctx.interaction.user.id, name)
 			await ctx.respond(res, embed=embed, ephemeral=True)
 		except:
 			error = loc.response("profile_embed", "desc", "error-length", ctx.interaction.locale)
@@ -219,7 +220,7 @@ class ProfilePublicCog(commands.Cog):
 		try:
 			db.set_active_character(ctx.guild.id, ctx.interaction.user.id, name)
 		except:
-			error = loc.response("profile", "swap", "error1", ctx.interaction.locale).format(name)
+			error = loc.response("profile", "swap", "error-missing", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -269,13 +270,18 @@ class ProfilePublicCog(commands.Cog):
 		"""View a character's profile"""
 
 		embed = utils.get_profile_embed(ctx.guild.id, player.id, name)
-		await ctx.respond(embed=embed, ephemeral=not visible)
+
+		try:
+			await ctx.respond(embed=embed, ephemeral=not visible)
+		except discord.HTTPException:
+			error = loc.response("profile", "view", "error-url", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 
 	@profile_view.error
 	async def profile_view_error(self, ctx, _):
 		"""Won't catch exception in normal method for some reason. So it's here."""
 
-		error = loc.response("profile", "view", "error1", ctx.interaction.locale)
+		error = loc.response("profile", "view", "error-missing", ctx.interaction.locale)
 		await ctx.respond(error, ephemeral=True)
 
 # ------------------------------------------------------------------------
@@ -300,7 +306,7 @@ class ProfilePublicCog(commands.Cog):
 		try:
 			all_chars = sorted(all_chars, key=lambda d: d["Name"])
 		except TypeError:
-			error = loc.response("profile", "list", "error1", ctx.interaction.locale)
+			error = loc.response("profile", "list", "error-nochars", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 

@@ -8,6 +8,7 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 import db
+from localization import loc
 
 
 # ------------------------------------------------------------------------
@@ -29,7 +30,9 @@ class MessageAdminCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	message_admin = SlashCommandGroup("msg_admin", "Admin messaging management")
+	message_admin = SlashCommandGroup("msg_admin", "Admin messaging management",
+		name_localizations=loc.group_names("msg_admin"),
+		description_localizations=loc.group_descriptions("msg_admin"))
 
 
 # ------------------------------------------------------------------------
@@ -38,19 +41,27 @@ class MessageAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /msg_admin anon
 # ------------------------------------------------------------------------
-	@message_admin.command(name="anon")
-	@option("toggle", str, choices=["ON", "OFF"], description="Select permission")
+	@message_admin.command(name="anon",
+		name_localizations=loc.command_names("msg_admin", "anon"),
+		description_localizations=loc.command_descriptions("msg_admin", "anon"))
+	@option("toggle", str,
+		description="Select permission",
+		choices=loc.choices("msg_admin", "anon", "toggle"),
+		name_localizations=loc.option_names("msg_admin", "anon", "toggle"),
+		description_localizations=loc.option_descriptions("msg_admin", "anon", "toggle"))
 	async def toggle(self, ctx, toggle):
 		"""Enable or disable anonymous messaging. All players will need a private channel to use these."""
 
 		if (toggle == "OFF"):
 			db.edit_guild(ctx.guild.id, "AnonPermitted", 0)
-			await ctx.respond("Anonymous messaging is **disabled** for your server.")
+
+			res = loc.response("msg_admin", "anon", "res1", ctx.interaction.locale)
+			await ctx.respond(res)
 			return
 
 		# Toggle on if chosen, but warn if any characters have not been assigned private channels
 		db.edit_guild(ctx.guild.id, "AnonPermitted", 1)
-		msg = "Anonymous messaging is **enabled** for your server."
+		msg = loc.response("msg_admin", "anon", "res2", ctx.interaction.locale)
 
 		chars = db.get_all_chars(ctx.guild.id)
 
@@ -58,15 +69,20 @@ class MessageAdminCog(commands.Cog):
 
 		if (len(chars_without_channels) > 0):
 			name_list = ", ".join(chars_without_channels)
-			msg += f"\n\n**These characters are missing associated channels: {name_list}**\nYou will need to assign them one with `/profile_admin edit channel` for them to use messaging commands!"
+			msg += loc.response("msg_admin", "anon", "warning", ctx.interaction.locale).format(name_list)
 
 		await ctx.respond(msg)
 
 # ------------------------------------------------------------------------
 # /msg_admin channels
 # ------------------------------------------------------------------------
-	@message_admin.command(name="channels")
-	@option("visible", bool, default=False, description="Set to True for permanent response")
+	@message_admin.command(name="channels",
+		name_localizations=loc.command_names("msg_admin", "channels"),
+		description_localizations=loc.command_descriptions("msg_admin", "channels"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def channels(self, ctx, visible):
 		"""List characters and their associated messaging channels"""
 
@@ -76,11 +92,11 @@ class MessageAdminCog(commands.Cog):
 		chars = sorted(chars, key=lambda d: d['Name'])
 
 		# Iterate
-		msg = "__Messaging Channels__"
+		msg =  loc.response("msg_admin", "channels", "res1", ctx.interaction.locale)
 		for char in chars:
 			if (char['ChannelID']):
 				msg += f"\n{char['Name']}: <#{char['ChannelID']}>"
 			else:
-				msg += f"\n{char['Name']}: **NONE**"
+				msg += loc.response("msg_admin", "channels", "res2", ctx.interaction.locale).format(char["Name"])
 
 		await ctx.respond(msg[:1800], ephemeral=not visible)

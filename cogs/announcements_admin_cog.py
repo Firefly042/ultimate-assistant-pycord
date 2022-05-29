@@ -14,7 +14,7 @@ from discord.ext import commands
 import aiocron
 
 import db
-
+from localization import loc
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -47,7 +47,9 @@ class AnnouncementsAdminCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	announcements = SlashCommandGroup("announcements", "Automated posting")
+	announcements = SlashCommandGroup("announcements", "Automated posting",
+		name_localizations=loc.group_names("announcements"),
+		description_localizations=loc.group_descriptions("announcements"))
 
 
 # ------------------------------------------------------------------------
@@ -109,8 +111,12 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /announcements tz
 # ------------------------------------------------------------------------
-	@announcements.command(name="tz")
-	@option("utc_offset", int, description="Your offset from UTC/GMT", min_value=-12, max_value=14)
+	@announcements.command(name="tz",
+		name_localizations=loc.command_names("announcements", "tz"),
+		description_localizations=loc.command_descriptions("announcements", "tz"))
+	@option("utc_offset", int, min_value=-12, max_value=14,
+		name_localizations=loc.option_names("announcements", "tz", "utc_offset"),
+		description_localizations=loc.option_descriptions("announcements", "tz", "utc_offset"))
 	async def timezone(self, ctx, utc_offset):
 		"""Set timezone for server relative to UTC/GMT. Half/Quarter hours not supported"""
 
@@ -121,20 +127,47 @@ class AnnouncementsAdminCog(commands.Cog):
 		else:
 			tz_str = f"UTC{utc_offset}"
 
-		await ctx.respond(f"Set timezone to **{tz_str}**")
+		res = loc.response("announcements", "tz", "res1", ctx.interaction.locale).format(tz_str)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /announcements new
 # ------------------------------------------------------------------------
-	@announcements.command(name="new")
-	@option("channel", discord.TextChannel, description="Channel to post in")
-	@option("start_year", int, min_value=2022, description="Year to begin")
-	@option("start_month", int, choices=list(range(1, 13)), description="Month to begin")
-	@option("start_day", int, min_value=1, max_value=31, description="Day to begin")
-	@option("start_hour", int, choices=list(range(0, 24)), description="The hour to begin this post")
-	@option("start_minute", int, choices=[0, 30], description="On the hour or on the half hour")
-	@option("interval", int, min_value=1, max_value=5040, description="Posting interval between 1 hour and 30 days (5040 hours)")
-	@option("message", str, description="Message, maximum 1024 characters")
+	@announcements.command(name="new",
+		name_localizations=loc.command_names("announcements", "new"),
+		description_localizations=loc.command_descriptions("announcements", "new"))
+	@option("channel", discord.TextChannel,
+		description="Channel to post in",
+		name_localizations=loc.option_names("announcements", "new", "channel"),
+		description_localizations=loc.option_descriptions("announcements", "new", "channel"))
+	@option("start_year", int, min_value=2022,
+		description="Year to begin",
+		name_localizations=loc.option_names("announcements", "new", "start_year"),
+		description_localizations=loc.option_descriptions("announcements", "new", "start_year"))
+	@option("start_month", int, choices=list(range(1, 13)),
+		description="Month to begin",
+		name_localizations=loc.option_names("announcements", "new", "start_month"),
+		description_localizations=loc.option_descriptions("announcements", "new", "start_month"))
+	@option("start_day", int, min_value=1, max_value=31,
+		description="Day to begin",
+		name_localizations=loc.option_names("announcements", "new", "start_day"),
+		description_localizations=loc.option_descriptions("announcements", "new", "start_day"))
+	@option("start_hour", int, choices=list(range(0, 24)),
+		description="Hour to begin (24 hour format)",
+		name_localizations=loc.option_names("announcements", "new", "start_hour"),
+		description_localizations=loc.option_descriptions("announcements", "new", "start_hour"))
+	@option("start_minute", int, choices=[0, 30],
+		description="On the hour or on the half hour",
+		name_localizations=loc.option_names("announcements", "new", "start_minute"),
+		description_localizations=loc.option_descriptions("announcements", "new", "start_minute"))
+	@option("interval", int, min_value=1, max_value=5040,
+		description="Posting interval between 1 hour and 30 days (5040 hours)",
+		name_localizations=loc.option_names("announcements", "new", "interval"),
+		description_localizations=loc.option_descriptions("announcements", "new", "interval"))
+	@option("message", str,
+		description="Message, maximum 1024 characters",
+		name_localizations=loc.option_names("announcements", "new", "message"),
+		description_localizations=loc.option_descriptions("announcements", "new", "message"))
 	async def new(self, ctx, channel, start_year, start_month, start_day, start_hour, start_minute, interval, message):
 		"""Define a new scheduled/repeated announcement (using your server's set timezone)"""
 
@@ -142,7 +175,8 @@ class AnnouncementsAdminCog(commands.Cog):
 		existing_announcements = db.get_guild_announcements(ctx.guild.id)
 
 		if (len(existing_announcements) == 25):
-			await ctx.respond("You may not have more than 25 automatic posts!", ephemeral=True)
+			error = loc.response("announcements", "new", "error-limit", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Get guild timezone
@@ -153,7 +187,8 @@ class AnnouncementsAdminCog(commands.Cog):
 		try:
 			guild_time = datetime(year=start_year, month=start_month, day=start_day, hour=start_hour, minute=start_minute)
 		except ValueError:
-			await ctx.respond("Please enter a valid date! Did you enter a nonexistent day like 30th Feb?", ephemeral=True)
+			error = loc.response("announcements", "new", "error-date", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Convert to utc
@@ -162,35 +197,49 @@ class AnnouncementsAdminCog(commands.Cog):
 		# Confirm that this is a later time
 		utc_now = datetime.utcnow()
 		if (utc_time <= utc_now):
-			await ctx.respond("Please enter a time and date in the future!", ephemeral=True)
+			error = loc.response("announcements", "new", "error-past", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Add to db using interaction snowflake as ID
 		db.add_announcement(ctx.interaction.id, ctx.guild.id, channel.id, message, interval, int(utc_time.strftime(DATE_STRING)))
 
-		await ctx.respond(f"Set automatic post (id {ctx.interaction.id})", ephemeral=True)
+		res = loc.response("announcements", "new", "res1", ctx.interaction.locale).format(ctx.interaction.id)
+		await ctx.respond(res, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /announcements rm
 # ------------------------------------------------------------------------
-	@announcements.command(name="rm")
-	@option("announcement_id", str, description="The id associated with the announcement (can be found with list command)")
+	@announcements.command(name="rm",
+		name_localizations=loc.command_names("announcements", "rm"),
+		description_localizations=loc.command_descriptions("announcements", "rm"))
+	@option("announcement_id", str,
+		description="The ID associated with the announcement (found with list command)",
+		name_localizations=loc.option_names("announcements", "rm", "announcement_id"),
+		description_localizations=loc.option_descriptions("announcements", "rm", "announcement_id"))
 	async def remove(self, ctx, announcement_id):
 		"""Remove an announcement by its id (obtained with /announcements list)"""
 
 		announcement_removed = db.remove_announcement(ctx.guild.id, int(announcement_id))
 
 		if (not announcement_removed):
-			await ctx.respond("There is no announcement with that ID!", ephemeral=True)
+			error = loc.response("announcements", "rm", "error-id", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond("Removed announcement", ephemeral=True)
+		res = loc.response("announcements", "rm", "res1", ctx.interaction.locale)
+		await ctx.respond(res, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /announcements list
 # ------------------------------------------------------------------------
-	@announcements.command(name="list")
-	@option("visible", bool, default=False, description="Set True for permanent response")
+	@announcements.command(name="list",
+		name_localizations=loc.command_names("announcements", "list"),
+		description_localizations=loc.command_descriptions("announcements", "list"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def list(self, ctx, visible):
 		"""List your server's automated posts in chronological order"""
 
@@ -198,7 +247,8 @@ class AnnouncementsAdminCog(commands.Cog):
 
 		# Return if no announcements
 		if (len(announcements) == 0):
-			await ctx.respond("You have no scheduled posts!", ephemeral=True)
+			error = loc.response("announcements", "list", "error-noposts", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Get timezone for conversion
@@ -208,14 +258,16 @@ class AnnouncementsAdminCog(commands.Cog):
 		announcements = sorted(announcements, key=lambda d: d["NextPosting"])
 
 		# Embed
-		embed = discord.Embed(title=f"Automatic Posts in {ctx.guild.name}"[:128])
+		res_title = loc.response("announcements", "list", "res-title", ctx.interaction.locale).format(ctx.guild.name)
+		embed = discord.Embed(title=res_title[:128])
 		for announcement in announcements:
 			post_time_utc = datetime.strptime(str(announcement['NextPosting']), DATE_STRING)
 			post_time_guild = post_time_utc + timedelta(hours=timezone)
 			post_time_str = post_time_guild.strftime("%d %b %Y, %H:%M")
 
-			title = f"{post_time_str}, every {announcement['Interval']} hours (id: {announcement['ID']})"
-			value = f"In <#{announcement['ChannelID']}>\n" + announcement['Message'][:128]
+			title = loc.response("announcements", "list", "res-field", ctx.interaction.locale).format(start_time=post_time_str, amount=announcement["Interval"], id=announcement["ID"])
+			value = loc.response("announcements", "list", "res-value", ctx.interaction.locale).format(announcement["ChannelID"]) + "\n" + announcement["Message"][:128]
+
 			embed.add_field(name=title, value=value, inline=False)
 
 		# Send
@@ -224,16 +276,23 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /announcements toggle
 # ------------------------------------------------------------------------
-	@announcements.command(name="toggle")
-	@option("state", str, choices=["RUN", "PAUSE"], description="Run or Pause")
+	@announcements.command(name="toggle",
+		name_localizations=loc.command_names("announcements", "toggle"),
+		description_localizations=loc.command_descriptions("announcements", "toggle"))
+	@option("state", str,
+		choices=loc.choices("announcements", "toggle", "state"),
+		description="Run or Pause",
+		name_localizations=loc.option_names("announcements", "toggle", "state"),
+		description_localizations=loc.option_descriptions("announcements", "toggle", "state"))
 	async def toggle(self, ctx, state):
 		"""Disable announcements from being posted until turned back on"""
 
 		if (state == "RUN"):
 			val =1
+			res = loc.response("announcements", "toggle", "res1", ctx.interaction.locale)
 		else:
 			val = 0
+			res = loc.response("announcements", "toggle", "res2", ctx.interaction.locale)
 
 		db.toggle_guild_announcements(ctx.guild.id, val)
-
-		await ctx.respond(f"Automatic posts set to {state}")
+		await ctx.respond(res)

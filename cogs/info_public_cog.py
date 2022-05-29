@@ -7,6 +7,8 @@ import discord
 from discord import slash_command, option
 from discord.ext import commands
 
+from localization import loc
+
 
 # ------------------------------------------------------------------------
 # COMPONENT CLASSES AND CONSTANTS
@@ -190,9 +192,14 @@ class InfoPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # Commands
 # ------------------------------------------------------------------------
-	@slash_command(name="help", guild_only=False)
-	@option("visible", bool, default=False, description="Set True for public response")
+	@slash_command(name="help", guild_only=False,
+		name_localizations=loc.nongroup_names("help"),
+		description_localizations=loc.nongroup_descriptions("help"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def help(self, ctx, visible):
-		"""Helpful information and links"""
+		"""Command group overviews (not localized)"""
 
 		await ctx.respond(embed=self.embeds["Info"], view=HelpMenu(self.embeds, ctx.interaction), ephemeral=not visible)

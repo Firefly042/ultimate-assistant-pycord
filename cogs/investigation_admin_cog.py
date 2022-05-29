@@ -11,6 +11,7 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 import db
+from localization import loc
 
 from utils import utils
 from utils.embed_list import EmbedList
@@ -35,7 +36,9 @@ class InvestigationAdminCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	investigate_admin = SlashCommandGroup("investigate_admin", "Admin investigation management")
+	investigate_admin = SlashCommandGroup("investigate_admin", "Admin investigation management",
+		name_localizations=loc.group_names("investigate_admin"),
+		description_localizations=loc.group_descriptions("investigate_admin"))
 
 
 # ------------------------------------------------------------------------
@@ -44,18 +47,53 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate_admin new
 # ------------------------------------------------------------------------
-	@investigate_admin.command(name="new")
-	@option("channel", discord.TextChannel, description="Channel that this investigation is in")
-	@option("desc", str, description="Text shown to investigator")
-	@option("name", str, description="Default name")
-	@option("name_2", str, default=None, description="Alternate name")
-	@option("name_3", str, default=None, description="Alternate name")
-	@option("name_4", str, default=None, description="Alternate name")
-	@option("name_5", str, default=None, description="Alternate name")
-	@option("name_6", str, default=None, description="Alternate name")
-	@option("name_7", str, default=None, description="Alternate name")
-	@option("name_8", str, default=None, description="Alternate name")
-	@option("stealable", bool, default=False, description="Set to True to allow players to take item")
+	@investigate_admin.command(name="new",
+		name_localizations=loc.command_names("investigate_admin", "new"),
+		description_localizations=loc.command_descriptions("investigate_admin", "new"))
+	@option("channel", discord.TextChannel,
+		description="Channel that this investigation is in",
+		name_localizations=loc.option_names("investigate_admin", "new", "channel"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "channel"))
+	@option("desc", str,
+		description="Text shown to investigator",
+		name_localizations=loc.option_names("investigate_admin", "new", "desc"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "desc"))
+	@option("name", str,
+		description="Default name",
+		name_localizations=loc.option_names("investigate_admin", "new", "name"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "name"))
+	@option("name_2", str, default=None,
+		description="Alternate name",
+		name_localizations=loc.option_names("investigate_admin", "new", "name_2"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "name_2"))
+	@option("name_3", str, default=None,
+		description="Alternate name",
+		name_localizations=loc.option_names("investigate_admin", "new", "name_3"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "name_3"))
+	@option("name_4", str, default=None,
+		description="Alternate name",
+		name_localizations=loc.option_names("investigate_admin", "new", "name_4"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "name_4"))
+	@option("name_5", str, default=None,
+		description="Alternate name",
+		name_localizations=loc.option_names("investigate_admin", "new", "name_5"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "name_5"))
+	@option("name_6", str, default=None,
+		description="Alternate name",
+		name_localizations=loc.option_names("investigate_admin", "new", "name_6"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "name_6"))
+	@option("name_7", str, default=None,
+		description="Alternate name",
+		name_localizations=loc.option_names("investigate_admin", "new", "name_7"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "name_7"))
+	@option("name_8", str, default=None,
+		description="Alternate name",
+		name_localizations=loc.option_names("investigate_admin", "new", "name_8"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "name_8"))
+	@option("stealable", bool, default=False,
+		description="Set to 'True' to allow players to take item",
+		name_localizations=loc.option_names("investigate_admin", "new", "stealable"),
+		description_localizations=loc.option_descriptions("investigate_admin", "new", "stealable"))
 	async def new(self, ctx, channel, desc, name, name_2, name_3, name_4, name_5, name_6, name_7, name_8, stealable):
 		"""Define an investigatable object for a specified channel. Up to 8 aliases"""
 
@@ -63,31 +101,46 @@ class InvestigationAdminCog(commands.Cog):
 		names = utils.dict_to_str([name for name in names if name])
 
 		db.add_investigation(ctx.guild.id, channel.id, names, desc, stealable)
-		await ctx.respond(f"Added {names} to <#{channel.id}>")
+
+		res = loc.response("investigate_admin", "new", "res1", ctx.interaction.locale).format(names=names, channel=channel.id)
+		await ctx.respond(res)
 
 
 # ------------------------------------------------------------------------
 # /investigate_admin rm
 # ------------------------------------------------------------------------
-	@investigate_admin.command(name="rm")
-	@option("channel", discord.TextChannel, description="Channel that this investigation is in")
-	@option("name", str, description="Item name (default or alternate)")
+	@investigate_admin.command(name="rm",
+		name_localizations=loc.command_names("investigate_admin", "rm"),
+		description_localizations=loc.command_descriptions("investigate_admin", "rm"))
+	@option("channel", discord.TextChannel,
+		description="Channel that the investigation is in",
+		name_localizations=loc.option_names("investigate_admin", "rm", "channel"),
+		description_localizations=loc.option_descriptions("investigate_admin", "rm", "channel"))
+	@option("name", str,
+		description="Item name (default or alternative)",
+		name_localizations=loc.option_names("investigate_admin", "rm", "name"),
+		description_localizations=loc.option_descriptions("investigate_admin", "rm", "name"))
 	async def remove(self, ctx, channel, name):
 		"""Remove an investigatable item from a specified channel by name"""
 
 		removed = db.remove_investigation(ctx.guild.id, channel.id, name)
 		if (not removed):
-			await ctx.respond(f"Could not find {name} in <#{channel.id}>!", ephemeral=True)
+			error = loc.response("investigate_admin", "rm", "error-missing", ctx.interaction.locale).format(name=name, channel=channel.id)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Removed {name} from <#{channel.id}>")
+		res = loc.response("investigate_admin", "rm", "res1", ctx.interaction.locale).format(name=name, channel=channel.id)
+		await ctx.respond(res)
 
 
 # ------------------------------------------------------------------------
 # /investigate_admin list
 # ------------------------------------------------------------------------
 	@investigate_admin.command(name="list")
-	@option("visible", bool, default=False, description="Set to true for permanent response.")
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def list(self, ctx, visible):
 		"""List investigations"""
 
@@ -115,7 +168,7 @@ class InvestigationAdminCog(commands.Cog):
 				desc = ""
 				for item in channel_items:
 					if (item["TakenBy"]):
-						desc += f"(Taken by <@{item['TakenBy']}>) "
+						desc += loc.response("investigate_admin", "list", "item-taken", ctx.interaction.locale).format(item["TakenBy"])
 
 					desc += item["Names"] + "\n"
 
