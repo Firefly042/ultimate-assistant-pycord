@@ -179,7 +179,7 @@ class GachaAdminCog(commands.Cog):
 		try:
 			res = loc.response("gacha_admin_currency", "view", "res1", ctx.interaction.locale).format(name=char["Name"], amount=char["Currency"], units=currency_name)
 			await ctx.respond(res, ephemeral=not visible)
-		finally:
+		except:
 			error = loc.response("gacha_admin_currency", "view", "error-missing", ctx.interaction.locale).format(player.name)
 			await ctx.respond(error, ephemeral=True)
 

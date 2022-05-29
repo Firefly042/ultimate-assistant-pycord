@@ -86,7 +86,7 @@ class InvestigationPublicCog(commands.Cog):
 
 		item = db.get_investigation(ctx.guild.id, ctx.channel.id, name)
 
-		if (not item):
+		if (not item or item["TakenBy"]):
 			error = loc.response("investigate", "take", "error-missing", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
 			return
