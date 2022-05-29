@@ -11,6 +11,7 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 import db
+from localization import loc
 
 from utils import utils
 from utils.embed_list import EmbedList
@@ -35,8 +36,13 @@ class GachaAdminCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	gacha_admin = SlashCommandGroup("gacha_admin", "Admin Gacha management")
-	currency = gacha_admin.create_subgroup("currency", "Currency management")
+	gacha_admin = SlashCommandGroup("gacha_admin", "Admin Gacha management",
+		name_localizations=loc.group_names("gacha_admin"),
+		description_localizations=loc.group_descriptions("gacha_admin"))
+
+	currency = gacha_admin.create_subgroup("currency", "Admin currency management")
+	currency.name_localizations = loc.group_names("gacha_admin_currency")
+	currency.description_localizations = loc.group_descriptions("gacha_admin_currency")
 
 # ------------------------------------------------------------------------
 # Commands
@@ -44,96 +50,148 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin currency name
 # ------------------------------------------------------------------------
-	@currency.command(name="name")
-	@option("name", str, description="Plural form recommended")
+	@currency.command(name="name",
+		name_localizations=loc.command_names("gacha_admin_currency", "name"),
+		description_localizations=loc.command_descriptions("gacha_admin_currency", "name"))
+	@option("name", str,
+		description="Plural form recommended",
+		name_localizations=loc.option_names("gacha_admin_currency", "name", "name"),
+		description_localizations=loc.option_descriptions("gacha_admin_currency", "name", "name"))
 	async def admin_currency_name(self, ctx, name):
 		"""Set the name of your game's currency"""
 
 		db.edit_guild(ctx.guild.id, "CurrencyName", name)
-		await ctx.respond(f"Set currency name to {name}")
+
+		res = loc.response("gacha_admin_currency", "name", "res1", ctx.interaction.locale).format(name)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /gacha_admin currency cost
 # ------------------------------------------------------------------------
-	@currency.command(name="cost")
-	@option("cost", int, description="1 to 999", min_value=1, max_value=999)
+	@currency.command(name="cost",
+		name_localizations=loc.command_names("gacha_admin_currency", "cost"),
+		description_localizations=loc.command_descriptions("gacha_admin_currency", "cost"))
+	@option("cost", int, min_value=1, max_value=999,
+		description="1 to 999",
+		name_localizations=loc.option_names("gacha_admin_currency", "cost", "cost"),
+		description_localizations=loc.option_descriptions("gacha_admin_currency", "cost", "cost"))
 	async def admin_currency_cost(self, ctx, cost):
-		"""Set the cost of a single /gacha use"""
+		"""Set the cost of a single gacha use"""
 
 		db.edit_guild(ctx.guild.id, "GachaCost", cost)
-		await ctx.respond(f"Set cost to {cost}")
+
+		res = loc.response("gacha_admin_currency", "cost", "res1", ctx.interaction.locale).format(cost)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /gacha_admin currency give
 # ------------------------------------------------------------------------
-	@currency.command(name="give")
-	@option("player", discord.Member)
-	@option("amount", int, description="Amount to give", min_value=1, max_value=999)
+	@currency.command(name="give",
+		name_localizations=loc.command_names("gacha_admin_currency", "give"),
+		description_localizations=loc.command_descriptions("gacha_admin_currency", "give"))
+	@option("player", discord.Member,
+		name_localizations=loc.option_names("gacha_admin_currency", "give", "player"),
+		description_localizations=loc.option_descriptions("gacha_admin_currency", "give", "player"))
+	@option("amount", int, min_value=1, max_value=999,
+		description="Amount to give",
+		name_localizations=loc.option_names("gacha_admin_currency", "give", "amount"),
+		description_localizations=loc.option_descriptions("gacha_admin_currency", "give", "amount"))
 	async def admin_currency_give(self, ctx, player, amount):
 		"""Give currency to an active character"""
 
 		char_updated = db.increase_currency_single(ctx.guild.id, player.id, amount)
 
 		if (not char_updated):
-			await ctx.respond(f"Could not find an active character for {player.name}", ephemeral=True)
+			error = loc.response("gacha_admin_currency", "give", "error-missing", ctx.interaction.locale).format(player.name)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Gave {amount} to {player.name}.")
+		res = loc.response("gacha_admin_currency", "give", "res1", ctx.interaction.locale).format(amount=amount, name=player.name)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /gacha_admin currency take
 # ------------------------------------------------------------------------
-	@currency.command(name="take")
-	@option("player", discord.Member, description="User must have an active character")
-	@option("amount", int, description="Amount to take", min_value=1, max_value=999)
+	@currency.command(name="take",
+		name_localizations=loc.command_names("gacha_admin_currency", "take"),
+		description_localizations=loc.command_descriptions("gacha_admin_currency", "take"))
+	@option("player", discord.Member,
+		name_localizations=loc.option_names("gacha_admin_currency", "take", "player"),
+		description_localizations=loc.option_descriptions("gacha_admin_currency", "take", "player"))
+	@option("amount", int, min_value=1, max_value=999,
+		description="Amount to take",
+		name_localizations=loc.option_names("gacha_admin_currency", "take", "amount"),
+		description_localizations=loc.option_descriptions("gacha_admin_currency", "take", "amount"))
 	async def admin_currency_take(self, ctx, player, amount):
 		"""Take currency from an active character"""
 
 		char_updated = db.decrease_currency_single(ctx.guild.id, player.id, amount)
 
 		if (not char_updated):
-			await ctx.respond(f"Could not find an active character for {player.name}", ephemeral=True)
+			error = loc.response("gacha_admin_currency", "take", "error-missing", ctx.interaction.locale).format(player.name)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Took {amount} from {player.name}.")
+		res = loc.response("gacha_admin_currency", "take", "res1", ctx.interaction.locale).format(amount=amount, name=player.name)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /gacha_admin currency give_all
 # ------------------------------------------------------------------------
-	@currency.command(name="give_all")
-	@option("amount", int, description="Amount to give", min_value=1, max_value=999)
+	@currency.command(name="give_all",
+		name_localizations=loc.command_names("gacha_admin_currency", "give_all"),
+		description_localizations=loc.command_descriptions("gacha_admin_currency", "give_all"))
+	@option("amount", int, min_value=1, max_value=999,
+		description="Amount to give",
+		name_localizations=loc.option_names("gacha_admin_currency", "give_all", "amount"),
+		description_localizations=loc.option_descriptions("gacha_admin_currency", "give_all", "amount"))
 	async def admin_currency_give_all(self, ctx, amount):
 		"""Give currency to all active characters"""
 
 		chars_updated = db.increase_currency_all(ctx.guild.id, amount)
 
 		if (not chars_updated):
-			await ctx.respond("Could not find any active characters for this server!", ephemeral=True)
+			error = loc.response("gacha_admin_currency", "give_all", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Gave {amount} to all active characters.")
+		res = loc.response("gacha_admin_currency", "give_all", "res1", ctx.interaction.locale).format(amount)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /gacha_admin currency view
 # ------------------------------------------------------------------------
-	@currency.command(name="view")
-	@option("player", discord.Member)
-	@option("visible", bool, default=False, description="Set to True for permanent response")
+	@currency.command(name="view",
+		name_localizations=loc.command_names("gacha_admin_currency", "view"),
+		description_localizations=loc.command_descriptions("gacha_admin_currency", "view"))
+	@option("player", discord.Member,
+		name_localizations=loc.option_names("gacha_admin_currency", "view", "player"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def admin_currency_view(self, ctx, player, visible):
 		"""View currency of an active character"""
 
 		char = db.get_active_char(ctx.guild.id, player.id)
 		currency_name = db.get_guild_info(ctx.guild.id)["CurrencyName"]
 		try:
-			await ctx.respond(f"{char['Name']} has {char['Currency']} {currency_name}", ephemeral=not visible)
+			res = loc.response("gacha_admin_currency", "view", "res1", ctx.interaction.locale).format(name=char["Name"], amount=char["Currency"], units=currency_name)
+			await ctx.respond(res, ephemeral=not visible)
 		finally:
-			await ctx.respond(f"{player.name} does not have an active character!", ephemeral=True)
+			error = loc.response("gacha_admin_currency", "view", "error-missing", ctx.interaction.locale).format(player.name)
+			await ctx.respond(error, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /gacha_admin currency view_all
 # ------------------------------------------------------------------------
-	@currency.command(name="view_all")
-	@option("visible", bool, default=False, description="Set to True for permanent response")
+	@currency.command(name="view_all",
+		name_localizations=loc.command_names("gacha_admin_currency", "view_all"),
+		description_localizations=loc.command_descriptions("gacha_admin_currency", "view_all"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def admin_currency_view_all(self, ctx, visible):
 		"""View currency for all characters (active and inactive)"""
 
@@ -149,11 +207,25 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin add
 # ------------------------------------------------------------------------
-	@gacha_admin.command(name="add")
-	@option("name", str, description="Item's name. Maximum of 64 characters")
-	@option("desc", str, description="Item's description. 1024 character maximum")
-	@option("amount", int, default=None, min_value=1, max_value=99999, description="Enter a number to make the item limited.")
-	@option("thumbnail", str, default=None, description="Optional thumbnail image URL")
+	@gacha_admin.command(name="add",
+		name_localizations=loc.command_names("gacha_admin", "add"),
+		description_localizations=loc.command_descriptions("gacha_admin", "add"))
+	@option("name", str,
+		description="Item name. Maximum of 64 characters",
+		name_localizations=loc.option_names("gacha_admin", "add", "name"),
+		description_localizations=loc.option_descriptions("gacha_admin", "add", "name"))
+	@option("desc", str,
+		description="Item description. 1024 character maximum",
+		name_localizations=loc.option_names("gacha_admin", "add", "desc"),
+		description_localizations=loc.option_descriptions("gacha_admin", "add", "desc"))
+	@option("amount", int, default=None, min_value=1, max_value=99999,
+		description="Enter a number to make the item limited.",
+		name_localizations=loc.option_names("gacha_admin", "add", "amount"),
+		description_localizations=loc.option_descriptions("gacha_admin", "add", "amount"))
+	@option("thumbnail", str, default=None,
+		description="Optional thumbnail image URL",
+		name_localizations=loc.option_names("gacha_admin", "add", "thumbnail"),
+		description_localizations=loc.option_descriptions("gacha_admin", "add", "thumbnail"))
 	async def gacha_admin_add(self, ctx, name, desc, amount, thumbnail):
 		"""Register a new item to gacha, optional item limits and thumbnail"""
 
@@ -165,7 +237,8 @@ class GachaAdminCog(commands.Cog):
 		try:
 			db.add_gacha(ctx.guild.id, name, desc, amount, thumbnail)
 		except:
-			await ctx.respond("Cannot add a duplicate name!", ephemeral=True)
+			error = loc.response("gacha_admin", "add", "error-duplicate", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Attempt to send gacha embed
@@ -174,32 +247,45 @@ class GachaAdminCog(commands.Cog):
 			embed = utils.get_gacha_embed(item)
 			if (not amount):
 				amount = "unlimited"
-			await ctx.respond(f"Added item ({amount})", embed=embed, ephemeral=True)
+
+			res = loc.response("gacha_admin", "add", "res1", ctx.interaction.locale).format(amount=amount)
+			await ctx.respond(res, embed=embed, ephemeral=True)
 		except discord.HTTPException:
-			await ctx.respond("I cannot display that image URL! Removing item", ephemeral=True)
+			error = loc.response("gacha_admin", "add", "error-url", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			db.remove_gacha_item(ctx.guild.id, name)
 
 # ------------------------------------------------------------------------
 # /gacha_admin rm
 # ------------------------------------------------------------------------
-	@gacha_admin.command(name="rm")
-	@option("name", str, description="The display name of item to remove")
+	@gacha_admin.command(name="rm",
+		name_localizations=loc.command_names("gacha_admin", "rm"),
+		description_localizations=loc.command_descriptions("gacha_admin", "rm"))
+	@option("name", str,
+		description="The display name of item to remove",
+		name_localizations=loc.option_names("gacha_admin", "rm", "name"),
+		description_localizations=loc.option_descriptions("gacha_admin", "rm", "name"))
 	async def gacha_admin_rm(self, ctx, name):
 		"""Remove an item from gacha by name"""
 
 		item_removed = db.remove_gacha_item(ctx.guild.id, name)
 
 		if (not item_removed):
-			await ctx.respond("Could not find that item!", ephemeral=True)
+			error = loc.response("gacha_admin", "rm", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Removed {name}.")
+		res = loc.response("gacha_admin", "rm", "res1", ctx.interaction.locale).format(name)
+		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
 # /gacha_admin list
 # ------------------------------------------------------------------------
 	@gacha_admin.command(name="list")
-	@option("visible", bool, default=False, description="Set to true for permanent response.")
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def gacha_admin_list(self, ctx, visible):
 		"""List all gacha items"""
 
@@ -207,7 +293,8 @@ class GachaAdminCog(commands.Cog):
 
 		# Handle no items case
 		if (len(items) == 0):
-			await ctx.respond("You have no gacha items in this server!", ephemeral=True)
+			error = loc.response("gacha_admin", "list", "error-none", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Order chars by name, error if no characters

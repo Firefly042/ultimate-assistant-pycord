@@ -11,6 +11,7 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 import db
+from localization import loc
 
 from utils import utils
 from utils.embed_list import EmbedList
@@ -35,7 +36,9 @@ class InventoryAdminCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	inventory_admin = SlashCommandGroup("inv_admin", "Admin inventory management")
+	inventory_admin = SlashCommandGroup("inv_admin", "Admin inventory management",
+		name_localizations=loc.group_names("inv_admin"),
+		description_localizations=loc.group_descriptions("inv_admin"))
 
 
 # ------------------------------------------------------------------------
@@ -44,31 +47,63 @@ class InventoryAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv_admin take
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="take")
-	@option("player", discord.Member, description="Active character to take from")
-	@option("item", str, description="Case sensitive item name, 64 character maximum")
-	@option("amount", int, default=1, min_value=1, max_value=9999, description="Amount to take, default 1")
-	@option("visible", bool, default=False, description="Set to True for public response")
+	@inventory_admin.command(name="take",
+		name_localizations=loc.command_names("inv_admin", "take"),
+		description_localizations=loc.command_descriptions("inv_admin", "take"))
+	@option("player", discord.Member,
+		description="Active character to take from",
+		name_localizations=loc.option_names("inv_admin", "take", "player"),
+		description_localizations=loc.option_descriptions("inv_admin", "take", "player"))
+	@option("item", str,
+		description="Case sensitive item name",
+		name_localizations=loc.option_names("inv_admin", "take", "item"),
+		description_localizations=loc.option_descriptions("inv_admin", "take", "item"))
+	@option("amount", int, default=1, min_value=1, max_value=9999,
+		description="Amount to take (default 1)",
+		name_localizations=loc.option_names("inv_admin", "take", "amount"),
+		description_localizations=loc.option_descriptions("inv_admin", "take", "amount"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def take(self, ctx, player, item, amount, visible):
 		"""Take one or more of an item from a player's inventory"""
 
 		updated = db.remove_item(ctx.guild.id, player.id, item, amount)
 
 		if (not updated):
-			await ctx.respond("That player is not holding any of that item! (Or you did not specify a player with an active character).", ephemeral=True)
+			error = loc.response("inv_admin", "take", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Took {amount} {item} from {player.name}", ephemeral=not visible)
+		res = loc.response("inv_admin", "take", "res1").format(amount=amount, item=item, name=player.name)
+		await ctx.respond(res, ephemeral=not visible)
 
 # ------------------------------------------------------------------------
 # /inv_admin give
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="give")
-	@option("recipient", discord.Member, description="The recipient")
-	@option("item", str, description="Case sensitive item to give")
-	@option("amount", int, default=1, description="How much you will give, default 1", min_value=1, max_value=999)
-	@option("desc", str, default=None, description="Short description of item")
-	@option("visible", bool, default=False, description="Set True for public response")
+	@inventory_admin.command(name="give",
+		name_localizations=loc.command_names("inv_admin", "give"),
+		description_localizations=loc.command_descriptions("inv_admin", "give"))
+	@option("recipient", discord.Member,
+		description="Active character to give item to",
+		name_localizations=loc.option_names("inv_admin", "give", "recipient"),
+		description_localizations=loc.option_descriptions("inv_admin", "give", "recipient"))
+	@option("item", str,
+		description="Case sensitive item to give",
+		name_localizations=loc.option_names("inv_admin", "give", "item"),
+		description_localizations=loc.option_descriptions("inv_admin", "give", "item"))
+	@option("amount", int, default=1, min_value=1, max_value=999,
+		name_localizations=loc.option_names("inv_admin", "give", "amount"),
+		description_localizations=loc.option_descriptions("inv_admin", "give", "amount"))
+	@option("desc", str, default=None,
+		description="A short description of the item (256 character maximum)",
+		name_localizations=loc.option_names("inv_admin", "give", "desc"),
+		description_localizations=loc.option_descriptions("inv_admin", "give", "desc"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def give(self, ctx, recipient, item, amount, desc, visible):
 		"""Add one or more of an item to a player's inventory. Description optional"""
 
@@ -78,18 +113,27 @@ class InventoryAdminCog(commands.Cog):
 		updated = db.add_item(ctx.guild.id, recipient.id, item[:64], amount, desc)
 
 		if (not updated):
-			await ctx.respond("That user does not have an active character!", ephemeral=True)
+			error = loc.response("inv_admin", "give", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		await ctx.respond(f"Gave {amount} {item[:64]} to {recipient.name}", ephemeral=not visible)
-
+		res = loc.response("inv_admin", "give", "res1", ctx.interaction.locale).format(amount=amount, item=item[:64], name=recipient.name)
+		await ctx.respond(res, ephemeral=not visible)
 
 # ------------------------------------------------------------------------
 # /inv_admin view
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="view")
-	@option("player", discord.Member, description="Player with an active character")
-	@option("visible", bool, default=False, description="Set to true for permanent response.")
+	@inventory_admin.command(name="view",
+		name_localizations=loc.command_names("inv_admin", "view"),
+		description_localizations=loc.command_descriptions("inv_admin", "view"))
+	@option("player", discord.Member,
+		description="Player with an active character",
+		name_localizations=loc.option_names("inv_admin", "view", "player"),
+		description_localizations=loc.option_descriptions("inv_admin", "view", "player"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def view(self, ctx, player, visible):
 		"""View a specified player's inventory (active character only)"""
 
@@ -97,12 +141,14 @@ class InventoryAdminCog(commands.Cog):
 			inventory = db.get_inventory(ctx.guild.id, player.id)
 			hex_color = db.get_active_char(ctx.guild.id, player.id)["HexColor"]
 		except TypeError:
-			await ctx.respond("That user does not have an active character!", ephemeral=True)
+			error = loc.response("inv_admin", "view", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Handle no items case
 		if (len(inventory) == 0):
-			await ctx.respond("That player has nothing in their inventory!", ephemeral=True)
+			error = loc.response("inv_admin", "view", "error-nothing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Order by key
@@ -128,7 +174,7 @@ class InventoryAdminCog(commands.Cog):
 				if (item["desc"]):
 					desc = item["desc"]
 				else:
-					desc = "No Description"
+					desc = loc.response("inv_admin", "view", "no-description", ctx.interaction.locale)
 
 				embeds[i].add_field(name=title, value=desc, inline=False)
 

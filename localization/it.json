@@ -1,0 +1,1009 @@
+{
+    "common": {
+        "no-character": "Non hai un personaggio attivo in questo server! Hai bisogno di usare `/profilo cambio`?",
+        "visible-desc": "Imposta a 'True' per una risposta visibile e permanente.",
+        "visible-name": "visibile"
+    },
+    "announcements": {
+        "group_name": "avvisi",
+        "group_description": "Post automatici",
+        "commands": {
+            "tz": {
+                "name": "fo",
+                "description": "Imposta il fuso orario del server relativo a UTC/GMT. Sono validi solo gli orari in punto",
+                "options": {
+                    "utc_offset": {
+                        "name": "utc_differenza",
+                        "description": "La tua differenza dall'UTC/GMT"
+                    }
+                },
+                "responses": {
+                    "res1": "Imposta il fuso orario a **{}**."
+                }
+            },
+            "new": {
+                "name": "nuovo",
+                "description": "Definisci un nuovo annuncio programmato/ripetuto (usando il fuso orario assegnato al server)",
+                "options": {
+                    "channel": {
+                        "name": "canale",
+                        "description": "Canale in cui postare"
+                    },
+                    "start_year": {
+                        "name": "inizio_anno",
+                        "description": "Anno in cui cominciare"
+                    },
+                    "start_month": {
+                        "name": "inizio_mese",
+                        "description": "Mese in cui iniziare"
+                    },
+                    "start_day": {
+                        "name": "inizio_giorno",
+                        "description": "Giorno in cui iniziare"
+                    },
+                    "start_hour": {
+                        "name": "inizio_ora",
+                        "description": "Ora in cui iniziare"
+                    },
+                    "start_minute": {
+                        "name": "inizio_minuto",
+                        "description": "Alla mezz'ora o in punto"
+                    },
+                    "interval": {
+                        "name": "intervallo",
+                        "description": "Intervallo di distacco tra ogni post, scegli qualunque valore tra 1 ora e 30 giorni (5040 ore)"
+                    },
+                    "message": {
+                        "name": "messaggio",
+                        "description": "Messaggio, massimo 1024 caratteri"
+                    }
+                },
+                "responses": {
+                    "error-limit": "Non puoi avere pi\u00f9 di 25 post automatizzati!",
+                    "error-date": "Inserisci una data valida! Hai inserito un giorno inesistente come il 30 Febbraio?",
+                    "error-past": "Inserisci un'ora o data futura!",
+                    "res1": "Imposta il post automatico (ID {})."
+                }
+            },
+            "rm": {
+                "name": "rm",
+                "description": "Rimuovi un avviso attraverso il suo id (ottenuto da /avvisi lista)",
+                "options": {
+                    "announcement_id": {
+                        "name": "avvisi_id",
+                        "description": "L'ID associato con l'avviso (trovato con il comando /lista)"
+                    }
+                },
+                "responses": {
+                    "error-id": "Non c'\u00e8 alcun annuncio con quell'ID!",
+                    "res1": "Avviso rimosso"
+                }
+            },
+            "list": {
+                "name": "lista",
+                "description": "Lista tutti i post automatizzati del server in ordine cronologico",
+                "responses": {
+                    "error-noposts": "Non hai alcun post programmato!",
+                    "res-title": "Post automatizzati in {}",
+                    "res-field": ", ogni {} ore (id: {})",
+                    "res-value": "In <#{}>"
+                }
+            },
+            "toggle": {
+                "name": "interruttore",
+                "description": "Disabilita o abilita gli avvisi dall'essere postati",
+                "options": {
+                    "state": {
+                        "name": "stato",
+                        "description": "Esegui o Pausa",
+                        "choices": [
+                            "ESEGUI",
+                            "PAUSA"
+                        ]
+                    }
+                },
+                "responses": {
+                    "res1": "Post automatizzati impostati a ESEGUI.",
+                    "res2": "Post automatizzati impostati a PAUSA."
+                }
+            }
+        }
+    },
+    "roll_admin": {
+        "group_name": "dadi_admin",
+        "group_description": "Tiro dei dadi (admin)",
+        "commands": {
+            "list": {
+                "name": "lista",
+                "description": "Visualizza i dadi personalizzati del personaggio attivo di un giocatore",
+                "options": {
+                    "player": {
+                        "name": "player",
+                        "description": "Active character to view"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Quel giocatore non ha un personaggio attivo!",
+                    "res1": "__Dadi Personalizzati di {}__"
+                }
+            }
+        }
+    },
+    "roll": {
+        "group_name": "dadi",
+        "group_description": "Tiro dei dadi (d20 o personalizzati)",
+        "commands": {
+            "d": {
+                "name": "d",
+                "description": "Tira un dado in notazione d20",
+                "options": {
+                    "dice": {
+                        "name": "dado",
+                        "description": "notazione d20"
+                    }
+                },
+                "responses": {
+                    "error-format": "Tipologia di dado invalida!",
+                    "error-amount": "Troppi tiri!"
+                }
+            },
+            "new": {
+                "name": "nuovo",
+                "description": "Aggiungi o modifica un tiro di dadi personalizzato per il tuo personaggio attivo",
+                "options": {
+                    "name": {
+                        "name": "nome",
+                        "description": "Un breve nome per il tiro. Massimo 16 caratteri (minuscoli)"
+                    },
+                    "dice": {
+                        "name": "tipologia",
+                        "description": "Notazione d20. Massimo 64 caratteri"
+                    }
+                },
+                "responses": {
+                    "error-format": "Tipologia di dado invalida!",
+                    "error-amount": "Troppi tiri!",
+                    "error-limit": "Hai raggiunto il limite di 25 tiri!",
+                    "res1": "Aggiunto/Modificato tiro di dadi personalizzato **{}: {}**."
+                }
+            },
+            "rm": {
+                "name": "rm",
+                "description": "Rimuovi un tiro di dadi personalizzato di un personaggio attivo",
+                "options": {
+                    "name": {
+                        "name": "nome",
+                        "description": "Nome del tiro di dadi esistente"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non hai una tipologia di tiro di dadi chiamata {}.",
+                    "res1": "Rimosso tiro di dadi personalizzato {}."
+                }
+            },
+            "c": {
+                "name": "p",
+                "description": "Tira un dado personalizzato per nome",
+                "options": {
+                    "name": {
+                        "name": "nome",
+                        "description": "Nome del tiro di dadi esistente"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non hai una tipologia di tiro di dadi chiamata {}!",
+                    "res1": "{} tira {}"
+                }
+            },
+            "list": {
+                "name": "lista",
+                "description": "Visualizza i tuoi tiri di dadi personalizzati",
+                "responses": {
+                    "res1": "__Tiri di Dadi Personalizzati__"
+                }
+            }
+        }
+    },
+    "gacha_admin_currency": {
+        "group_name": "valuta",
+        "group_description": "Gestione valuta dell'Admin",
+        "commands": {
+            "name": {
+                "name": "nome",
+                "description": "Imposta il nome della valuta del gioco",
+                "options": {
+                    "name": {
+                        "name": "nome",
+                        "description": "Si consiglia un nome al plurale"
+                    }
+                },
+                "responses": {
+                    "res1": "Imposta il nome della valuta a {}."
+                }
+            },
+            "cost": {
+                "name": "costo",
+                "description": "Imposta il costo di un singolo giro del gacha",
+                "options": {
+                    "name": {
+                        "name": "costo",
+                        "description": "Da 1 a 999"
+                    }
+                },
+                "responses": {
+                    "res1": "Imposta il costo del gacha a {}."
+                }
+            },
+            "give": {
+                "name": "dai",
+                "description": "Dai della valuta a un personaggio attivo",
+                "options": {
+                    "player": {
+                        "name": "giocatore"
+                    },
+                    "amount": {
+                        "name": "importo",
+                        "description": "Quantit\u00e0 di valuta da dare"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non sono riuscito a trovare un personaggio attivo per {}.",
+                    "res1": "Dato {} a {}."
+                }
+            },
+            "take": {
+                "name": "prendi",
+                "description": "Prendi della valuta da un personaggio attivo",
+                "options": {
+                    "player": {
+                        "name": "giocatore"
+                    },
+                    "amount": {
+                        "name": "importo",
+                        "description": "Quantit\u00e0 di valuta da prendere"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non sono riuscito a trovare un personaggio attivo per {}.",
+                    "res1": "Preso {} da {}."
+                }
+            },
+            "give_all": {
+                "name": "dai_a_tutti",
+                "description": "Dai della valuta a tutti i personaggi attivi",
+                "options": {
+                    "amount": {
+                        "name": "importo",
+                        "description": "Quantit\u00e0 di valuta da dare"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non sono riuscito a trovare alcun personaggio attivo in questo server.",
+                    "res1": "Dato {} a tutti i personaggi."
+                }
+            },
+            "view": {
+                "name": "visualizza",
+                "description": "Visualizza la valuta posseduta da un personaggio attivo",
+                "options": {
+                    "player": {
+                        "name": "giocatore"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non sono riuscito a trovare un personaggio attivo per {}.",
+                    "res1": "{} ha {} {}."
+                }
+            },
+            "view_all": {
+                "name": "visualizza_tutti",
+                "description": "Visualizza la valuta posseduta da ogni personaggio (attivo o inattivo)"
+            }
+        }
+    },
+    "gacha_admin": {
+        "group_name": "gacha_admin",
+        "group_description": "Gestione del gacha dell'Admin",
+        "commands": {
+            "add": {
+                "name": "aggiungi",
+                "description": "Registra un nuovo oggetto nel gacha, limiti per l'oggetto opzionali e la sua immagine",
+                "options": {
+                    "name": {
+                        "name": "nome",
+                        "description": "Nome dell'oggetto. Massimo 64 caratteri"
+                    },
+                    "desc": {
+                        "name": "desc",
+                        "description": "Descrizione dell'oggetto. Massimo 1024 caratteri"
+                    },
+                    "amount": {
+                        "name": "quantit\u00e0",
+                        "description": "Inserisci un numero per rendere l'oggetto limitato."
+                    },
+                    "thumbnail": {
+                        "name": "immagine",
+                        "description": "L'URL di un'immagine da usare come copertina (opzionale)"
+                    }
+                },
+                "responses": {
+                    "error-duplicate": "Impossibile aggiungere un nome gi\u00e0 in uso!",
+                    "error-url": "Non riesco a visualizzare quell'URL come immagine! Rimuovo l'oggetto.",
+                    "res1": "Oggetto aggiunto ({})"
+                }
+            },
+            "rm": {
+                "name": "rm",
+                "description": "Rimuovi un oggetto dal gacha per nome",
+                "options": {
+                    "name": {
+                        "name": "nome",
+                        "description": "Il nome dell'elemento da rimuovere"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non sono riuscito a trovare quell'oggetto!",
+                    "res1": "Rimosso {}."
+                }
+            },
+            "list": {
+                "name": "lista",
+                "description": "Lista tutti gli oggetti del gacha",
+                "responses": {
+                    "error-none": "Non hai oggetti per il gacha in questo server!"
+                }
+            }
+        }
+    },
+    "gacha": {
+        "name": "gacha",
+        "description": "Pesca un oggetto dal gacha. Costa almeno 1 di valuta",
+        "responses": {
+            "error-currency": "Non hai abbastanza {}!",
+            "error-none": "Questo server non ha oggetti nel gacha!",
+            "res1": "Hai {} {} rimanenti."
+        }
+    },
+    "currency": {
+        "group_name": "valuta",
+        "group_description": "Valuta del Gacha",
+        "commands": {
+            "view": {
+                "name": "visualizza",
+                "description": "Visualizza quanta valuta hai",
+                "responses": {
+                    "res1": "{} ha {} {}."
+                }
+            },
+            "give": {
+                "name": "dai",
+                "description": "Dai a un altro personaggio attivo un po' della tua valuta",
+                "options": {
+                    "recipient": {
+                        "name": "destinatario",
+                        "description": "Il destinatario"
+                    },
+                    "amount": {
+                        "name": "importo",
+                        "description": "Quanto darai"
+                    },
+                    "visible": {
+                        "name": "visibile",
+                        "description": "Imposta a 'Falso' per rendere segreta la transazione."
+                    }
+                },
+                "responses": {
+                    "error-amount": "Hai soltanto {} {}!",
+                    "error-missingrecipient": "{} non ha un personaggio attivo!",
+                    "res1": "{} da {} {} {}."
+                }
+            }
+        }
+    },
+    "help": {
+        "name": "aiuto",
+        "description": "Panoramica del gruppo di comandi (non localizzata)"
+    },
+    "inv_admin": {
+        "group_name": "inv_admin",
+        "group_description": "Gestione dell'inventario dell'Admin",
+        "commands": {
+            "take": {
+                "name": "prendi",
+                "description": "Prendi una o pi\u00f9 copie di un oggetto dall'inventario di un giocatore",
+                "options": {
+                    "player": {
+                        "name": "giocatore",
+                        "description": "Personaggio attivo da cui prendere"
+                    },
+                    "item": {
+                        "name": "oggetto",
+                        "description": "Nome dell'oggetto (Case sensitive)"
+                    },
+                    "amount": {
+                        "name": "quantit\u00e0",
+                        "description": "Quantit\u00e0 da prendere (predefinito 1)"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Quel giocatore non possiede quell'oggetto! (Oppure non hai specificato un giocatore con un personaggio attivo)",
+                    "res1": "Preso {} {} da {}."
+                }
+            },
+            "give": {
+                "name": "dai",
+                "description": "Aggiungi una o pi\u00f9 copie di un oggetto all'inventario di un giocatore",
+                "options": {
+                    "recipient": {
+                        "name": "destinatario",
+                        "description": "Personaggio attivo a cui dare"
+                    },
+                    "item": {
+                        "name": "oggetto",
+                        "description": "Nome dell'oggetto (Case sensitive)"
+                    },
+                    "amount": {
+                        "name": "quantit\u00e0",
+                        "description": "Quantit\u00e0 da dare (predefinito 1)"
+                    },
+                    "desc": {
+                        "name": "desc",
+                        "description": "Una breve descrizione dell'oggetto (massimo 256 caratteri)"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Quell'utente non ha un personaggio attivo!",
+                    "res1": "Dato {} {} a {}."
+                }
+            },
+            "view": {
+                "name": "visualizza",
+                "description": "Visualizza l'inventario di un giocatore specifico (solo personaggi attivi)",
+                "options": {
+                    "player": {
+                        "name": "giocatore",
+                        "description": "Giocatore con un personaggio attivo"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Quell'utente non ha un personaggio attivo!",
+                    "error-nothing": "Quel giocatore non ha nulla nel suo inventario",
+                    "no-description": "Nessuna Descrizione"
+                }
+            }
+        }
+    },
+    "inv": {
+        "group_name": "inv",
+        "group_description": "Gestione dell'inventario del Giocatore",
+        "commands": {
+            "take": {
+                "name": "prendi",
+                "description": "Aggiungi una o pi\u00f9 copie di un oggetto al tuo inventario. Descrizione opzionale",
+                "options": {
+                    "item": {
+                        "name": "oggetto",
+                        "description": "Nome dell'oggetto (Case sensitive), massimo 64 caratteri"
+                    },
+                    "amount": {
+                        "name": "quantit\u00e0",
+                        "description": "Quantit\u00e0 da prendere (predefinito 1)"
+                    },
+                    "desc": {
+                        "name": "desc",
+                        "description": "Descrizione opzionale, massimo 256 caratteri"
+                    }
+                },
+                "responses": {
+                    "res1": "Preso {} {}"
+                }
+            },
+            "drop": {
+                "name": "rimuovi",
+                "description": "Rimuovi una o pi\u00f9 copie di un oggetto dal tuo inventario (case sensitive)",
+                "options": {
+                    "item": {
+                        "name": "oggetto",
+                        "description": "Nome dell'oggetto da rimuovere (case sensitive)"
+                    },
+                    "amount": {
+                        "name": "quantit\u00e0",
+                        "description": "Quantit\u00e0 da rimuovere (predefinito 1)"
+                    }
+                },
+                "responses": {
+                    "error-missing": "O non hai un personaggio attivo, o non possiedi quell'oggetto!",
+                    "res1": "Rimosso {} {}"
+                }
+            },
+            "give": {
+                "name": "dai",
+                "description": "Dai a un altro personaggio attivo una o pi\u00f9 copie di un oggetto dal tuo inventario",
+                "options": {
+                    "recipient": {
+                        "name": "destinatario",
+                        "description": "Il giocatore che ricever\u00e0 il tuo oggetto"
+                    },
+                    "item": {
+                        "name": "oggetto",
+                        "description": "Nome dell'oggetto da dare (Case sensitive)"
+                    },
+                    "amount": {
+                        "name": "quantit\u00e0",
+                        "description": "Quantit\u00e0 da dare (predefinito 1)"
+                    },
+                    "visible": {
+                        "name": "visibile",
+                        "description": " Imposta a 'Falso' per rendere segreta quest'azione."
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non possiedi {}!",
+                    "error-amount": "Non hai abbastanza {}!",
+                    "error-recipient": "{} non ha un personaggio attivo!",
+                    "res1": "Dato {} {} a {}."
+                }
+            },
+            "view": {
+                "name": "visualizza",
+                "description": "Visualizza il tuo inventario",
+                "responses": {
+                    "error-items": "Non hai nulla nel tuo inventario!",
+                    "no-description": "Nessuna Descrizione"
+                }
+            }
+        }
+    },
+    "investigate_admin": {
+        "group_name": "investiga_admin",
+        "group_description": "Gestione dell'investigazione dell'Admin",
+        "commands": {
+            "new": {
+                "name": "nuovo",
+                "description": "Definisci un nuovo oggetti investigabile per un canale specifico. Fino a 8 alternative",
+                "options": {
+                    "channel": {
+                        "name": "canale",
+                        "description": "Il canale in cui apparir\u00e0 quest'investigazione"
+                    },
+                    "desc": {
+                        "name": "desc",
+                        "description": "Testo da mostrare all'investigatore"
+                    },
+                    "name": {
+                        "name": "nome",
+                        "description": "Nome predefinito"
+                    },
+                    "name_2": {
+                        "name": "nome_2",
+                        "description": "Nome alternativo"
+                    },
+                    "name_3": {
+                        "name": "nome_3",
+                        "description": "Nome alternativo"
+                    },
+                    "name_4": {
+                        "name": "nome_4",
+                        "description": "Nome alternativo"
+                    },
+                    "name_5": {
+                        "name": "nome_5",
+                        "description": "Nome alternativo"
+                    },
+                    "name_6": {
+                        "name": "nome_6",
+                        "description": "Nome alternativo"
+                    },
+                    "name_7": {
+                        "name": "nome_7",
+                        "description": "Nome alternativo"
+                    },
+                    "name_8": {
+                        "name": "nome_8",
+                        "description": "Nome alternativo"
+                    },
+                    "stealable": {
+                        "name": "rubabile",
+                        "description": "Imposta a 'True' per permettere ai giocatori di prendere l'oggetto"
+                    }
+                },
+                "responses": {
+                    "res1": "Aggiunto {} a <#{}>."
+                }
+            },
+            "rm": {
+                "name": "rm",
+                "description": "Rimuove un oggetto investigabile da un canale specificato per nome",
+                "options": {
+                    "channel": {
+                        "name": "canale",
+                        "description": "Canale in cui si trova l'investigazione"
+                    },
+                    "name": {
+                        "name": "nome",
+                        "description": "Nome dell'oggetto (predefinito o alternativo)"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Non sono riuscito a trovare {} in <#{}>!",
+                    "res1": "Rimosso {} da <#{}>."
+                }
+            },
+            "list": {
+                "name": "lista",
+                "description": "Lista le investigazioni",
+                "responses": {
+                    "item-taken": "(Preso da <@{}>) "
+                }
+            }
+        }
+    },
+    "investigate": {
+        "group_name": "investigate",
+        "group_description": "Player investigation",
+        "commands": {
+            "here": {
+                "name": "here",
+                "description": "Investigate an item in current channel",
+                "options": {
+                    "name": {
+                        "name": "name",
+                        "description": "Name of object"
+                    }
+                },
+                "responses": {
+                    "error-missing": "{} does not exist in this channel!"
+                }
+            },
+            "take": {
+                "name": "take",
+                "description": "Take an item in current channel, if allowed",
+                "options": {
+                    "name": {
+                        "name": "name",
+                        "description": "Name of object"
+                    }
+                },
+                "responses": {
+                    "error-missing": "{} does not exist in this channel!",
+                    "error-forbidden": "{} cannot be taken!",
+                    "res1": "Took {}"
+                }
+            }
+        }
+    },
+    "msg_admin": {
+        "group_name": "msg_admin",
+        "group_description": "Admin messaging management",
+        "commands": {
+            "anon": {
+                "name": "anon",
+                "description": "Enable or disable anonymous messaging. All players will need a private channel to use these.",
+                "options": {
+                    "toggle": {
+                        "name": "toggle",
+                        "description": "Select permission",
+                        "choices": [
+                            "ON",
+                            "OFF"
+                        ]
+                    }
+                },
+                "responses": {
+                    "res1": "Anonymous messaging is **disabled** for your server.",
+                    "res2": "Anonymous messaging is **enabled** for your server.",
+                    "warning": "\n\n**These characters are missing associated channels: {}**\nYou will need to assign them one with `profile_admin edit channel` for them to use messaging commands!"
+                }
+            },
+            "channels": {
+                "name": "channels",
+                "description": "List characters and their associated messaging channels",
+                "responses": {
+                    "res1": "__Messaging Channels__",
+                    "res2": "\n{}: **NONE**"
+                }
+            }
+        }
+    },
+    "msg": {
+        "group_name": "msg",
+        "group_description": "Private messaging",
+        "commands": {
+            "whisper": {
+                "name": "whisper",
+                "description": "Non-anonymously message another player's designated channel. Sends receipt to your channel",
+                "options": {
+                    "player": {
+                        "name": "player",
+                        "description": "Character to privately message"
+                    },
+                    "message": {
+                        "name": "message",
+                        "description": "Message to send, limit 1500 characters"
+                    }
+                },
+                "responses": {
+                    "error-channel": "Missing or invalid channel for {}!",
+                    "error-char": "That user does not have an active character!",
+                    "error-perms": "Missing permissions in recipient channel!",
+                    "warning-perms": "Messaged {}, but missing permissions in your channel!",
+                    "res1": "Messaged {}.",
+                    "receiver-title": "Message from {}",
+                    "sender-receipt": "Message to {}"
+                }
+            },
+            "anon": {
+                "name": "anon",
+                "description": "Anonymously message another player's designated channel. Sends receipt to your channel",
+                "options": {
+                    "player": {
+                        "name": "player",
+                        "description": "Character to privately message"
+                    },
+                    "message": {
+                        "name": "message",
+                        "description": "Message to send, limit 1500 characters"
+                    }
+                },
+                "responses": {
+                    "error-disabled": "Anonymous messaging is disabled in this server!",
+                    "error-channel": "Missing or invalid channel for {}!",
+                    "error-char": "That user does not have an active character!",
+                    "error-perms": "Missing permissions in recipient channel!",
+                    "warning-perms": "Messaged {}, but missing permissions in your channel!",
+                    "res1": "Messaged {}.",
+                    "receiver-title": "Anonymous message!",
+                    "sender-receipt": "Anonymous message to {}"
+                }
+            }
+        }
+    },
+    "profile_admin": {
+        "group_name": "profile_admin",
+        "group_description": "Admin profile setup",
+        "commands": {
+            "new": {
+                "name": "new",
+                "description": "Register a player, character, and name to the bot",
+                "options": {
+                    "player": {
+                        "name": "player",
+                        "description": "Who will play this character"
+                    },
+                    "name": {
+                        "name": "name",
+                        "description": "The character's given/default name to display. 32 character max"
+                    },
+                    "surname": {
+                        "name": "surname",
+                        "description": "The rest of the character's name, if any. 32 character max"
+                    },
+                    "channel": {
+                        "name": "channel",
+                        "description": "Where anonymous messages and whispers will be sent"
+                    }
+                },
+                "responses": {
+                    "error-duplicate": "Cannot add {} without causing a duplicate!",
+                    "res1": "Added {} {}"
+                }
+            },
+            "rm": {
+                "name": "rm",
+                "description": "Unregister a character",
+                "options": {
+                    "player": {
+                        "name": "player",
+                        "description": "Who played this character"
+                    },
+                    "name": {
+                        "name": "name",
+                        "description": "The character's display name"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Could not find that character under that player!",
+                    "res1": "Removed {}. This player may not have an active character anymore, but can `/profile swap` to another!"
+                }
+            },
+            "disable": {
+                "name": "disable",
+                "description": "Set a character to inactive (disabling the player's ability to use commands)",
+                "options": {
+                    "name": {
+                        "name": "name",
+                        "description": "The character's display name"
+                    },
+                    "player": {
+                        "name": "player",
+                        "description": "Who plays this character"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Could not find that character under that player!",
+                    "res1": "Disabled character for {}."
+                }
+            }
+        }
+    },
+    "profile_admin_edit": {
+        "group_name": "edit",
+        "group_description": "Admin profile editing",
+        "commands": {
+            "text": {
+                "name": "text",
+                "description": "Edit a character's name or surname",
+                "options": {
+                    "player": {
+                        "name": "player",
+                        "description": "Who plays this character"
+                    },
+                    "name": {
+                        "name": "name",
+                        "description": "The character's display name"
+                    },
+                    "field_to_change": {
+                        "name": "field_to_change",
+                        "description": "Specify Name or Surname",
+                        "choices": [
+                            "Name",
+                            "Surname"
+                        ]
+                    },
+                    "new_value": {
+                        "name": "new_value",
+                        "description": "New name or surname. 32 character maximum"
+                    }
+                },
+                "responses": {
+                    "error-duplicate": "Cannot edit {} without causing a duplicate!",
+                    "error-missing": "Could not find that character under that player!",
+                    "res1": "Updated character for {}."
+                }
+            },
+            "channel": {
+                "name": "channel",
+                "description": "Add or edit a character's associated channel",
+                "options": {
+                    "player": {
+                        "name": "player",
+                        "description": "Who plays this character"
+                    },
+                    "name": {
+                        "name": "name",
+                        "description": "The character's display name"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Could not find that character under that player!",
+                    "res1": "Updated character for {}."
+                }
+            }
+        }
+    },
+    "profile": {
+        "group_name": "profile",
+        "group_description": "Character profiles",
+        "commands": {
+            "view": {
+                "name": "view",
+                "description": "View a character's profile",
+                "options": {
+                    "player": {
+                        "name": "player",
+                        "description": "The user who plays this character"
+                    },
+                    "name": {
+                        "name": "name",
+                        "description": "Character's display name (usually given name)"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Cannot find that character for that player!",
+                    "error-url": "Missing image URL!"
+                }
+            },
+            "list": {
+                "name": "list",
+                "description": "List all registered characters for this server",
+                "responses": {
+                    "res1": "Characters in {}",
+                    "error-nochars": "This server has no registered characters!"
+                }
+            },
+            "swap": {
+                "name": "swap",
+                "description": "Set your active character",
+                "options": {
+                    "name": {
+                        "name": "name",
+                        "description": "Display name of character to swap to"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Cannot find a character named {} for you!",
+                    "res1": "Swapped character to {}"
+                }
+            },
+            "current": {
+                "name": "current",
+                "description": "Check your active character",
+                "responses": {
+                    "res1": "You are currently playing as **{}**"
+                }
+            }
+        }
+    },
+    "profile_embed": {
+        "group_name": "embed",
+        "group_description": "Profile editing",
+        "commands": {
+            "edit": {
+                "name": "edit",
+                "description": "Edit profile embed fields (color, thumbnail, or image)",
+                "options": {
+                    "name": {
+                        "name": "name",
+                        "description": "Your character's display name"
+                    },
+                    "field_to_change": {
+                        "name": "field_to_change"
+                    },
+                    "new_value": {
+                        "name": "new_value",
+                        "description": "Hex code (without #) or image url"
+                    }
+                },
+                "responses": {
+                    "error-hex": "#{} is not a valid hex!",
+                    "error-missing": "Could not find a character with that name for you!",
+                    "error-url": "I cannot display that image URL! Reverting.",
+                    "res1": "Updated"
+                }
+            },
+            "field": {
+                "name": "field",
+                "description": "Add or edit up to 25 fields to your character's profile embed",
+                "options": {
+                    "name": {
+                        "name": "name",
+                        "description": "Your character's display name"
+                    },
+                    "field_title": {
+                        "name": "field_title",
+                        "description": "Up to 256 characters"
+                    },
+                    "field_content": {
+                        "name": "field_content",
+                        "description": "Up to 1024 characters"
+                    }
+                },
+                "responses": {
+                    "error-limit": "You must remove a field before adding a new one!",
+                    "error-missing": "Could not find a character with that name for you!",
+                    "error-length": "Your embed has exceeded the maximum length of 6000. Reverting.",
+                    "res1": "Updated"
+                }
+            },
+            "desc": {
+                "name": "desc",
+                "description": "Add or edit profile embed description",
+                "options": {
+                    "name": {
+                        "name": "name",
+                        "description": "Your character's display name"
+                    },
+                    "content": {
+                        "name": "content",
+                        "description": "Up to 4096 characters"
+                    }
+                },
+                "responses": {
+                    "error-missing": "Could not find a character with that name for you!",
+                    "error-length": "Your embed has exceeded the maximum length of 6000. Reverting.",
+                    "res1": "Updated"
+                }
+            }
+        }
+    }
+}

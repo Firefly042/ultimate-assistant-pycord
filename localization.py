@@ -1,553 +1,217 @@
 """String localization"""
 
-strings = {
-	"common": {
-		"no-character": {
-			"en-US": "You do not have an active character in this server! Do you need to use `/profile scambio`?",
-			"it": "Non hai un personaggio attivo in questo server! Hai bisogno di usare `/profile scambio`?",
-		},
-		"visible-desc": {
-			"en-US": "Set to 'True' for a permanent, visible response.",
-			"it": "Imposta a 'True' per una risposta visibile e permanente.",
-		},
-		"visible-name": {
-			"en-US": "visible",
-			"it": "visibile",
-		},
-	},
+import os
+import json
 
-	"profile_admin": {
-		"group_name": {
-			"en-US": "profile_admin",
-		},
-		"group_description": {
-			"en-US": "Admin profile setup",
-		},
-		"commands": {
-			"new": {
-				"name": {
-					"en-US": "new",
-				},
-				"description": {
-					"en-US": "Register a player, character, and name to the bot",
-				},
-				"options": {
-					"player": {
-						"name": {
-							"en-US": "player",
-						},
-						"description": {
-							"en-US": "Who will play this character",
-						},
-					},
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "The character's given/default name to display. 32 character max",
-						},
-					},
-					"surname": {
-						"name": {
-							"en-US": "surname",
-						},
-						"description": {
-							"en-US": "The rest of the character's name, if any. 32 character max",
-						},
-					},
-					"channel": {
-						"name": {
-							"en-US": "channel",
-						},
-						"description": {
-							"en-US": "Where anonymous messages and whispers will be sent",
-						},
-					},
-				},
-				"responses": {
-					"error1": {
-						"en-US": "Cannot add {} without causing a duplicate!",
-					},
-					"res1": {
-						"en-US": "Added {} {}",
-					},
-				},
-			},
+from discord import OptionChoice
 
-			"rm": {
-				"name": {
-					"en-US": "rm",
-				},
-				"description": {
-					"en-US": "Unregister a character",
-				},
-				"options": {
-					"player": {
-						"name": {
-							"en-US": "player",
-						},
-						"description": {
-							"en-US": "Who played this character",
-						},
-					},
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "The character's display name",
-						},
-					},
-				},
-				"responses": {
-					"error1": {
-						"en-US": "Could not find that character under that player!",
-					},
-					"res1": {
-						"en-US": "Removed {}. This player may not have an active character anymore, but can `/profile swap` to another!",
-					},
-				},
-			},
+class Localization:
+	"""Data encapsulation of .jsons in ./localization"""
 
-			"disable": {
-				"name": {
-					"en-US": "disable",
-				},
-				"description": {
-					"en-US": "Set a character to inactive (disabling the player's ability to use commands)",
-				},
-				"options": {
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "The character's display name",
-						},
-					},
-					"player": {
-						"name": {
-							"en-US": "player",
-						},
-						"description": {
-							"en-US": "Who plays this character",
-						},
-					},
-				},
-				"responses": {
-					"error1": {
-						"en-US": "Could not find that character under that player!",
-					},
-					"res1": {
-						"en-US": "Disabled character for {}.",
-					},
-				},
-			},
-		},
-	},
-
-	"profile_admin_edit": {
-		"group_name": {
-			"en-US": "edit",
-		},
-		"group_description": {
-			"en-US": "Admin profile editing",
-		},
-		"commands": {
-			"text": {
-				"name": {
-					"en-US": "text",
-				},
-				"description": {
-					"en-US": "Edit a character's name or surname",
-				},
-				"options": {
-					"player": {
-						"name": {
-							"en-US": "player",
-						},
-						"description": {
-							"en-US": "Who plays this character",
-						},
-					},
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "The character's display name",
-						},
-					},
-					"field_to_change": {
-						"name": {
-							"en-US": "field_to_change",
-						},
-						"description": {
-							"en-US": "Specify Name or Surname",
-						},
-						"choices": {
-							"Name": {
-								"en-US": "Name",
-							},
-							"Surname": {
-								"en-US": "Surname",
-							},
-						},
-					},
-					"new_value": {
-						"name": {
-							"en-US": "new_value",
-						},
-						"description": {
-							"en-US": "New name or surname. 32 character maximum",
-						},
-					},
-				},
-				"responses": {
-					"error-duplicate": {
-						"en-US": "Cannot edit {} without causing a duplicate!",
-					},
-					"error1": {
-						"en-US": "Could not find that character under that player!",
-					},
-					"res1": {
-						"en-US": "Updated character for {}.",
-					},
-				},
-			},
-
-			"channel": {
-				"name": {
-					"en-US": "channel",
-				},
-				"description": {
-					"en-US": "Add or edit a character's associated channel",
-				},
-				"options": {
-					"player": {
-						"name": {
-							"en-US": "player",
-						},
-						"description": {
-							"en-US": "Who plays this character",
-						},
-					},
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "The character's display name",
-						},
-					},
-				},
-				"responses": {
-					"error1": {
-						"en-US": "Could not find that character under that player!",
-					},
-					"res1": {
-						"en-US": "Updated character for {}.",
-					},
-				},
-			},
-		}
-	},
-
-	"profile": {
-		"group_name": {
-			"en-US": "profile",
-			"it": "profilo",
-		},
-		"group_description": {
-			"en-US": "Character profiles",
-		},
-		"commands": {
-			"view": {
-				"name": {
-					"en-US": "view",
-					"it": "visualizza",
-				},
-				"description": {
-					"en-US": "View a character's profile",
-					"it": "Visualizza il profilo di un personaggio",
-				},
-				"options": {
-					"player": {
-						"name": {
-							"en-US": "player",
-							"it": "giocatore",
-						},
-						"description": {
-							"en-US": "The user who plays this character",
-							"it": "L'utente che usa questo personaggio",
-						},
-					},
-					"name": {
-						"name": {
-							"en-US": "name",
-							"it": "nome"
-						},
-						"description": {
-							"en-US": "Character's display name (usually given name)",
-							"it": "Il nome da display del personaggio",
-						},
-					}
-				},
-				"responses": {
-					"error1": {
-						"en-US": "Cannot find that character for that player!",
-						"it": "Non riesco a trovare quel personaggio per quel giocatore!",
-					},
-				},
-			},
-
-			"list": {
-				"name": {
-					"en-US": "list",
-					"it": "lista",
-				},
-				"description": {
-					"en-US": "List all registered characters for this server",
-					"it": "Lista tutti i personaggi registrati per questo server",
-				},
-				"responses": {
-					"res1": {
-						"en-US": "Characters in {}",
-						"it": "Personaggi in {}"
-					},
-					"error1": {
-						"en-US": "This server has no registered characters!",
-						"it": "Questo server non ha personaggi registrati!",
-					},
-				}
-			},
-
-			"swap": {
-				"name": {
-					"en-US": "swap",
-				},
-				"description": {
-					"en-US":  "Set your active character",
-				},
-				"options": {
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "Display name of character to swap to",
-						},
-					},
-				},
-				"responses": {
-					"error1": {
-						"en-US": "Cannot find a character named {} for you!",
-					},
-					"res1": {
-						"Swapped character to {}",
-					},
-				},
-			},
-
-			"current": {
-				"name": {
-					"en-US": "current",
-				},
-				"description": {
-					"en-US": "Check your active character",
-				},
-				"responses": {
-					"res1": {
-						"en-US": "You are currently playing as **{}**",
-					},
-				},
-			},
-		},
-	},
-
-	"profile_embed": {
-		"group_name": {
-			"en-US": "embed",
-			"it": "embed",
-		},
-		"group_description": {
-			"en-US": "Profile editing",
-			"it": "italiano embed desc",
-		},
-		"commands": {
-			"edit": {
-				"name": {
-					"en-US": "edit",
-				},
-				"description": {
-					"en-US": "Edit profile embed fields (color, thumbnail, or image)",
-				},
-				"options": {
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "Your character's display name",
-						},
-					},
-					"field_to_change": {
-						"name": {
-							"en-US": "field_to_change",
-						},
-					},
-					"new_value": {
-						"name": {
-							"en-US": "new_value",
-						},
-						"description": {
-							"en-US": "Hex code (without #) or image url",
-						},
-					},
-				},
-				"responses": {
-					"error-hex": {
-						"en-US": "#{} is not a valid hex!",
-					},
-					"error1": {
-						"en-US": "Could not find a character with that name for you!",
-					},
-					"error-url": {
-						"en-US": "I cannot display that image URL! Reverting.",
-					},
-					"res1": {
-						"en-US": "Updated",
-					},
-				},
-			},
-
-			"field": {
-				"name": {
-					"en-US": "field",
-				},
-				"description": {
-					"en-US": "Add or edit up to 25 fields to your character's profile embed",
-				},
-				"options": {
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "Your character's display name",
-						},
-					},
-					"field_title": {
-						"name": {
-							"en-US": "field_title",
-						},
-						"description": {
-							"en-US": "Up to 256 characters",
-						},
-					},
-					"field_content": {
-						"name": {
-							"en-US": "field_content",
-						},
-						"description": {
-							"en-US": "Up to 1024 characters",
-						},
-					},
-				},
-				"responses": {
-					"error-limit": {
-						"en-US": "You must remove a field before adding a new one!",
-					},
-					"error1": {
-						"en-US": "Could not find a character with that name for you!",
-					},
-					"error-length": {
-						"en-US": "Your embed has exceeded the maximum length of 6000. Reverting.",
-					},
-					"res1": {
-						"en-US": "Updated",
-					},
-				}
-			},
-
-			"desc": {
-				"name": {
-					"en-US": "desc",
-				},
-				"description": {
-					"en-US": "Add or edit profile embed description",
-				},
-				"options": {
-					"name": {
-						"name": {
-							"en-US": "name",
-						},
-						"description": {
-							"en-US": "Your character's display name",
-						},
-					},
-					"content": {
-						"name": {
-							"en-US": "content",
-						},
-						"description": {
-							"en-US": "Up to 4096 characters",
-						},
-					},
-				},
-				"responses": {
-					"error1": {
-						"en-US": "Could not find a character with that name for you!",
-					},
-					"error-length": {
-						"en-US": "Your embed has exceeded the maximum length of 6000. Reverting.",
-					},
-					"res1": {
-						"en-US": "Updated",
-					},
-				},
-			},
-		},
-	},
-}
+	def __new__(cls):
+		if not hasattr(cls, 'instance'):
+			cls.instance = super(Localization, cls).__new__(cls)
+		return cls.instance
 
 
+	def __init__(self):
+		self.strings = {}
+		self.keys = []
+		# Iterate through files in ./localization
+		for fname in os.listdir("./localization"):
+			locale = fname[:-5]
+			self.keys.append(locale)
 
-def common(tag):
-	return strings["common"][tag]
+			fobject = open(f"./localization/{fname}", "r", encoding="utf-8")
+			self.strings[locale] = json.load(fobject)
 
+			fobject.close()
 
-def group_names(group):
-	return strings[group]["group_name"]
-
-
-def group_descriptions(group):
-	return strings[group]["group_description"]
-
-
-def command_names(group, command):
-	return strings[group]["commands"][command]["name"]
-
-
-def command_descriptions(group, command):
-	return strings[group]["commands"][command]["description"]
+		print("Initialized localizations")
 
 
-def option_names(group, command, option):
-	return strings[group]["commands"][command]["options"][option]["name"]
+	def common(self, tag):
+		"""Dictionary for a common name/description"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale]["common"][tag]
+
+		return res
 
 
-def option_descriptions(group, command, option):
-	return strings[group]["commands"][command]["options"][option]["description"]
+	def common_res(self, tag, locale):
+		"""String for a common response"""
+
+		try:
+			res = self.strings[locale]["common"][tag]
+		except KeyError:
+			return self.strings["en-US"]["common"][tag]
+
+		return res
 
 
-def response(group, command, res_tag, locale):
-	"""Requires locale parameter (ctx.interaction.locale)"""
+	def group_names(self, group):
+		"""Command group name"""
 
-	try:
-		res = strings[group]["commands"][command]["responses"][res_tag][locale]
-	except KeyError:
-		return strings[group]["commands"][command]["responses"][res_tag]["en-US"]
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][group]["group_name"]
 
-	return res
+		return res
+
+
+	def group_descriptions(self, group):
+		"""Command group description"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][group]["group_description"]
+
+		return res
+
+
+	def command_names(self, group, command):
+		"""Command name (in group)"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][group]["commands"][command]["name"]
+
+		return res
+
+
+	def command_descriptions(self, group, command):
+		"""Command description (in group)"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][group]["commands"][command]["description"]
+
+		return res
+
+
+	def nongroup_names(self, command):
+		"""Command name (not in group)"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][command]["name"]
+
+		return res
+
+
+	def nongroup_descriptions(self, command):
+		"""Command description (not in group)"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][command]["description"]
+
+		return res
+
+
+	def nongroup_option_names(self, command, option):
+		"""Command option name (not in group)"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][command]["options"][option]["name"]
+
+		return res
+
+
+	def nongroup_option_descriptions(self, command, option):
+		"""Command option description (not in group)"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][command]["options"][option]["description"]
+
+		return res
+
+
+	def nongroup_choices(self, command, option):
+		"""Returns array of OptionChoice"""
+
+		# Get number of choices fron en-US
+		en_choices = self.strings["en-US"][command]["options"][option]["choices"]
+		n_choices = len(en_choices)
+
+		choices = [OptionChoice(name=en_choices[i], value=en_choices[i]) for i in range(n_choices)]
+
+		for i in range(n_choices):
+			choice = choices[i]
+			locales = {}
+
+			for locale in self.keys:
+				locales[locale] = self.strings[locale][command]["options"][option]["choices"][i]
+
+			choice.name_localizations = locales
+
+		return choices
+
+
+	def nongroup_res(command, tag, locale):
+		try:
+			res = self.strings[locale][command]["responses"][tag]
+		except KeyError:
+			return self.strings["en-US"][command]["responses"][tag]
+
+		return res
+
+
+	def option_names(self, group, command, option):
+		"""Command option name (in group)"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][group]["commands"][command]["options"][option]["name"]
+
+		return res
+
+
+	def option_descriptions(self, group, command, option):
+		"""Command option description (in group)"""
+
+		res = {}
+		for locale in self.keys:
+			res[locale] = self.strings[locale][group]["commands"][command]["options"][option]["description"]
+
+		return res
+
+
+	def choices(self, group, command, option):
+		"""Returns array of OptionChoice"""
+
+		# Get number of choices fron en-US
+		en_choices = self.strings["en-US"][group]["commands"][command]["options"][option]["choices"]
+		n_choices = len(en_choices)
+
+		choices = [OptionChoice(name=en_choices[i], value=en_choices[i]) for i in range(n_choices)]
+
+		for i in range(n_choices):
+			choice = choices[i]
+			locales = {}
+
+			for locale in self.keys:
+				locales[locale] = self.strings[locale][group]["commands"][command]["options"][option]["choices"][i]
+
+			choice.name_localizations = locales
+
+		return choices
+
+
+	def response(self, group, command, tag, locale):
+		"""Requires locale parameter (ctx.interaction.locale)"""
+
+		try:
+			res = self.strings[locale][group]["commands"][command]["responses"][tag]
+		except KeyError:
+			return self.strings["en-US"][group]["commands"][command]["responses"][tag]
+
+		return res
+
+
+# Instantiate singleton
+loc = Localization()

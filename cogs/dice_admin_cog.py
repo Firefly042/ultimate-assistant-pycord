@@ -11,7 +11,7 @@ from discord.ext import commands
 import db
 
 from utils import utils
-
+from localization import loc
 
 # ------------------------------------------------------------------------
 # COG
@@ -32,7 +32,9 @@ class DiceAdminCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	dice_admin = SlashCommandGroup("roll_admin", "Dice rolling (admin)")
+	dice_admin = SlashCommandGroup("roll_admin", "Dice rolling (admin)",
+		name_localizations=loc.group_names("roll_admin"),
+		description_localizations=loc.group_descriptions("roll_admin"))
 
 
 # ------------------------------------------------------------------------
@@ -41,9 +43,16 @@ class DiceAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /roll list
 # ------------------------------------------------------------------------
-	@dice_admin.command(name="list")
-	@option("player", discord.Member, description="Active character to view")
-	@option("visible", bool, default=False, description="Set to True for permanent response")
+	@dice_admin.command(name="list",
+		name_localizations=loc.command_names("roll_admin", "list"),
+		description_localizations=loc.command_descriptions("roll_admin", "list"))
+	@option("player", discord.Member,description="Active character to view",
+		name_localizations=loc.option_names("roll_admin", "list", "player"),
+		description_localizations=loc.option_descriptions("roll_admin", "list", "player"))
+	@option("visible", bool, default=False,
+		description="Set to 'True' for a permanent, visible response.",
+		name_localizations=loc.common("visible-name"),
+		description_localizations=loc.common("visible-desc"))
 	async def roll_list(self, ctx, player, visible):
 		"""View a player's active character's custom rolls"""
 
@@ -52,10 +61,11 @@ class DiceAdminCog(commands.Cog):
 		try:
 			rolls = utils.str_to_dict(char['CustomRolls'])
 		except TypeError:
-			await ctx.respond("That player does not have an active character!", ephemeral=True)
+			error = loc.response("roll_admin", "list", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
 			return
 
-		msg = f"__Custom Rolls for {char['Name']}__"
+		msg = loc.response("roll_admin", "list", "res1").format(char["Name"])
 		for name in sorted(rolls.keys()):
 			msg += f"\n**{name}**: {rolls[name]}"
 
