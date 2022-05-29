@@ -279,7 +279,12 @@ class ProfilePublicCog(commands.Cog):
 	async def profile_view(self, ctx, player, name, visible):
 		"""View a character's profile"""
 
-		embed = utils.get_profile_embed(ctx.guild.id, player.id, name)
+		try:
+			embed = utils.get_profile_embed(ctx.guild.id, player.id, name)
+		except:
+			error = loc.response("profile", "view", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			return
 
 		try:
 			await ctx.respond(embed=embed, ephemeral=not visible)
@@ -287,12 +292,6 @@ class ProfilePublicCog(commands.Cog):
 			error = loc.response("profile", "view", "error-url", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 
-	@profile_view.error
-	async def profile_view_error(self, ctx, _):
-		"""Won't catch exception in normal method for some reason. So it's here."""
-
-		error = loc.response("profile", "view", "error-missing", ctx.interaction.locale)
-		await ctx.respond(error, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /profile list
