@@ -633,7 +633,8 @@
                 "name": "lista",
                 "description": "Lista le investigazioni",
                 "responses": {
-                    "item-taken": "(Preso da <@{}>) "
+                    "item-taken": "(Preso da <@{}>) ",
+                    "warning-nochannel": "inaccessible channel"
                 }
             }
         }
@@ -723,7 +724,7 @@
                     }
                 },
                 "responses": {
-                    "error-channel": "Canale mancante o invalido per {}!",
+                    "error-channel": "Missing or invalid channel for {}! Did you forget to grant viewing permissions?",
                     "error-char": "Quell'utente non ha un personaggio attivo!",
                     "error-perms": "Permessi mancanti nel canale del destinatario!",
                     "warning-perms": "Messaggiato {}, ma non ho i permessi nel tuo canale!",
@@ -747,7 +748,7 @@
                 },
                 "responses": {
                     "error-disabled": "La messaggistica anonima \u00e8 disabilitata in questo server!",
-                    "error-channel": "Canale mancante o invalido per {}!",
+                    "error-channel": "Missing or invalid channel for {}! Did you forget to grant viewing permissions?",
                     "error-char": "Quell'utente non ha un personaggio attivo!",
                     "error-perms": "Permessi mancanti nel canale del destinatario!",
                     "warning-perms": "Messaggiato {}, ma non ho i permessi nel tuo canale!",

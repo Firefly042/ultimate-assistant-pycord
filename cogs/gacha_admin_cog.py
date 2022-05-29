@@ -60,6 +60,9 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_name(self, ctx, name):
 		"""Set the name of your game's currency"""
 
+		# Reasonable limit
+		name = name[:32]
+		
 		db.edit_guild(ctx.guild.id, "CurrencyName", name)
 
 		res = loc.response("gacha_admin_currency", "name", "res1", ctx.interaction.locale).format(name)
@@ -176,7 +179,7 @@ class GachaAdminCog(commands.Cog):
 		try:
 			res = loc.response("gacha_admin_currency", "view", "res1", ctx.interaction.locale).format(name=char["Name"], amount=char["Currency"], units=currency_name)
 			await ctx.respond(res, ephemeral=not visible)
-		finally:
+		except:
 			error = loc.response("gacha_admin_currency", "view", "error-missing", ctx.interaction.locale).format(player.name)
 			await ctx.respond(error, ephemeral=True)
 

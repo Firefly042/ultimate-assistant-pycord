@@ -120,8 +120,13 @@ class ProfilePublicCog(commands.Cog):
 		"""Add or edit up to 25 fields to your character's profile embed"""
 
 		# Get existing fields from db and convert to python dict
-		fields = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ProfileFields"]
-		fields = utils.str_to_dict(fields)
+		try:
+			fields = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ProfileFields"]
+			fields = utils.str_to_dict(fields)
+		except TypeError:
+			error = loc.common_res("no-character", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			return
 
 		# Enforce embed length limits
 		field_title = field_title[:256]
@@ -175,7 +180,12 @@ class ProfilePublicCog(commands.Cog):
 		"""Add or edit profile embed description"""
 
 		# Get previous content, if any
-		previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ProfileDesc"]
+		try:
+			previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ProfileDesc"]
+		except TypeError:
+			error = loc.common_res("no-character", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			return
 
 		# Enforce embed length limits
 		content = content[:4096]
@@ -245,7 +255,7 @@ class ProfilePublicCog(commands.Cog):
 			res = loc.response("profile", "current", "res1", ctx.interaction.locale).format(char["Name"])
 			await ctx.respond(res, ephemeral=not visible)
 		except TypeError:
-			error = loc.common("no-character")
+			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 
 # ------------------------------------------------------------------------
@@ -269,7 +279,12 @@ class ProfilePublicCog(commands.Cog):
 	async def profile_view(self, ctx, player, name, visible):
 		"""View a character's profile"""
 
-		embed = utils.get_profile_embed(ctx.guild.id, player.id, name)
+		try:
+			embed = utils.get_profile_embed(ctx.guild.id, player.id, name)
+		except:
+			error = loc.response("profile", "view", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			return
 
 		try:
 			await ctx.respond(embed=embed, ephemeral=not visible)
@@ -277,12 +292,6 @@ class ProfilePublicCog(commands.Cog):
 			error = loc.response("profile", "view", "error-url", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 
-	@profile_view.error
-	async def profile_view_error(self, ctx, _):
-		"""Won't catch exception in normal method for some reason. So it's here."""
-
-		error = loc.response("profile", "view", "error-missing", ctx.interaction.locale)
-		await ctx.respond(error, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /profile list

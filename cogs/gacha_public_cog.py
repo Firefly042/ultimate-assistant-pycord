@@ -81,7 +81,11 @@ class GachaPublicCog(commands.Cog):
 			item = db.get_random_item(ctx.guild.id)
 
 			msg = loc.nongroup_res("gacha", "res1", ctx.interaction.locale).format(amount=str(currency-cost), units=currency_name)
-			await ctx.respond(content=msg, embed=utils.get_gacha_embed(item), ephemeral=not visible)
+
+			try:
+				await ctx.respond(content=msg, embed=utils.get_gacha_embed(item), ephemeral=not visible)
+			except discord.HTTPException:
+				await ctx.respond(content=msg+"\n[IMAGE URL ERROR]", ephemeral=not visible)
 
 			# Reduce currency
 			db.decrease_currency_single(ctx.guild.id, ctx.interaction.user.id, cost)
