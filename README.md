@@ -10,8 +10,12 @@ Ultimate Assistant is a discord bot maintained by user @Firefly#7113. It aims to
 Further information can be found on this repository's wiki including:
 * Future updates and plans
 * Hosting instructions
-* Contribution guidelines 
 * Privacy Policy and Terms of Service
+
+# Contributing
+Ultimate Assistant now supports **localization**, and is in need of translators! No coding experience necessary! See the [contribution guidelines](./CONTRIBUTING.md) for full instructions!
+
+Contributions to code, writing, and feature requests are always welcome.
 
 
 # Setting up your server
