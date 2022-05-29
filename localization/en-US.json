@@ -774,7 +774,8 @@
 				"description": "List investigations",
 
 				"responses": {
-					"item-taken": "(Taken by <@{}>) "
+					"item-taken": "(Taken by <@{}>) ",
+					"warning-nochannel": "inaccessible channel"
 				}
 			}
 		}
@@ -885,7 +886,7 @@
 				},
 
 				"responses": {
-					"error-channel": "Missing or invalid channel for {}!",
+					"error-channel": "Missing or invalid channel for {}! Did you forget to grant viewing permissions?",
 
 					"error-char": "That user does not have an active character!",
 
@@ -919,7 +920,7 @@
 				"responses": {
 					"error-disabled": "Anonymous messaging is disabled in this server!",
 
-					"error-channel": "Missing or invalid channel for {}!",
+					"error-channel": "Missing or invalid channel for {}! Did you forget to grant viewing permissions?",
 
 					"error-char": "That user does not have an active character!",
 
