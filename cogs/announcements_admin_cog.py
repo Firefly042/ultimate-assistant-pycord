@@ -202,7 +202,7 @@ class AnnouncementsAdminCog(commands.Cog):
 			return
 
 		# Add to db using interaction snowflake as ID
-		db.add_announcement(ctx.interaction.id, ctx.guild.id, channel.id, message, interval, int(utc_time.strftime(DATE_STRING)))
+		db.add_announcement(ctx.interaction.id, ctx.guild.id, channel.id, message[:1024], interval, int(utc_time.strftime(DATE_STRING)))
 
 		res = loc.response("announcements", "new", "res1", ctx.interaction.locale).format(ctx.interaction.id)
 		await ctx.respond(res, ephemeral=True)
