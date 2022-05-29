@@ -60,6 +60,9 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_name(self, ctx, name):
 		"""Set the name of your game's currency"""
 
+		# Reasonable limit
+		name = name[:32]
+		
 		db.edit_guild(ctx.guild.id, "CurrencyName", name)
 
 		res = loc.response("gacha_admin_currency", "name", "res1", ctx.interaction.locale).format(name)
