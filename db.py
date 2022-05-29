@@ -44,8 +44,11 @@ def add_guilds(guild_ids):
 	"""Called when bot joins a guild, or when it is restarted and has been added to guilds"""
 
 	guilds = [(i,) for i in guild_ids]
-	cs.executemany("INSERT INTO GuildInfo ('GuildID') VALUES (?);", guilds)
-	conn.commit()
+	try:
+		cs.executemany("INSERT INTO GuildInfo ('GuildID') VALUES (?);", guilds)
+		conn.commit()
+	except sqlite3.IntegrityError:
+		return
 
 
 def remove_guilds(existing_guilds):

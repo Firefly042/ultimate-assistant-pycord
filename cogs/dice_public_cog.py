@@ -76,7 +76,7 @@ class DicePublicCog(commands.Cog):
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		embed = discord.Embed(title=str(res)[:256])
+		embed = discord.Embed(description=str(res)[:2048])
 		await ctx.respond(embed=embed, ephemeral=not visible)
 
 # ------------------------------------------------------------------------
@@ -116,7 +116,8 @@ class DicePublicCog(commands.Cog):
 			updated = db.add_roll(ctx.guild.id, ctx.interaction.user.id, name, dice)
 		except:
 			error = loc.response("roll", "new", "error-limit", ctx.interaction.locale)
-			await ctx.reply(error, ephemeral=True)
+			await ctx.respond(error, ephemeral=True)
+			return
 
 		if (not updated):
 			error = loc.common_res("no-character", ctx.interaction.locale)
@@ -151,7 +152,7 @@ class DicePublicCog(commands.Cog):
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		res = loc.response("roll", "rm", "res1").format(name.lower())
+		res = loc.response("roll", "rm", "res1", ctx.interaction.locale).format(name.lower())
 		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
@@ -178,7 +179,7 @@ class DicePublicCog(commands.Cog):
 		try:
 			rolls = utils.str_to_dict(char['CustomRolls'])
 		except TypeError:
-			error = loc.common_res("no-character", ctx.interaction.locales)
+			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -196,7 +197,7 @@ class DicePublicCog(commands.Cog):
 
 		# Result
 		desc = loc.response("roll", "c", "res1", ctx.interaction.locale).format(name=char["Name"], dice=name)
-		embed = discord.Embed(color=hex_color, description=f"**{desc}**", title=f"{str(res)[:128]}")
+		embed = discord.Embed(color=hex_color, title=f"**{desc}**"[:128], description=f"{str(res)[:2048]}")
 		await ctx.respond(embed=embed, ephemeral=not visible)
 
 # ------------------------------------------------------------------------
