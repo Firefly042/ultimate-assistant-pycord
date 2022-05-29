@@ -43,7 +43,9 @@ class DeveloperCog(commands.Cog):
 		"""DM developer"""
 
 		if (not self.dm_channel):
-			self.dm_channel = await self.bot.fetch_channel(DEVELOPER_ID)
+			dev_user = await self.bot.fetch_user(DEVELOPER_ID)
+			self.dm_channel = await dev_user.create_dm()
+
 
 		await self.dm_channel.send(f"Added to **{guild.name}** ({guild.id})")
 
@@ -53,7 +55,8 @@ class DeveloperCog(commands.Cog):
 		"""DM developer"""
 
 		if (not self.dm_channel):
-			self.dm_channel = await self.bot.fetch_channel(DEVELOPER_ID)
+			dev_user = await self.bot.fetch_user(DEVELOPER_ID)
+			self.dm_channel = await dev_user.create_dm()
 
 		await self.dm_channel.send(f"Removed from **{guild.name}** ({guild.id})")
 
@@ -63,13 +66,15 @@ class DeveloperCog(commands.Cog):
 		"""DM developer"""
 
 		if (not self.dm_channel):
-			self.dm_channel = await self.bot.fetch_channel(DEVELOPER_ID)
+			dev_user = await self.bot.fetch_user(DEVELOPER_ID)
+			self.dm_channel = await dev_user.create_dm()
+
 
 		msg = f"**GuildID**: {ctx.guild.id}\n"
 		msg += f"**ChannelID**: {ctx.channel.id}\n"
-		msg += f"**UserID**: {ctx.interaction.user.id}"
-		msg += f"**Command**: {ctx.command.qualified_name}"
-		msg += f"**Exception**: {type(exception)}\n--------------------------------------------"
+		msg += f"**UserID**: {ctx.interaction.user.id}\n"
+		msg += f"**Command**: /{ctx.command.qualified_name}\n"
+		msg += f"**Exception**: {exception}\n--------------------------------------------"
 
 		await self.dm_channel.send(msg[:1024])
 
