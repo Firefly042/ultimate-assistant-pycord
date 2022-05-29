@@ -281,8 +281,8 @@
 				"description": "Set the cost of a single gacha use",
 
 				"options": {
-					"name": {
-						"name": "cost",
+					"amount": {
+						"name": "amount",
 						"description": "1 to 999"
 					}
 				},

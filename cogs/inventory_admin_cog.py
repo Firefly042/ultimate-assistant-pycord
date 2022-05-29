@@ -76,7 +76,7 @@ class InventoryAdminCog(commands.Cog):
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		res = loc.response("inv_admin", "take", "res1").format(amount=amount, item=item, name=player.name)
+		res = loc.response("inv_admin", "take", "res1", ctx.interaction.locale).format(amount=amount, item=item, name=player.name)
 		await ctx.respond(res, ephemeral=not visible)
 
 # ------------------------------------------------------------------------

@@ -193,7 +193,7 @@ class ProfilePublicCog(commands.Cog):
 		# Attempt to send embed and warn if limits have been exceeded
 		try:
 			res = loc.response("profile_embed", "desc", "res1", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
+			embed = utils.get_profile_embed(ctx.guild.id, ctx.interaction.user.id, name)
 			await ctx.respond(res, embed=embed, ephemeral=True)
 		except:
 			error = loc.response("profile_embed", "desc", "error-length", ctx.interaction.locale)

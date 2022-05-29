@@ -159,12 +159,12 @@ class InventoryPublicCog(commands.Cog):
 		try:
 			_ = sender_inv[item]
 		except KeyError:
-			error = loc.response("inv", "give", "error-missing").format(item)
+			error = loc.response("inv", "give", "error-missing", ctx.interaction.locale).format(item)
 			await ctx.respond(error, ephemeral=True)
 			return
 
 		if (sender_inv[item]["amount"] < amount):
-			error = loc.response("inv", "give", "error-amount").format(item)
+			error = loc.response("inv", "give", "error-amount", ctx.interaction.local).format(item)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -173,14 +173,14 @@ class InventoryPublicCog(commands.Cog):
 		recipient_updated = db.add_item(ctx.guild.id, recipient.id, item, amount, sender_inv[item]["desc"])
 
 		if (not recipient_updated):
-			error = loc.response("inv", "give", "error-recipient").format(recipient.name)
+			error = loc.response("inv", "give", "error-recipient", ctx.interaction.local).format(recipient.name)
 			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Remove from sender inventory
 		db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount)
 
-		res = loc.response("inv", "give", "res1").format(amount=amount, item=item, name=recipient.name)
+		res = loc.response("inv", "give", "res1", ctx.interaction.local).format(amount=amount, item=item, name=recipient.name)
 		await ctx.respond(res, ephemeral=not visible)
 
 # ------------------------------------------------------------------------

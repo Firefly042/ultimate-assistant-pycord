@@ -152,7 +152,9 @@ class Localization:
 		return choices
 
 
-	def nongroup_res(command, tag, locale):
+	def nongroup_res(self, command, tag, locale):
+		"""Responses for nongroup commands"""
+
 		try:
 			res = self.strings[locale][command]["responses"][tag]
 		except KeyError:

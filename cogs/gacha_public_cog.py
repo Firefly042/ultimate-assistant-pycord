@@ -167,7 +167,7 @@ class GachaPublicCog(commands.Cog):
 		try:
 			_ = receiver['Currency']
 		except TypeError:
-			error = loc.response("currency", "give", "error-missingrecipient", ct.interaction.locale).format(recipient.name)
+			error = loc.response("currency", "give", "error-missingrecipient", ctx.interaction.locale).format(recipient.name)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -176,5 +176,5 @@ class GachaPublicCog(commands.Cog):
 		db.decrease_currency_single(ctx.guild.id, ctx.interaction.user.id, amount)
 
 		# Send response
-		res = loc.response("currency", "give", "res1", ct.interaction.locale).format(sender=sender["Name"], recipient=receiver["Name"], amount=amount, units=currency_name)
+		res = loc.response("currency", "give", "res1", ctx.interaction.locale).format(sender=sender["Name"], recipient=receiver["Name"], amount=amount, units=currency_name)
 		await ctx.respond(res, ephemeral=not visible)

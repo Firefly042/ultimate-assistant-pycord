@@ -123,7 +123,7 @@ class DicePublicCog(commands.Cog):
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		res = loc.response("roll", "new", "res1", ctx.interaction.locale).format(name=name, name=dice)
+		res = loc.response("roll", "new", "res1", ctx.interaction.locale).format(name=name, dice=dice)
 		await ctx.respond(res)
 
 # ------------------------------------------------------------------------

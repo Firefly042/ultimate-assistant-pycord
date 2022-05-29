@@ -205,7 +205,7 @@ class AnnouncementsAdminCog(commands.Cog):
 		db.add_announcement(ctx.interaction.id, ctx.guild.id, channel.id, message, interval, int(utc_time.strftime(DATE_STRING)))
 
 		res = loc.response("announcements", "new", "res1", ctx.interaction.locale).format(ctx.interaction.id)
-		await ctx.respond(res1, ephemeral=True)
+		await ctx.respond(res, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /announcements rm

@@ -85,7 +85,7 @@
                 "responses": {
                     "error-noposts": "You have no scheduled posts!",
                     "res-title": "Automatic posts in {}",
-                    "res-field": ", every {} hours (id: {})",
+                    "res-field": "{start_time}, every {amount} hours (id: {id})",
                     "res-value": "In <#{}>"
                 }
             },
@@ -164,7 +164,7 @@
                     "error-format": "Invalid dice format!",
                     "error-amount": "Too many rolls!",
                     "error-limit": "You have reached the limit of 25 rolls!",
-                    "res1": "Added/Edited custum roll **{}: {}**."
+                    "res1": "Added/Edited custom roll **{name}: {dice}**."
                 }
             },
             "rm": {
@@ -192,7 +192,7 @@
                 },
                 "responses": {
                     "error-missing": "You do not have a roll named {}!",
-                    "res1": "{} rolls {}"
+                    "res1": "{name} rolls {dice}"
                 }
             },
             "list": {
@@ -225,8 +225,8 @@
                 "name": "cost",
                 "description": "Set the cost of a single gacha use",
                 "options": {
-                    "name": {
-                        "name": "cost",
+                    "amount": {
+                        "name": "amount",
                         "description": "1 to 999"
                     }
                 },
@@ -248,7 +248,7 @@
                 },
                 "responses": {
                     "error-missing": "Could not find an active character for {}.",
-                    "res1": "Gave {} to {}."
+                    "res1": "Gave {amount} to {name}."
                 }
             },
             "take": {
@@ -265,7 +265,7 @@
                 },
                 "responses": {
                     "error-missing": "Could not find an active character for {}.",
-                    "res1": "Took {} from {}."
+                    "res1": "Took {amount} from {name}."
                 }
             },
             "give_all": {
@@ -292,7 +292,7 @@
                 },
                 "responses": {
                     "error-missing": "Could not find an active character for {}.",
-                    "res1": "{} has {} {}."
+                    "res1": "{name} has {amount} {units}."
                 }
             },
             "view_all": {
@@ -329,7 +329,7 @@
                 "responses": {
                     "error-duplicate": "Cannot add a duplicate name!",
                     "error-url": "I cannot display that image URL! Removing item.",
-                    "res1": "Added item ({})"
+                    "res1": "Added item ({amount})"
                 }
             },
             "rm": {
@@ -359,9 +359,9 @@
         "name": "gacha",
         "description": "Draw an item from the gacha. Costs at least 1 currency",
         "responses": {
-            "error-currency": "You do not have enough {}!",
+            "error-currency": "You do not have enough {units}!",
             "error-none": "This server has no gacha items!",
-            "res1": "You have {} {} remaining."
+            "res1": "You have {amount} {units} remaining."
         }
     },
     "currency": {
@@ -372,7 +372,7 @@
                 "name": "view",
                 "description": "View how much currency you have",
                 "responses": {
-                    "res1": "{} has {} {}."
+                    "res1": "{name} has {amount} {units}."
                 }
             },
             "give": {
@@ -393,9 +393,9 @@
                     }
                 },
                 "responses": {
-                    "error-amount": "You only have {} {}!",
+                    "error-amount": "You only have {amount} {units}!",
                     "error-missingrecipient": "{} does not have an active character!",
-                    "res1": "{} gives {} {} {}."
+                    "res1": "{sender} gives {recipient} {amount} {units}."
                 }
             }
         }
@@ -427,7 +427,7 @@
                 },
                 "responses": {
                     "error-missing": "That player is not holding any of that item! (Or you did not specify a player with an active character)",
-                    "res1": "Took {} {} from {}."
+                    "res1": "Took {amount} {item} from {name}."
                 }
             },
             "give": {
@@ -453,7 +453,7 @@
                 },
                 "responses": {
                     "error-missing": "That user does not have an active character!",
-                    "res1": "Gave {} {} to {}."
+                    "res1": "Gave {amount} {item} to {name}."
                 }
             },
             "view": {
@@ -495,7 +495,7 @@
                     }
                 },
                 "responses": {
-                    "res1": "Took {} {}"
+                    "res1": "Took {amount} {item}"
                 }
             },
             "drop": {
@@ -513,7 +513,7 @@
                 },
                 "responses": {
                     "error-missing": "You either do not have an active character, or you are not carrying that item!",
-                    "res1": "Dropped {} {}"
+                    "res1": "Dropped {amount} {item}"
                 }
             },
             "give": {
@@ -541,7 +541,7 @@
                     "error-missing": "You are not carrying {}!",
                     "error-amount": "You do not have enough {}!",
                     "error-recipient": "{} does not have an active character!",
-                    "res1": "Gave {} {} to {}."
+                    "res1": "Gave {amount} {item} to {name}."
                 }
             },
             "view": {
@@ -608,7 +608,7 @@
                     }
                 },
                 "responses": {
-                    "res1": "Added {} to <#{}>."
+                    "res1": "Added {names} to <#{channel}>."
                 }
             },
             "rm": {
@@ -625,8 +625,8 @@
                     }
                 },
                 "responses": {
-                    "error-missing": "Could not find {} in <#{}>!",
-                    "res1": "Removed {} from <#{}>."
+                    "error-missing": "Could not find {name} in <#{channel}>!",
+                    "res1": "Removed {name} from <#{channel}>."
                 }
             },
             "list": {
@@ -785,7 +785,7 @@
                 },
                 "responses": {
                     "error-duplicate": "Cannot add {} without causing a duplicate!",
-                    "res1": "Added {} {}"
+                    "res1": "Added {name} {surname}"
                 }
             },
             "rm": {

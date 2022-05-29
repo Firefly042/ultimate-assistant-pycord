@@ -100,7 +100,6 @@ class MessagePublicCog(commands.Cog):
 
 		# Receipt to sender channel
 		title = loc.response("msg", "whisper", "receiver-title", ctx.interaction.locale).format(recipient["Name"])
-			await ctx.respond(error, ephemeral=True)
 		embed_s = discord.Embed(color=embed_r_color, title=title, description=message[:1500])
 		try:
 			await channel_s.send(embed=embed_s)
@@ -109,8 +108,8 @@ class MessagePublicCog(commands.Cog):
 			await ctx.respond(warning, ephemeral=True)
 			return
 
-		res()
-		await ctx.respond(f"Messaged {recipient['Name']}!", ephemeral=True)
+		res = loc.response("msg", "whisper", "re1", ctx.interaction.locale).format(recipient["Name"])
+		await ctx.respond(res, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /msg anon
@@ -179,5 +178,5 @@ class MessagePublicCog(commands.Cog):
 			await ctx.respond(warning, ephemeral=True)
 			return
 
-		res = loc.response("msg", "anon", "res1").format(recipient["Name"])
+		res = loc.response("msg", "anon", "res1", ctx.interaction.locale).format(recipient["Name"])
 		await ctx.respond(res, ephemeral=True)

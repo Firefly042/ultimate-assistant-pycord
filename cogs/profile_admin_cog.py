@@ -110,7 +110,7 @@ class ProfileAdminCog(commands.Cog):
 		name_localizations=loc.option_names("profile_admin_edit", "text", "name"),
 		description_localizations=loc.option_descriptions("profile_admin_edit", "text", "name"))
 	@option("field_to_change", str,
-		choices=loc.choices("profile_admin", "text", "field_to_change"),
+		choices=loc.choices("profile_admin_edit", "text", "field_to_change"),
 		description="Specify Name or Surname.",
 		name_localizations=loc.option_names("profile_admin_edit", "text", "field_to_change"),
 		description_localizations=loc.option_descriptions("profile_admin_edit", "text", "field_to_change"))

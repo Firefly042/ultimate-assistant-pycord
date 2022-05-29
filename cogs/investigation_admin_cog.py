@@ -38,7 +38,7 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	investigate_admin = SlashCommandGroup("investigate_admin", "Admin investigation management",
 		name_localizations=loc.group_names("investigate_admin"),
-		description_localizations=group_descriptions("investigate_admin"))
+		description_localizations=loc.group_descriptions("investigate_admin"))
 
 
 # ------------------------------------------------------------------------
@@ -49,7 +49,7 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@investigate_admin.command(name="new",
 		name_localizations=loc.command_names("investigate_admin", "new"),
-		description_localizations=localization.command_descriptions("investigate_admin", "new"))
+		description_localizations=loc.command_descriptions("investigate_admin", "new"))
 	@option("channel", discord.TextChannel,
 		description="Channel that this investigation is in",
 		name_localizations=loc.option_names("investigate_admin", "new", "channel"),
@@ -111,7 +111,7 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 	@investigate_admin.command(name="rm",
 		name_localizations=loc.command_names("investigate_admin", "rm"),
-		description_localizations=localization.command_descriptions("investigate_admin", "rm"))
+		description_localizations=loc.command_descriptions("investigate_admin", "rm"))
 	@option("channel", discord.TextChannel,
 		description="Channel that the investigation is in",
 		name_localizations=loc.option_names("investigate_admin", "rm", "channel"),

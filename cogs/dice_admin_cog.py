@@ -65,7 +65,7 @@ class DiceAdminCog(commands.Cog):
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		msg = loc.response("roll_admin", "list", "res1").format(char["Name"])
+		msg = loc.response("roll_admin", "list", "res1", ctx.interaction.locale).format(char["Name"])
 		for name in sorted(rolls.keys()):
 			msg += f"\n**{name}**: {rolls[name]}"
 

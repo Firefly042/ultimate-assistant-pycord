@@ -71,16 +71,16 @@ class GachaAdminCog(commands.Cog):
 	@currency.command(name="cost",
 		name_localizations=loc.command_names("gacha_admin_currency", "cost"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "cost"))
-	@option("cost", int, min_value=1, max_value=999,
+	@option("amount", int, min_value=1, max_value=999,
 		description="1 to 999",
-		name_localizations=loc.option_names("gacha_admin_currency", "cost", "cost"),
-		description_localizations=loc.option_descriptions("gacha_admin_currency", "cost", "cost"))
-	async def admin_currency_cost(self, ctx, cost):
+		name_localizations=loc.option_names("gacha_admin_currency", "cost", "amount"),
+		description_localizations=loc.option_descriptions("gacha_admin_currency", "cost", "amount"))
+	async def admin_currency_cost(self, ctx, amount):
 		"""Set the cost of a single gacha use"""
 
-		db.edit_guild(ctx.guild.id, "GachaCost", cost)
+		db.edit_guild(ctx.guild.id, "GachaCost", amount)
 
-		res = loc.response("gacha_admin_currency", "cost", "res1", ctx.interaction.locale).format(cost)
+		res = loc.response("gacha_admin_currency", "cost", "res1", ctx.interaction.locale).format(amount)
 		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
@@ -90,8 +90,7 @@ class GachaAdminCog(commands.Cog):
 		name_localizations=loc.command_names("gacha_admin_currency", "give"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "give"))
 	@option("player", discord.Member,
-		name_localizations=loc.option_names("gacha_admin_currency", "give", "player"),
-		description_localizations=loc.option_descriptions("gacha_admin_currency", "give", "player"))
+		name_localizations=loc.option_names("gacha_admin_currency", "give", "player"))
 	@option("amount", int, min_value=1, max_value=999,
 		description="Amount to give",
 		name_localizations=loc.option_names("gacha_admin_currency", "give", "amount"),
@@ -116,8 +115,7 @@ class GachaAdminCog(commands.Cog):
 		name_localizations=loc.command_names("gacha_admin_currency", "take"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "take"))
 	@option("player", discord.Member,
-		name_localizations=loc.option_names("gacha_admin_currency", "take", "player"),
-		description_localizations=loc.option_descriptions("gacha_admin_currency", "take", "player"))
+		name_localizations=loc.option_names("gacha_admin_currency", "take", "player"))
 	@option("amount", int, min_value=1, max_value=999,
 		description="Amount to take",
 		name_localizations=loc.option_names("gacha_admin_currency", "take", "amount"),
