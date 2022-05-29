@@ -108,7 +108,7 @@ class MessagePublicCog(commands.Cog):
 			await ctx.respond(warning, ephemeral=True)
 			return
 
-		res = loc.response("msg", "whisper", "re1", ctx.interaction.locale).format(recipient["Name"])
+		res = loc.response("msg", "whisper", "res1", ctx.interaction.locale).format(recipient["Name"])
 		await ctx.respond(res, ephemeral=True)
 
 # ------------------------------------------------------------------------
