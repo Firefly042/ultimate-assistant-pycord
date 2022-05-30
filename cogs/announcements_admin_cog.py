@@ -67,7 +67,12 @@ class AnnouncementsAdminCog(commands.Cog):
 		for announcement in announcements:
 			# Check if announcements enabled
 			guild_id = announcement["GuildID"]
-			enabled = db.get_guild_info(guild_id)["AnnouncementsEnabled"]
+
+			try:
+				enabled = db.get_guild_info(guild_id)["AnnouncementsEnabled"]
+			# Announcement registered but guild not in guildinfo
+			except TypeError: 
+				continue
 
 			# Skip if disabled
 			if (not enabled):
