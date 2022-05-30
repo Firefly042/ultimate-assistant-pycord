@@ -22,7 +22,9 @@ bot_intents = discord.Intents.default()
 # ------------------------------------------------------------------------
 # Instantiate bot
 # ------------------------------------------------------------------------
-bot = discord.Bot(debug_guilds=TESTING_SERVERS, intents=bot_intents, activity=discord.Game(name="CHECK PROFILE DESCRIPTION"))
+# bot = discord.Bot(debug_guilds=TESTING_SERVERS, intents=bot_intents, activity=discord.Game(name="CHECK PROFILE DESCRIPTION"))
+
+bot = discord.Bot(intents=bot_intents, activity=discord.Game(name="CHECK PROFILE DESCRIPTION"))
 
 
 # ------------------------------------------------------------------------
