@@ -41,7 +41,7 @@ class MessageAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /msg_admin anon
 # ------------------------------------------------------------------------
-	@message_admin.command(name="anon",
+	@message_admin.command(name="anon", guild_only=True,
 		name_localizations=loc.command_names("msg_admin", "anon"),
 		description_localizations=loc.command_descriptions("msg_admin", "anon"))
 	@option("toggle", str,
@@ -76,7 +76,7 @@ class MessageAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /msg_admin channels
 # ------------------------------------------------------------------------
-	@message_admin.command(name="channels",
+	@message_admin.command(name="channels", guild_only=True,
 		name_localizations=loc.command_names("msg_admin", "channels"),
 		description_localizations=loc.command_descriptions("msg_admin", "channels"))
 	@option("visible", bool, default=False,

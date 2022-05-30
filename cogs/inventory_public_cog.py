@@ -55,7 +55,7 @@ class InventoryPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv take
 # ------------------------------------------------------------------------
-	@inventory.command(name="take",
+	@inventory.command(name="take", guild_only=True,
 		name_localizations=loc.command_names("inv", "take"),
 		description_localizations=loc.command_descriptions("inv", "take"))
 	@option("item", str,
@@ -93,7 +93,7 @@ class InventoryPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv drop
 # ------------------------------------------------------------------------
-	@inventory.command(name="drop",
+	@inventory.command(name="drop", guild_only=True,
 		name_localizations=loc.command_names("inv", "drop"),
 		description_localizations=loc.command_descriptions("inv", "drop"))
 	@option("item", str,
@@ -124,7 +124,7 @@ class InventoryPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv give
 # ------------------------------------------------------------------------
-	@inventory.command(name="give",
+	@inventory.command(name="give", guild_only=True,
 		name_localizations=loc.command_names("inv", "give"),
 		description_localizations=loc.command_descriptions("inv", "give"))
 	@option("recipient", discord.Member,
@@ -186,7 +186,7 @@ class InventoryPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv view
 # ------------------------------------------------------------------------
-	@inventory.command(name="view",
+	@inventory.command(name="view", guild_only=True,
 		name_localizations=loc.command_names("inv", "view"),
 		description_localizations=loc.command_descriptions("inv", "view"))
 	@option("visible", bool, default=False,

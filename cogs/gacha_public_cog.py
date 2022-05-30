@@ -44,7 +44,7 @@ class GachaPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha
 # ------------------------------------------------------------------------
-	@slash_command(name="gacha",
+	@slash_command(name="gacha", guild_only=True,
 		name_localizations=loc.nongroup_names("gacha"),
 		description_localizations=loc.nongroup_descriptions("gacha"))
 	@option("visible", bool, default=False,
@@ -102,7 +102,7 @@ class GachaPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /currency view
 # ------------------------------------------------------------------------
-	@currency.command(name="view",
+	@currency.command(name="view", guild_only=True,
 		name_localizations=loc.command_names("currency", "view"),
 		description_localizations=loc.command_descriptions("currency", "view"))
 	@option("visible", bool, default=False,
@@ -129,7 +129,7 @@ class GachaPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /currency give
 # ------------------------------------------------------------------------
-	@currency.command(name="give",
+	@currency.command(name="give", guild_only=True,
 		name_localizations=loc.command_names("currency", "give"),
 		description_localizations=loc.command_descriptions("currency", "give"))
 	@option("recipient", discord.Member,

@@ -47,7 +47,7 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate_admin new
 # ------------------------------------------------------------------------
-	@investigate_admin.command(name="new",
+	@investigate_admin.command(name="new", guild_only=True,
 		name_localizations=loc.command_names("investigate_admin", "new"),
 		description_localizations=loc.command_descriptions("investigate_admin", "new"))
 	@option("channel", discord.TextChannel,
@@ -109,7 +109,7 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate_admin rm
 # ------------------------------------------------------------------------
-	@investigate_admin.command(name="rm",
+	@investigate_admin.command(name="rm", guild_only=True,
 		name_localizations=loc.command_names("investigate_admin", "rm"),
 		description_localizations=loc.command_descriptions("investigate_admin", "rm"))
 	@option("channel", discord.TextChannel,
@@ -136,7 +136,9 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate_admin list
 # ------------------------------------------------------------------------
-	@investigate_admin.command(name="list")
+	@investigate_admin.command(name="list", guild_only=True,
+		name_localizations=loc.command_names("investigate_admin", "list"),
+		description_localizations=loc.command_descriptions("investigate_admin", "list"))
 	@option("visible", bool, default=False,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),

@@ -50,7 +50,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin currency name
 # ------------------------------------------------------------------------
-	@currency.command(name="name",
+	@currency.command(name="name", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin_currency", "name"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "name"))
 	@option("name", str,
@@ -71,7 +71,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin currency cost
 # ------------------------------------------------------------------------
-	@currency.command(name="cost",
+	@currency.command(name="cost", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin_currency", "cost"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "cost"))
 	@option("amount", int, min_value=1, max_value=999,
@@ -89,7 +89,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin currency give
 # ------------------------------------------------------------------------
-	@currency.command(name="give",
+	@currency.command(name="give", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin_currency", "give"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "give"))
 	@option("player", discord.Member,
@@ -114,7 +114,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin currency take
 # ------------------------------------------------------------------------
-	@currency.command(name="take",
+	@currency.command(name="take", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin_currency", "take"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "take"))
 	@option("player", discord.Member,
@@ -139,7 +139,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin currency give_all
 # ------------------------------------------------------------------------
-	@currency.command(name="give_all",
+	@currency.command(name="give_all", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin_currency", "give_all"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "give_all"))
 	@option("amount", int, min_value=1, max_value=999,
@@ -162,7 +162,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin currency view
 # ------------------------------------------------------------------------
-	@currency.command(name="view",
+	@currency.command(name="view", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin_currency", "view"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "view"))
 	@option("player", discord.Member,
@@ -186,7 +186,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin currency view_all
 # ------------------------------------------------------------------------
-	@currency.command(name="view_all",
+	@currency.command(name="view_all", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin_currency", "view_all"),
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "view_all"))
 	@option("visible", bool, default=False,
@@ -208,7 +208,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin add
 # ------------------------------------------------------------------------
-	@gacha_admin.command(name="add",
+	@gacha_admin.command(name="add", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin", "add"),
 		description_localizations=loc.command_descriptions("gacha_admin", "add"))
 	@option("name", str,
@@ -259,7 +259,7 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin rm
 # ------------------------------------------------------------------------
-	@gacha_admin.command(name="rm",
+	@gacha_admin.command(name="rm", guild_only=True,
 		name_localizations=loc.command_names("gacha_admin", "rm"),
 		description_localizations=loc.command_descriptions("gacha_admin", "rm"))
 	@option("name", str,
@@ -282,7 +282,9 @@ class GachaAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /gacha_admin list
 # ------------------------------------------------------------------------
-	@gacha_admin.command(name="list")
+	@gacha_admin.command(name="list", guild_only=True,
+		name_localizations=loc.command_names("gacha_admin", "list"),
+		description_localizations=loc.command_descriptions("gacha_admin", "list"))
 	@option("visible", bool, default=False,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),

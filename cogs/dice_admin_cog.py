@@ -43,7 +43,7 @@ class DiceAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /roll list
 # ------------------------------------------------------------------------
-	@dice_admin.command(name="list",
+	@dice_admin.command(name="list", guild_only=True,
 		name_localizations=loc.command_names("roll_admin", "list"),
 		description_localizations=loc.command_descriptions("roll_admin", "list"))
 	@option("player", discord.Member,description="Active character to view",

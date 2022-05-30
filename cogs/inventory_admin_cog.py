@@ -47,7 +47,7 @@ class InventoryAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv_admin take
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="take",
+	@inventory_admin.command(name="take", guild_only=True,
 		name_localizations=loc.command_names("inv_admin", "take"),
 		description_localizations=loc.command_descriptions("inv_admin", "take"))
 	@option("player", discord.Member,
@@ -82,7 +82,7 @@ class InventoryAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv_admin give
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="give",
+	@inventory_admin.command(name="give", guild_only=True,
 		name_localizations=loc.command_names("inv_admin", "give"),
 		description_localizations=loc.command_descriptions("inv_admin", "give"))
 	@option("recipient", discord.Member,
@@ -123,7 +123,7 @@ class InventoryAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv_admin view
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="view",
+	@inventory_admin.command(name="view", guild_only=True,
 		name_localizations=loc.command_names("inv_admin", "view"),
 		description_localizations=loc.command_descriptions("inv_admin", "view"))
 	@option("player", discord.Member,

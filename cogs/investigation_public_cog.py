@@ -41,7 +41,7 @@ class InvestigationPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate here
 # ------------------------------------------------------------------------
-	@investigate.command(name="here",
+	@investigate.command(name="here", guild_only=True,
 		name_localizations=loc.command_names("investigate", "here"),
 		description_localizations=loc.command_descriptions("investigate", "here"))
 	@option("name", str,
@@ -70,7 +70,7 @@ class InvestigationPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate take
 # ------------------------------------------------------------------------
-	@investigate.command(name="take",
+	@investigate.command(name="take", guild_only=True,
 		name_localizations=loc.command_names("investigate", "take"),
 		description_localizations=loc.command_descriptions("investigate", "take"))
 	@option("name", str,
