@@ -164,8 +164,8 @@
 		"group_description": "Dice rolling (d20 and custom)",
 
 		"commands": {
-			"d": {
-				"name": "d",
+			"dice": {
+				"name": "dice",
 				"description": "Roll with normal d20 notation",
 
 				"options": {
@@ -226,8 +226,8 @@
 				}
 			},
 
-			"c": {
-				"name": "c",
+			"custom": {
+				"name": "custom",
 				"description": "Roll an existing custom roll by name",
 
 				"options": {

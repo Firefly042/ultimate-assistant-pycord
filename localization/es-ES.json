@@ -1,29 +1,37 @@
 {
     "common": {
         "no-character": "You do not have an active character in this server! Do you need to use `/profile swap`?",
+
         "visible-desc": "Set to 'True' for a permanent, visible response.",
+
         "visible-name": "visible"
     },
+
     "announcements": {
         "group_name": "announcements",
         "group_description": "Automated posting",
+
         "commands": {
             "tz": {
-                "name": "tz",
+                "name": "tz", 
                 "description": "Set timezone for server relative to UTC/GMT. Half/Quarter hours not supported",
+
                 "options": {
                     "utc_offset": {
                         "name": "utc_offset",
                         "description": "Your offset from UTC/GMT"
                     }
                 },
+
                 "responses": {
                     "res1": "Set timezone to **{}**."
                 }
             },
+
             "new": {
                 "name": "new",
                 "description": "Define a new scheduled/repeated announcement (using your server's set timezone)",
+
                 "options": {
                     "channel": {
                         "name": "channel",
@@ -58,40 +66,55 @@
                         "description": "Message, maximum 1024 characters"
                     }
                 },
+
                 "responses": {
                     "error-limit": "You may not have more than 25 automatic posts!",
+
                     "error-date": "Please enter a valid date! Did you enter a nonexistent day like 30th Feb?",
+
                     "error-past": "Please enter a time and date in the future!",
+
                     "res1": "Set automatic post (ID {})."
                 }
             },
-            "rm": {
+
+            "rm": { 
                 "name": "rm",
                 "description": "Remove an announcement by its id (obtained with /announcements list)",
+
                 "options": {
                     "announcement_id": {
                         "name": "announcement_id",
                         "description": "The ID associated with the announcement (found with /list command)"
                     }
                 },
+
                 "responses": {
                     "error-id": "There is no announcement with that ID!",
+
                     "res1": "Removed announcement"
                 }
             },
+
             "list": {
                 "name": "list",
                 "description": "List your server's automated posts in chronological order",
+
                 "responses": {
                     "error-noposts": "You have no scheduled posts!",
+
                     "res-title": "Automatic posts in {}",
+
                     "res-field": "{start_time}, every {amount} hours (id: {id})",
+
                     "res-value": "In <#{}>"
                 }
             },
+
             "toggle": {
                 "name": "toggle",
                 "description": "Disable announcements from being posted until turned back on",
+
                 "options": {
                     "state": {
                         "name": "state",
@@ -102,6 +125,7 @@
                         ]
                     }
                 },
+
                 "responses": {
                     "res1": "Automatic posts set to RUN.",
                     "res2": "Automatic posts set to PAUSE."
@@ -109,47 +133,59 @@
             }
         }
     },
+
     "roll_admin": {
         "group_name": "roll_admin",
         "group_description": "Dice rolling (admin)",
+
         "commands": {
             "list": {
                 "name": "list",
                 "description": "View a player's active character's custom rolls",
+
                 "options": {
                     "player": {
                         "name": "player",
                         "description": "Active character to view"
                     }
                 },
+
                 "responses": {
                     "error-missing": "That player does not have an active character!",
+
                     "res1": "__Custom Rolls for {}__"
                 }
             }
         }
     },
+
     "roll": {
         "group_name": "roll",
         "group_description": "Dice rolling (d20 and custom)",
+
         "commands": {
-            "d": {
-                "name": "d",
+            "dice": {
+                "name": "dice",
                 "description": "Roll with normal d20 notation",
+
                 "options": {
                     "dice": {
                         "name": "dice",
                         "description": "d20 notation"
                     }
                 },
+
                 "responses": {
                     "error-format": "Invalid dice format!",
+
                     "error-amount": "Too many rolls!"
                 }
             },
+
             "new": {
                 "name": "new",
                 "description": "Add or edit a custom dice roll for your active character",
+
                 "options": {
                     "name": {
                         "name": "name",
@@ -160,83 +196,106 @@
                         "description": "d20 notation. 64 characters max"
                     }
                 },
+
                 "responses": {
                     "error-format": "Invalid dice format!",
+
                     "error-amount": "Too many rolls!",
+
                     "error-limit": "You have reached the limit of 25 rolls!",
+
                     "res1": "Added/Edited custom roll **{name}: {dice}**."
                 }
             },
+
             "rm": {
                 "name": "rm",
                 "description": "Remove a custom dice roll for active character",
+
                 "options": {
                     "name": {
                         "name": "name",
                         "description": "Name of existing roll"
                     }
                 },
+
                 "responses": {
                     "error-missing": "You do not have a roll named {}.",
+
                     "res1": "Removed custom roll {}."
                 }
             },
-            "c": {
-                "name": "c",
+
+            "custom": {
+                "name": "custom",
                 "description": "Roll an existing custom roll by name",
+
                 "options": {
                     "name": {
                         "name": "name",
                         "description": "Name of existing roll"
                     }
                 },
+
                 "responses": {
                     "error-missing": "You do not have a roll named {}!",
+
                     "res1": "{name} rolls {dice}"
                 }
             },
+
             "list": {
                 "name": "list",
                 "description": "View your custom rolls",
+
                 "responses": {
                     "res1": "__Custom Rolls__"
                 }
             }
         }
     },
+
     "gacha_admin_currency": {
         "group_name": "currency",
         "group_description": "Admin currency management",
+
         "commands": {
             "name": {
                 "name": "name",
                 "description": "Set the name of your game's currency",
+
                 "options": {
                     "name": {
                         "name": "name",
                         "description": "Plural form recommended"
                     }
                 },
+
                 "responses": {
                     "res1": "Set currency name to {}."
                 }
             },
+
             "cost": {
                 "name": "cost",
                 "description": "Set the cost of a single gacha use",
+
                 "options": {
                     "amount": {
                         "name": "amount",
                         "description": "1 to 999"
                     }
                 },
+
                 "responses": {
                     "res1": "Set gacha cost to {}."
                 }
             },
+
             "give": {
                 "name": "give",
                 "description": "Give currency to an active character",
+
                 "options": {
                     "player": {
                         "name": "player"
@@ -246,14 +305,18 @@
                         "description": "Amount to give"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Could not find an active character for {}.",
+
                     "res1": "Gave {amount} to {name}."
                 }
             },
+
             "take": {
                 "name": "take",
                 "description": "Take currency from an active character",
+
                 "options": {
                     "player": {
                         "name": "player"
@@ -263,51 +326,65 @@
                         "description": "Amount to take"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Could not find an active character for {}.",
+
                     "res1": "Took {amount} from {name}."
                 }
             },
+
             "give_all": {
                 "name": "give_all",
                 "description": "Give currency to all active characters",
+
                 "options": {
                     "amount": {
                         "name": "amount",
                         "description": "Amount to give"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Could not find any active characters for this server.",
+
                     "res1": "Gave {} to all characters."
                 }
             },
+
             "view": {
                 "name": "view",
                 "description": "View currency of an active character",
+
                 "options": {
                     "player": {
                         "name": "player"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Could not find an active character for {}.",
+
                     "res1": "{name} has {amount} {units}."
                 }
             },
+
             "view_all": {
                 "name": "view_all",
                 "description": "View currency for all characters (active and inactive)"
             }
         }
     },
+
     "gacha_admin": {
         "group_name": "gacha_admin",
         "group_description": "Admin gacha management",
+
         "commands": {
             "add": {
                 "name": "add",
                 "description": "Register a new item to gacha, optional item limits and thumbnail",
+
                 "options": {
                     "name": {
                         "name": "name",
@@ -316,6 +393,7 @@
                     "desc": {
                         "name": "desc",
                         "description": "Item description. 1024 character maximum"
+
                     },
                     "amount": {
                         "name": "amount",
@@ -326,58 +404,76 @@
                         "description": "Optional thumbnail image URL"
                     }
                 },
+
                 "responses": {
                     "error-duplicate": "Cannot add a duplicate name!",
+
                     "error-url": "I cannot display that image URL! Removing item.",
+
                     "res1": "Added item ({amount})"
                 }
             },
+
             "rm": {
                 "name": "rm",
                 "description": "Remove an item from gacha by name",
+
                 "options": {
                     "name": {
                         "name": "name",
                         "description": "The display name of item to remove"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Could not find that item!",
+
                     "res1": "Removed {}."
                 }
             },
+
             "list": {
                 "name": "list",
                 "description": "List all gacha items",
+
                 "responses": {
                     "error-none": "You have no gacha items in this server!"
                 }
             }
         }
     },
+
     "gacha": {
         "name": "gacha",
         "description": "Draw an item from the gacha. Costs at least 1 currency",
+
         "responses": {
             "error-currency": "You do not have enough {units}!",
+
             "error-none": "This server has no gacha items!",
+
             "res1": "You have {amount} {units} remaining."
         }
     },
+
     "currency": {
         "group_name": "currency",
         "group_description": "Gacha currency",
+
         "commands": {
             "view": {
                 "name": "view",
                 "description": "View how much currency you have",
+
                 "responses": {
                     "res1": "{name} has {amount} {units}."
                 }
             },
+
             "give": {
                 "name": "give",
                 "description": "Give another active character some of your own currency",
+
                 "options": {
                     "recipient": {
                         "name": "recipient",
@@ -392,25 +488,32 @@
                         "description": "Set to 'False' for hidden response."
                     }
                 },
+
                 "responses": {
                     "error-amount": "You only have {amount} {units}!",
+
                     "error-missingrecipient": "{} does not have an active character!",
+
                     "res1": "{sender} gives {recipient} {amount} {units}."
                 }
             }
         }
     },
+
     "help": {
         "name": "help",
         "description": "Command group overviews (not localized)"
     },
+
     "inv_admin": {
         "group_name": "inv_admin",
         "group_description": "Admin inventory management",
+
         "commands": {
             "take": {
                 "name": "take",
                 "description": "Take one or more of an item from a player's inventory",
+
                 "options": {
                     "player": {
                         "name": "player",
@@ -425,14 +528,18 @@
                         "description": "Amount to take (default 1)"
                     }
                 },
+
                 "responses": {
                     "error-missing": "That player is not holding any of that item! (Or you did not specify a player with an active character)",
+
                     "res1": "Took {amount} {item} from {name}."
                 }
             },
+
             "give": {
                 "name": "give",
                 "description": "Add one or more of an item to a player's inventory",
+
                 "options": {
                     "recipient": {
                         "name": "recipient",
@@ -451,35 +558,45 @@
                         "description": "A short description of the item (256 character maximum)"
                     }
                 },
+
                 "responses": {
                     "error-missing": "That user does not have an active character!",
+
                     "res1": "Gave {amount} {item} to {name}."
                 }
             },
+
             "view": {
                 "name": "view",
                 "description": "View a specified player's inventory (active character only)",
+
                 "options": {
                     "player": {
                         "name": "player",
                         "description": "Player with an active character"
                     }
                 },
+
                 "responses": {
                     "error-missing": "That user does not have an active character!",
+
                     "error-nothing": "That player has nothing in their inventory",
+
                     "no-description": "No Description"
                 }
             }
         }
     },
+
     "inv": {
         "group_name": "inv",
         "group_description": "Player inventory management",
+
         "commands": {
             "take": {
                 "name": "take",
                 "description": "Add one or more of an item to your inventory. Description optional",
+
                 "options": {
                     "item": {
                         "name": "item",
@@ -494,13 +611,16 @@
                         "description": "Optional description, 256 character maximum"
                     }
                 },
+
                 "responses": {
                     "res1": "Took {amount} {item}"
                 }
             },
+
             "drop": {
                 "name": "drop",
                 "description": "Remove one or more of an item from your inventory (case sensitive)",
+
                 "options": {
                     "item": {
                         "name": "item",
@@ -511,14 +631,18 @@
                         "description": "Amount to drop, default 1"
                     }
                 },
+
                 "responses": {
                     "error-missing": "You either do not have an active character, or you are not carrying that item!",
+
                     "res1": "Dropped {amount} {item}"
                 }
             },
+
             "give": {
                 "name": "give",
                 "description": "Give another active character one or more of an item in your inventory",
+
                 "options": {
                     "recipient": {
                         "name": "recipient",
@@ -537,30 +661,40 @@
                         "description": " Set to 'False' for a hidden response."
                     }
                 },
+
                 "responses": {
                     "error-missing": "You are not carrying {}!",
+
                     "error-amount": "You do not have enough {}!",
+
                     "error-recipient": "{} does not have an active character!",
+
                     "res1": "Gave {amount} {item} to {name}."
                 }
             },
+
             "view": {
                 "name": "view",
                 "description": "View your inventory",
+
                 "responses": {
                     "error-items": "You have nothing in your inventory!",
+
                     "no-description": "No Description"
                 }
             }
         }
     },
+
     "investigate_admin": {
         "group_name": "investigate_admin",
         "group_description": "Admin investigation management",
+
         "commands": {
             "new": {
                 "name": "new",
                 "description": "Define an investigatable object for a specified channel. Up to 8 aliases",
+
                 "options": {
                     "channel": {
                         "name": "channel",
@@ -607,13 +741,16 @@
                         "description": "Set to 'True' to allow players to take item"
                     }
                 },
+
                 "responses": {
                     "res1": "Added {names} to <#{channel}>."
                 }
             },
+
             "rm": {
                 "name": "rm",
                 "description": "Remove an investigatable item from a specified channel by name",
+
                 "options": {
                     "channel": {
                         "name": "channel",
@@ -624,14 +761,18 @@
                         "description": "Item name (default or alternative)"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Could not find {name} in <#{channel}>!",
+
                     "res1": "Removed {name} from <#{channel}>."
                 }
             },
+
             "list": {
                 "name": "list",
                 "description": "List investigations",
+
                 "responses": {
                     "item-taken": "(Taken by <@{}>) ",
                     "warning-nochannel": "inaccessible channel"
@@ -639,47 +780,59 @@
             }
         }
     },
+
     "investigate": {
         "group_name": "investigate",
         "group_description": "Player investigation",
+
         "commands": {
             "here": {
                 "name": "here",
                 "description": "Investigate an item in current channel",
+
                 "options": {
                     "name": {
                         "name": "name",
                         "description": "Name of object"
                     }
                 },
+
                 "responses": {
                     "error-missing": "{} does not exist in this channel!"
                 }
             },
+
             "take": {
                 "name": "take",
                 "description": "Take an item in current channel, if allowed",
+
                 "options": {
                     "name": {
                         "name": "name",
                         "description": "Name of object"
                     }
                 },
+
                 "responses": {
                     "error-missing": "{} does not exist in this channel!",
+
                     "error-forbidden": "{} cannot be taken!",
+
                     "res1": "Took {}"
                 }
             }
         }
     },
+
     "msg_admin": {
         "group_name": "msg_admin",
         "group_description": "Admin messaging management",
+
         "commands": {
             "anon": {
                 "name": "anon",
                 "description": "Enable or disable anonymous messaging. All players will need a private channel to use these.",
+
                 "options": {
                     "toggle": {
                         "name": "toggle",
@@ -690,15 +843,20 @@
                         ]
                     }
                 },
+
                 "responses": {
                     "res1": "Anonymous messaging is **disabled** for your server.",
+
                     "res2": "Anonymous messaging is **enabled** for your server.",
+
                     "warning": "\n\n**These characters are missing associated channels: {}**\nYou will need to assign them one with `profile_admin edit channel` for them to use messaging commands!"
                 }
             },
+
             "channels": {
                 "name": "channels",
                 "description": "List characters and their associated messaging channels",
+
                 "responses": {
                     "res1": "__Messaging Channels__",
                     "res2": "\n{}: **NONE**"
@@ -706,13 +864,16 @@
             }
         }
     },
+
     "msg": {
         "group_name": "msg",
         "group_description": "Private messaging",
+
         "commands": {
             "whisper": {
                 "name": "whisper",
                 "description": "Non-anonymously message another player's designated channel. Sends receipt to your channel",
+
                 "options": {
                     "player": {
                         "name": "player",
@@ -723,19 +884,28 @@
                         "description": "Message to send, limit 1500 characters"
                     }
                 },
+
                 "responses": {
                     "error-channel": "Missing or invalid channel for {}! Did you forget to grant viewing permissions?",
+
                     "error-char": "That user does not have an active character!",
+
                     "error-perms": "Missing permissions in recipient channel!",
+
                     "warning-perms": "Messaged {}, but missing permissions in your channel!",
+
                     "res1": "Messaged {}.",
-                    "receiver-title": "Message from {}",
+
+                    "receiver-title": "Message from {}", 
+
                     "sender-receipt": "Message to {}"
                 }
             },
+
             "anon": {
                 "name": "anon",
                 "description": "Anonymously message another player's designated channel. Sends receipt to your channel",
+
                 "options": {
                     "player": {
                         "name": "player",
@@ -746,26 +916,37 @@
                         "description": "Message to send, limit 1500 characters"
                     }
                 },
+
                 "responses": {
                     "error-disabled": "Anonymous messaging is disabled in this server!",
+
                     "error-channel": "Missing or invalid channel for {}! Did you forget to grant viewing permissions?",
+
                     "error-char": "That user does not have an active character!",
+
                     "error-perms": "Missing permissions in recipient channel!",
+
                     "warning-perms": "Messaged {}, but missing permissions in your channel!",
+
                     "res1": "Messaged {}.",
+
                     "receiver-title": "Anonymous message!",
+
                     "sender-receipt": "Anonymous message to {}"
                 }
             }
         }
     },
+
     "profile_admin": {
         "group_name": "profile_admin",
         "group_description": "Admin profile setup",
+
         "commands": {
             "new": {
                 "name": "new",
                 "description": "Register a player, character, and name to the bot",
+
                 "options": {
                     "player": {
                         "name": "player",
@@ -786,12 +967,15 @@
                 },
                 "responses": {
                     "error-duplicate": "Cannot add {} without causing a duplicate!",
+
                     "res1": "Added {name} {surname}"
                 }
             },
+
             "rm": {
                 "name": "rm",
                 "description": "Unregister a character",
+
                 "options": {
                     "player": {
                         "name": "player",
@@ -804,12 +988,15 @@
                 },
                 "responses": {
                     "error-missing": "Could not find that character under that player!",
+
                     "res1": "Removed {}. This player may not have an active character anymore, but can `/profile swap` to another!"
                 }
             },
+
             "disable": {
                 "name": "disable",
                 "description": "Set a character to inactive (disabling the player's ability to use commands)",
+
                 "options": {
                     "name": {
                         "name": "name",
@@ -827,13 +1014,16 @@
             }
         }
     },
+
     "profile_admin_edit": {
         "group_name": "edit",
         "group_description": "Admin profile editing",
+
         "commands": {
             "text": {
                 "name": "text",
                 "description": "Edit a character's name or surname",
+
                 "options": {
                     "player": {
                         "name": "player",
@@ -856,15 +1046,20 @@
                         "description": "New name or surname. 32 character maximum"
                     }
                 },
+
                 "responses": {
                     "error-duplicate": "Cannot edit {} without causing a duplicate!",
+
                     "error-missing": "Could not find that character under that player!",
+
                     "res1": "Updated character for {}."
                 }
             },
+
             "channel": {
                 "name": "channel",
                 "description": "Add or edit a character's associated channel",
+
                 "options": {
                     "player": {
                         "name": "player",
@@ -875,20 +1070,25 @@
                         "description": "The character's display name"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Could not find that character under that player!",
-                    "res1": "Updated character for {}."
+
+                    "res1":  "Updated character for {}."
                 }
             }
         }
     },
+
     "profile": {
         "group_name": "profile",
         "group_description": "Character profiles",
+
         "commands": {
             "view": {
                 "name": "view",
                 "description": "View a character's profile",
+
                 "options": {
                     "player": {
                         "name": "player",
@@ -901,47 +1101,60 @@
                 },
                 "responses": {
                     "error-missing": "Cannot find that character for that player!",
+                    
                     "error-url": "Missing image URL!"
                 }
             },
+
             "list": {
                 "name": "list",
                 "description": "List all registered characters for this server",
+
                 "responses": {
                     "res1": "Characters in {}",
+
                     "error-nochars": "This server has no registered characters!"
                 }
             },
+
             "swap": {
                 "name": "swap",
                 "description": "Set your active character",
+
                 "options": {
                     "name": {
                         "name": "name",
                         "description": "Display name of character to swap to"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Cannot find a character named {} for you!",
+
                     "res1": "Swapped character to {}"
                 }
             },
+
             "current": {
                 "name": "current",
                 "description": "Check your active character",
+
                 "responses": {
-                    "res1": "You are currently playing as **{}**"
+                    "res1":  "You are currently playing as **{}**"
                 }
             }
         }
     },
+
     "profile_embed": {
         "group_name": "embed",
         "group_description": "Profile editing",
+
         "commands": {
             "edit": {
                 "name": "edit",
                 "description": "Edit profile embed fields (color, thumbnail, or image)",
+
                 "options": {
                     "name": {
                         "name": "name",
@@ -955,16 +1168,22 @@
                         "description": "Hex code (without #) or image url"
                     }
                 },
+
                 "responses": {
                     "error-hex": "#{} is not a valid hex!",
-                    "error-missing": "Could not find a character with that name for you!",
+
+                    "error-missing":  "Could not find a character with that name for you!",
+
                     "error-url": "I cannot display that image URL! Reverting.",
+
                     "res1": "Updated"
                 }
             },
+
             "field": {
                 "name": "field",
                 "description": "Add or edit up to 25 fields to your character's profile embed",
+
                 "options": {
                     "name": {
                         "name": "name",
@@ -979,29 +1198,38 @@
                         "description": "Up to 1024 characters"
                     }
                 },
+
                 "responses": {
                     "error-limit": "You must remove a field before adding a new one!",
+
                     "error-missing": "Could not find a character with that name for you!",
+
                     "error-length": "Your embed has exceeded the maximum length of 6000. Reverting.",
+
                     "res1": "Updated"
                 }
             },
+
             "desc": {
                 "name": "desc",
                 "description": "Add or edit profile embed description",
+
                 "options": {
                     "name": {
                         "name": "name",
-                        "description": "Your character's display name"
+                        "description":"Your character's display name"
                     },
                     "content": {
                         "name": "content",
                         "description": "Up to 4096 characters"
                     }
                 },
+
                 "responses": {
                     "error-missing": "Could not find a character with that name for you!",
+
                     "error-length": "Your embed has exceeded the maximum length of 6000. Reverting.",
+
                     "res1": "Updated"
                 }
             }

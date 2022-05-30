@@ -49,30 +49,30 @@ class DicePublicCog(commands.Cog):
 # Commands
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
-# /roll d
+# /roll dice
 # ------------------------------------------------------------------------
-	@dice.command(name="d",
-		name_localizations=loc.command_names("roll", "d"),
-		description_localizations=loc.command_descriptions("roll", "d"))
+	@dice.command(name="dice",
+		name_localizations=loc.command_names("roll", "dice"),
+		description_localizations=loc.command_descriptions("roll", "dice"))
 	@option("dice", str,
 		description="d20 notation",
-		name_localizations=loc.option_names("roll", "d", "dice"),
-		description_localizations=loc.option_descriptions("roll", "d", "dice"))
+		name_localizations=loc.option_names("roll", "dice", "dice"),
+		description_localizations=loc.option_descriptions("roll", "dice", "dice"))
 	@option("visible", bool, default=False,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
 		description_localizations=loc.common("visible-desc"))
-	async def roll_d(self, ctx, dice, visible):
+	async def roll_dice(self, ctx, dice, visible):
 		"""Roll with normal d20 notation"""
 
 		try:
 			res = d20.roll(dice)
 		except d20.errors.RollSyntaxError:
-			error = loc.response("roll", "d", "error-format", ctx.interaction.locale)
+			error = loc.response("roll", "dice", "error-format", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 		except d20.errors.TooManyRolls:
-			error = loc.response("roll", "d", "error-amount", ctx.interaction.locale)
+			error = loc.response("roll", "dice", "error-amount", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -156,15 +156,15 @@ class DicePublicCog(commands.Cog):
 		await ctx.respond(res)
 
 # ------------------------------------------------------------------------
-# /roll c
+# /roll custom
 # ------------------------------------------------------------------------
-	@dice.command(name="c",
-		name_localizations=loc.command_names("roll", "c"),
-		description_localizations=loc.command_descriptions("roll", "c"))
+	@dice.command(name="custom",
+		name_localizations=loc.command_names("roll", "custom"),
+		description_localizations=loc.command_descriptions("roll", "custom"))
 	@option("name", str,
 		description="Name of existing roll",
-		name_localizations=loc.option_names("roll", "c", "name"),
-		description_localizations=loc.option_descriptions("roll", "c", "name"))
+		name_localizations=loc.option_names("roll", "custom", "name"),
+		description_localizations=loc.option_descriptions("roll", "custom", "name"))
 	@option("visible", bool, default=False,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
@@ -187,7 +187,7 @@ class DicePublicCog(commands.Cog):
 		try:
 			res = d20.roll(rolls[name])
 		except KeyError:
-			error = loc.response("roll", "c", "error-missing", ctx.interaction.locale).format(name)
+			error = loc.response("roll", "custom", "error-missing", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
 			return
 
@@ -196,7 +196,7 @@ class DicePublicCog(commands.Cog):
 		hex_color = utils.hex_to_color(char['HexColor'])
 
 		# Result
-		desc = loc.response("roll", "c", "res1", ctx.interaction.locale).format(name=char["Name"], dice=name)
+		desc = loc.response("roll", "custom", "res1", ctx.interaction.locale).format(name=char["Name"], dice=name)
 		embed = discord.Embed(color=hex_color, title=f"**{desc}**"[:128], description=f"{str(res)[:2048]}")
 		await ctx.respond(embed=embed, ephemeral=not visible)
 
