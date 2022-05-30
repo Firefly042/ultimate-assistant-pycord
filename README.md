@@ -18,13 +18,27 @@ Ultimate Assistant now supports **localization**, and is in need of translators!
 Contributions to code, writing, and feature requests are always welcome.
 
 # Examples
+https://user-images.githubusercontent.com/17179785/170972621-9ea6383a-e3a5-4486-a976-a0c3d2e0618e.mp4
+
+https://user-images.githubusercontent.com/17179785/170972660-da1b695d-f49a-43e9-9524-4834e97444ba.mp4
+
+https://user-images.githubusercontent.com/17179785/170972686-8af19ead-1c15-4c94-9823-e7eb4edbd529.mp4
 
 
 # Getting Started
 1. With discord's permissions v2 update, admin permissions are now in the hands of server moderators. To grey out commands for non-players and non-admins, moderators should *heavily* consider using the Integration settings in their server settings like so:
-![ex 1](./images/perms_example1.PNG)
-![ex 2](./images/perms_example2.PNG)
-![ex 3](./images/perms_example3.PNG)
+
+https://user-images.githubusercontent.com/17179785/170972711-5fca82c4-eecd-4943-a1fa-82ba92884946.mp4
+
+Player groups are: 
+/currency
+/gacha
+/help
+/inv
+/investigate
+/msg
+/profile
+/roll
 
 2. Each player and character in your game will need to be registered with `/profile_admin new`. Players can have multiple registered characters each, but only one active character at a time.
 
