@@ -23,11 +23,11 @@ HELP_EMBEDS = {
 
 			"Support the Developer": "[Ko-fi](https://ko-fi.com/firefly42)",
 
-			"Commissions": "[I can make other things too.](https://docs.google.com/document/d/1kM7qFBWqGsHktgrQHdCSf0HYJCfrTAa9MVsGPE8xF6A/edit?usp=sharing)",
+			"Getting Started": "1. Set application permissions for moderator and player roles in your server settings (Integrations). Here's an official [guide](https://discord.com/blog/slash-commands-permissions-discord-apps-bots) from Discord.\n\n2. Set up character profiles with `/profile_admin new`. If you plan to use the Messaging features, you will need designated player channels with `/profile_admin edit channel`.\n\n3. Players may customize their profiles further with `/profile` commands.\n\n4. Multiple characters can be registered for a single player, but only one may be active at a time (set with `/profile swap`).",
 
-			"Basic Usage": "1. Set application permissions for moderator and player roles in your server settings (Integrations). Here's an official [guide](https://discord.com/blog/slash-commands-permissions-discord-apps-bots) from Discord.\n\n2. Set up character profiles with `/profile_admin` commands. If you plan to use the Messaging features, you will need designated player channels.\n\n3. Players may customize their profiles further with `/profile` commands.\n\n4. Multiple characters can be registered for a single player, but only one may be active at a time (set with `/profile swap`).",
+			"Tip!": "Many commands have optional arguments that may be of interest! Make note of the `visible` parameter that makes use of temporary/single-user messages.",
 
-			"Optional Parameters": "Many commands have optional arguments that may be of interest! Make note of the `visible` parameter that makes use of temporary/single-user messages."
+			"Localization": "UA will support localization in the future (when discord displays it reliably)! To prepare, translators are needed. Translation is being done on [crowdin](https://crowdin.com/project/ultimate-assistant)!"
 		},
 		"Footer": "This bot is written by discord user @Firefly#7113. If this code is not running on bot user 517165856933937153, it is being hosted by someone else and should only be used if you trust that person."
 	},
@@ -73,11 +73,11 @@ HELP_EMBEDS = {
 	"Dice": {
 		"Description": "Rolling with d20 notation and custom rolls",
 		"Fields": {
-			"Admin": "`/roll_admin list` - List rolls for a specified player",
+			"Admin": "`/roll_admin list` - List custom rolls for a specified player",
 
-			"Player": "`/roll` - Manage a set of up to 25 named rolls",
+			"Player": "`/roll` - Manage a set of up to 25 named (custom) rolls",
 
-			"Public": "`/roll d` - Roll with normal d20 notation"
+			"Public": "`/roll dice` - Roll with normal d20 notation"
 		}
 	},
 
