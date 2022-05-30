@@ -18,9 +18,11 @@ Ultimate Assistant now supports **localization**, and is in need of translators!
 Contributions to code, writing, and feature requests are always welcome.
 
 # Examples
-./images/profile_new_example.mp4
-./images/gacha_example.mp4)
-./images/dice_example.mp4)
+https://raw.githubusercontent.com/Firefly042/ultimate-assistant-pycord/main/images/profile_new_example.mp4
+
+https://raw.githubusercontent.com/Firefly042/ultimate-assistant-pycord/main/images/gacha_example.mp4
+
+https://raw.githubusercontent.com/Firefly042/ultimate-assistant-pycord/main/images/dice_example.mp4
 
 # Getting Started
 1. With discord's permissions v2 update, admin permissions are now in the hands of server moderators. To grey out commands for non-players and non-admins, moderators should *heavily* consider using the Integration settings in their server settings like so:
