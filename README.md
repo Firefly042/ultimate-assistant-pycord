@@ -17,8 +17,12 @@ Ultimate Assistant now supports **localization**, and is in need of translators!
 
 Contributions to code, writing, and feature requests are always welcome.
 
+# Examples
+![ex 1](./images/profile_new_example.gif)
+![ex 2](./images/gacha_example.gif)
+![ex 3](./images/dice_example.gif)
 
-# Setting up your server
+# Getting Started
 1. With discord's permissions v2 update, admin permissions are now in the hands of server moderators. To grey out commands for non-players and non-admins, moderators should *heavily* consider using the Integration settings in their server settings like so:
 ![ex 1](./images/perms_example1.PNG)
 ![ex 2](./images/perms_example2.PNG)
