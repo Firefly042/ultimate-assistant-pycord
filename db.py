@@ -27,7 +27,7 @@ print(f"Connected to {DB_NAME}")
 
 
 def disconnect():
-	"""Called when the shutdown command is used for proper practice"""
+	"""Called when the bot shuts down"""
 
 	conn.close()
 	print("Database connection closed")
@@ -85,13 +85,6 @@ def get_guild_info(guild_id):
 	cs.execute("SELECT * FROM GuildInfo WHERE GuildID = ? LIMIT 1;", (guild_id,))
 	return cs.fetchone()
 
-def get_player_roles():
-	"""Returns array of all player role IDs"""
-
-	cs.execute("SELECT PlayerRole FROM GuildInfo;")
-	roles = [entry["PlayerRole"] for entry in cs.fetchall() if entry["PlayerRole"]]
-	print(roles)
-	return roles
 
 # ------------------------------------------------------------------------
 # Other functions
