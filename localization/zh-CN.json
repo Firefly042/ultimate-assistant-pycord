@@ -634,7 +634,8 @@
                 "description": "List investigations",
                 "responses": {
                     "item-taken": "(Taken by <@{}>) ",
-                    "warning-nochannel": "inaccessible channel"
+                    "warning-nochannel": "inaccessible channel",
+                    "error-none": "There are no investigations in this server!"
                 }
             }
         }

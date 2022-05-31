@@ -148,11 +148,16 @@ class InvestigationAdminCog(commands.Cog):
 
 		items = db.get_all_investigations(ctx.guild.id)
 
+		if (len(items) == 0):
+			error = loc.response("investigate_admin", "list", "error-none", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			return
+
 		channels = list(set([item["ChannelID"] for item in items]))
 
 		# To stay safely within limits, we'll allow up to 10 items per embed
 		n_embeds = math.ceil(len(channels) / 10)
-		embeds = [discord.Embed(title=f"{i+1}/{n_embeds}") for i in range(n_embeds)]
+		embeds = [discord.Embed(title=f"{i+1}/{n_embeds}") for i in range(0, n_embeds)]
 
 		for i in range(0, n_embeds):
 			for j in range(0, 10):
