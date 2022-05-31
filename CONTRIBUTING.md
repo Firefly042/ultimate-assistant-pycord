@@ -11,7 +11,7 @@ If you are comfortable with github, you may submit a pull request with the 'cred
 2. While not explicitly required for this case, it is good practice to make a new **branch** (on your fork) with an informative name.
 3. On the new branch, add your credits to `CONTRIBUTORS.md`, following the given format.
 4. Commit/Save your changes.
-5. Submit a **pull request** to the **main** branch of this repository (Firefly042) following the provided template. Be sure to use the **credit request** label.
+5. Submit a **pull request** to the **main** branch of this repository (Firefly042) following the provided template. Be sure to use the 'credit request' label.
 
 
 # For Translators
@@ -19,21 +19,21 @@ All translators can request access to [this crowdin project](https://crowdin.com
 
 **Guidelines**
 * When referring to boolean options, 'True' and 'False' are not translated at the time of writing. (See `common > visible-desc` for an example).
-* Values inside `{}` should be left untranslated as they refer to hardcoded arguments in the code.
+* Values inside `{}` should be left untranslated as they refer to parameters in the code.
 * Do *not* directly edit any localization files in the repository. They are overwritten by the crowdin build.
 
 
 # For Writers
-If you would like to propose a change to names, descriptions, or responses, either create an **Issue** or mention it in the support server. If you are comfortable with github forking, branching, and pull requests, you may also edit the strings directly in `localizations/en-US.json` and the corresponding command file(s). [Here](https://github.com/firstcontributions/first-contributions/blob/master/gui-tool-tutorials/github-desktop-tutorial.md) is a good guide that can be adjusted to work entirely in-browser. 
-
-1. If you are submitting a pull request, you must create an **Issue** with the **string rewording** tag. Discussing in the support server is also recommended if you are proposing more than a spelling/grammar fix.
-2. Follow the guide to make your changes. You *must* edit the default strings in the corresponding command files.
-3. You can include your contribution credit in this as well. Be sure to add the 'credit request' label if you do so.
+If you would like to propose a change to names, descriptions, or responses, either create an **Issue** or mention it in the support server. Pull requests with edited strings will not be accepted at this time due to localization procedures. 
 
 
 # For Coders
-You are likely familiar enough with Github's fork and branch workflow. If not, follow the linked guide in the Translator section. If you're not familiar with discord bots, follow the Hosting instructions on the wiki's Home page.
+You are likely familiar enough with Github's fork and branch workflow. If you're not familiar with discord bots, follow the Hosting instructions on the wiki's Home page.
 
 1. Submit an Issue (bug or feature request) if there isn't one yet. 
 2. Lint your changes to the best of ability and follow the established format as closely as possible.
 3. Submit a pull request to the **test** branch using the code template. Be sure to include your contribution credit if it's not there.
+
+
+# Bug Reports and Feature Requests
+Something not working as expected? Do you have an ideas for new or existing features? Submit an **Issue** with the appropriate template!
