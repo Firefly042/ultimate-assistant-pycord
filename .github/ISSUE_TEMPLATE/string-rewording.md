@@ -7,17 +7,20 @@ assignees: ''
 
 ---
 
-**Associated command**
+## Associated command
 `/command name` (in English if possible)
 
-**Current string**
+## Current string
 In English if possible
 
-**Proposed string**
+## Proposed string
 In English if possible
 
-**Reason**
-[Typo, clarity, information, grammar etc.]
+## Reason
+Typo, clarity, information, grammar etc.
 
-**Will localizations need to be edited?**
-[Yes or No]
+## Will localizations need to be edited?
+Yes or No
+
+## Additional context
+Anything else that may be relevant
