@@ -153,14 +153,14 @@ class InvestigationAdminCog(commands.Cog):
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		channels = list(set([item["ChannelID"] for item in items]))
+		channels = list({item["ChannelID"] for item in items})
 
 		# To stay safely within limits, we'll allow up to 10 items per embed
 		n_embeds = math.ceil(len(channels) / 10)
-		embeds = [discord.Embed(title=f"{i+1}/{n_embeds}") for i in range(0, n_embeds)]
+		embeds = [discord.Embed(title=f"{i+1}/{n_embeds}") for i in range(n_embeds)]
 
-		for i in range(0, n_embeds):
-			for j in range(0, 10):
+		for i in range(n_embeds):
+			for j in range(10):
 				try:
 					channel_name = await ctx.guild.fetch_channel(channels[j])
 				except discord.Forbidden:

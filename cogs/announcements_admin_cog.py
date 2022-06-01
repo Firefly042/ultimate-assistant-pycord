@@ -127,11 +127,7 @@ class AnnouncementsAdminCog(commands.Cog):
 
 		db.edit_guild(ctx.guild.id, "Timezone", utc_offset)
 
-		if (utc_offset >= 0):
-			tz_str = f"UTC+{utc_offset}"
-		else:
-			tz_str = f"UTC{utc_offset}"
-
+		tz_str = f"UTC+{utc_offset}" if (utc_offset >= 0) else f"UTC{utc_offset}"
 		res = loc.response("announcements", "tz", "res1", ctx.interaction.locale).format(tz_str)
 		await ctx.respond(res)
 
@@ -157,7 +153,7 @@ class AnnouncementsAdminCog(commands.Cog):
 		description="Day to begin",
 		name_localizations=loc.option_names("announcements", "new", "start_day"),
 		description_localizations=loc.option_descriptions("announcements", "new", "start_day"))
-	@option("start_hour", int, choices=list(range(0, 24)),
+	@option("start_hour", int, choices=list(range(24)),
 		description="Hour to begin (24 hour format)",
 		name_localizations=loc.option_names("announcements", "new", "start_hour"),
 		description_localizations=loc.option_descriptions("announcements", "new", "start_hour"))

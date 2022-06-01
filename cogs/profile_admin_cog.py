@@ -72,10 +72,7 @@ class ProfileAdminCog(commands.Cog):
 		if (surname):
 			surname = surname[:32]
 
-		if (channel):
-			channel_id = channel.id
-		else:
-			channel_id = None
+		channel_id = channel.id if channel else None
 
 		# Add to db, catches uniqueness error
 		try:
