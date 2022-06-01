@@ -36,25 +36,6 @@ def app_died():
 
 	db.disconnect()
 
-	# Remove __pycache__
-	try:
-		shutil.rmtree("__pycache__")
-	except FileNotFoundError:
-		pass
-
-	try:
-		shutil.rmtree("./cogs/__pycache__")
-	except FileNotFoundError:
-		pass
-
-	try:
-		shutil.rmtree("./utils/__pycache__")
-	except FileNotFoundError:
-		pass
-
-	print("Removed __pycache__")
-
-
 # ------------------------------------------------------------------------
 # Essential event listeners
 # ------------------------------------------------------------------------
