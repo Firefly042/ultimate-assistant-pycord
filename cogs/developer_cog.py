@@ -24,8 +24,13 @@ class DeveloperCog(commands.Cog):
 
 	def __init__(self, bot):
 		self.bot = bot
-		self.dm_channel = None # Cannot have async init, initialized on first use
+		self.dm_channel = None # Cannot have async init
+		self.bot.loop.create_task(self.get_dm_channel()) # ...so instead we get it here
 		print(f"Added {self.__class__.__name__}")
+
+	async def get_dm_channel(self):
+		dev_user = await self.bot.fetch_user(DEVELOPER_ID)
+		self.dm_channel = await dev_user.create_dm()
 
 
 # ------------------------------------------------------------------------
@@ -42,11 +47,6 @@ class DeveloperCog(commands.Cog):
 	async def on_guild_join(self, guild):
 		"""DM developer"""
 
-		if (not self.dm_channel):
-			dev_user = await self.bot.fetch_user(DEVELOPER_ID)
-			self.dm_channel = await dev_user.create_dm()
-
-
 		await self.dm_channel.send(f"Added to **{guild.name}** ({guild.id})")
 
 
@@ -54,20 +54,12 @@ class DeveloperCog(commands.Cog):
 	async def on_guild_remove(self, guild):
 		"""DM developer"""
 
-		if (not self.dm_channel):
-			dev_user = await self.bot.fetch_user(DEVELOPER_ID)
-			self.dm_channel = await dev_user.create_dm()
-
 		await self.dm_channel.send(f"Removed from **{guild.name}** ({guild.id})")
 
 
 	@commands.Cog.listener()
 	async def on_application_command_error(self, ctx, exception):
 		"""DM developer"""
-
-		if (not self.dm_channel):
-			dev_user = await self.bot.fetch_user(DEVELOPER_ID)
-			self.dm_channel = await dev_user.create_dm()
 
 
 		msg = f"**GuildID**: {ctx.guild.id}\n"
