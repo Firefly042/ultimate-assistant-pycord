@@ -81,22 +81,12 @@ class AnnouncementsAdminCog(commands.Cog):
 			# Attempt to fetch channel
 			try:
 				channel = await self.bot.fetch_channel(announcement["ChannelID"])
-			except discord.NotFound:
-				continue
-			except discord.Forbidden:
-				continue
 			except discord.HTTPException:
-				continue
-			finally:
 				continue
 
 			# Attempt to post
 			try:
 				await channel.send(content=announcement["Message"])
-			except discord.Forbidden:
-				continue
-			except discord.HTTPException:
-				continue
 			finally:
 				continue
 
