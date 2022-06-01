@@ -11,7 +11,7 @@ Thank you to all who have put their time into improving this project. This has a
 
 
 ## Code
-> No one yet :(
+* [Astrea](https://github.com/Astrea49) (@Astrea#7171)
 
 
 ## Other Writing
