@@ -159,7 +159,7 @@ class InventoryAdminCog(commands.Cog):
 		embeds = [discord.Embed(title=f"{i+1}/{n_embeds}", color=utils.hex_to_color(hex_color)) for i in range(n_embeds)]
 
 		keys = list(inventory.keys())
-		for i in range(0, n_embeds):
+		for i in range(n_embeds):
 			for _ in range(10):
 				try:
 					item_name = keys.pop(0)
@@ -171,11 +171,7 @@ class InventoryAdminCog(commands.Cog):
 				if (item["amount"] > 1):
 					title += f" (x{item['amount']})"
 
-				if (item["desc"]):
-					desc = item["desc"]
-				else:
-					desc = loc.response("inv_admin", "view", "no-description", ctx.interaction.locale)
-
+				desc = item["desc"] or loc.response("inv_admin", "view", "no-description", ctx.interaction.locale)
 				embeds[i].add_field(name=title, value=desc, inline=False)
 
 		await ctx.respond(view=EmbedList(embeds, ctx.interaction), ephemeral=not visible, embed=embeds[0])

@@ -307,7 +307,7 @@ class GachaAdminCog(commands.Cog):
 		n_embeds = math.ceil(len(items) / 35)
 		embeds = [discord.Embed(title=f"{i+1}/{n_embeds}") for i in range(n_embeds)]
 
-		for i in range(0, n_embeds):
+		for i in range(n_embeds):
 			msg_i = ""
 			for _ in range(35):
 				try:

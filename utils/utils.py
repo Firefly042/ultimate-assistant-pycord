@@ -58,15 +58,7 @@ def get_profile_embed(guild_id, player_id, name):
 		embed.add_field(name=key, value=profile_fields[key], inline=False)
 
 	# Can't seem to catch HTTPException, so throw an Exception here after checking length
-	items = [embed.title, embed.description, embed.footer.text, embed.author.name]
-	items.extend([field.name for field in embed.fields])
-	items.extend([field.value for field in embed.fields])
-
-	length = 0
-	for item in items:
-		length += len(str(item)) if str(item) != 'Embed.Empty' else 0
-
-	if (length > 6000):
+	if len(embed) > 6000:
 		raise Exception("Embed too long")
 
 	# If all checks out, return the embed
