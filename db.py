@@ -13,10 +13,7 @@ from utils import utils
 # ------------------------------------------------------------------------
 def dict_factory(cursor, row):
 	"""Formats the request output as a dictionary"""
-	dct = {}
-	for idx, col in enumerate(cursor.description):
-		dct[col[0]] = row[idx]
-	return dct
+	return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
 
 
 DB_NAME = "main.db"

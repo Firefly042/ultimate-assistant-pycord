@@ -90,7 +90,8 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Attempt to send to recipient channel
-		embed_r = discord.Embed(color=embed_s_color, title=f"Message from {sender['Name']}", description=message[:1500])
+		title_r = loc.response("msg", "whisper", "receiver-title", ctx.interaction.locale).format(sender["Name"])
+		embed_r = discord.Embed(color=embed_s_color, title=title_r, description=message[:1500])
 		try:
 			await channel_r.send(content=f"<@{player.id}>", embed=embed_r)
 		except discord.Forbidden:
@@ -99,8 +100,8 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Receipt to sender channel
-		title = loc.response("msg", "whisper", "receiver-title", ctx.interaction.locale).format(recipient["Name"])
-		embed_s = discord.Embed(color=embed_r_color, title=title, description=message[:1500])
+		title_s = loc.response("msg", "whisper", "sender-receipt", ctx.interaction.locale).format(recipient["Name"])
+		embed_s = discord.Embed(color=embed_r_color, title=title_s, description=message[:1500])
 		try:
 			await channel_s.send(embed=embed_s)
 		except discord.Forbidden:
@@ -161,8 +162,8 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Attempt to send to recipient channel
-		title = loc.response("msg", "anon", "receiver-title", ctx.interaction.locale)
-		embed_r = discord.Embed(title=title, description=message[:1500])
+		title_r = loc.response("msg", "anon", "receiver-title", ctx.interaction.locale)
+		embed_r = discord.Embed(title=title_r, description=message[:1500])
 		try:
 			await channel_r.send(content=f"<@{player.id}>", embed=embed_r)
 		except discord.Forbidden:
@@ -171,8 +172,8 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Receipt to sender channel
-		receipt_title = loc.response("msg", "anon", "sender-receipt", ctx.interaction.locale).format(recipient["Name"])
-		embed_s = discord.Embed(color=embed_r_color, title=receipt_title, description=message[:1500])
+		title_s = loc.response("msg", "anon", "sender-receipt", ctx.interaction.locale).format(recipient["Name"])
+		embed_s = discord.Embed(color=embed_r_color, title=receipt_s, description=message[:1500])
 		try:
 			await channel_s.send(embed=embed_s)
 		except discord.Forbidden:

@@ -65,9 +65,7 @@ class MessageAdminCog(commands.Cog):
 
 		chars = db.get_all_chars(ctx.guild.id)
 
-		chars_without_channels = [char['Name'] for char in chars if not char['ChannelID']]
-
-		if (len(chars_without_channels) > 0):
+		if chars_without_channels := [char['Name'] for char in chars if not char['ChannelID']]:
 			name_list = ", ".join(chars_without_channels)
 			msg += loc.response("msg_admin", "anon", "warning", ctx.interaction.locale).format(name_list)
 
