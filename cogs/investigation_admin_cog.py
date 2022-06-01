@@ -167,8 +167,6 @@ class InvestigationAdminCog(commands.Cog):
 					channel_name = channels[i]
 				except discord.HTTPException:
 					channel_name = loc.response("investigate_admin", "list", "warning-nochannel", ctx.interaction.locale)
-				except discord.NotFound:
-					channel_name = loc.response("investigate_admin", "list", "warning-nochannel", ctx.interaction.locale)
 				except IndexError:
 					break
 
