@@ -173,7 +173,7 @@ class MessagePublicCog(commands.Cog):
 
 		# Receipt to sender channel
 		title_s = loc.response("msg", "anon", "sender-receipt", ctx.interaction.locale).format(recipient["Name"])
-		embed_s = discord.Embed(color=embed_r_color, title=receipt_s, description=message[:1500])
+		embed_s = discord.Embed(color=embed_r_color, title=title_s, description=message[:1500])
 		try:
 			await channel_s.send(embed=embed_s)
 		except discord.Forbidden:

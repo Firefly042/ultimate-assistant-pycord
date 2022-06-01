@@ -28,6 +28,7 @@ class DeveloperCog(commands.Cog):
 		self.bot.loop.create_task(self.get_dm_channel()) # ...so instead we get it here
 		print(f"Added {self.__class__.__name__}")
 
+
 	async def get_dm_channel(self):
 		# This whole thing will break if this is run before the bot logs in
 		await self.bot.wait_until_ready()
@@ -67,6 +68,9 @@ class DeveloperCog(commands.Cog):
 		msg += f"**ChannelID**: {ctx.channel.id}\n"
 		msg += f"**UserID**: {ctx.interaction.user.id}\n"
 		msg += f"**Command**: /{ctx.command.qualified_name}\n"
+		if (ctx.selected_options):
+			msg += "**Options**: "
+			msg += ", ".join([f"{opt['name']}: {opt['value']}" for opt in ctx.selected_options]) + "\n"
 		msg += f"**Exception**: {exception}\n--------------------------------------------"
 
 		await self.dm_channel.send(msg[:1024])
@@ -105,7 +109,8 @@ class DeveloperCog(commands.Cog):
 # /dev test
 # ------------------------------------------------------------------------
 	@dev.command(name="test")
-	async def test(self, ctx):
+	@option("input", str)
+	async def test(self, ctx, input):
 		"""Dev test"""
-
-		await ctx.respond("dev test")
+		
+		await ctx.respond("test")
