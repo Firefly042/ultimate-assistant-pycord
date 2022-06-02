@@ -48,6 +48,8 @@ class AnnouncementsAdminCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	announcements = SlashCommandGroup("announcements", "Automated posting",
+		default_member_permissions=discord.Permissions(administrator=True),
+		guild_only=True,
 		name_localizations=loc.group_names("announcements"),
 		description_localizations=loc.group_descriptions("announcements"))
 
@@ -106,7 +108,7 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /announcements tz
 # ------------------------------------------------------------------------
-	@announcements.command(name="tz", guild_only=True,
+	@announcements.command(name="tz",
 		name_localizations=loc.command_names("announcements", "tz"),
 		description_localizations=loc.command_descriptions("announcements", "tz"))
 	@option("utc_offset", int, min_value=-12, max_value=14,
@@ -124,7 +126,7 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /announcements new
 # ------------------------------------------------------------------------
-	@announcements.command(name="new", guild_only=True,
+	@announcements.command(name="new",
 		name_localizations=loc.command_names("announcements", "new"),
 		description_localizations=loc.command_descriptions("announcements", "new"))
 	@option("channel", discord.TextChannel,
@@ -201,7 +203,7 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /announcements rm
 # ------------------------------------------------------------------------
-	@announcements.command(name="rm", guild_only=True,
+	@announcements.command(name="rm",
 		name_localizations=loc.command_names("announcements", "rm"),
 		description_localizations=loc.command_descriptions("announcements", "rm"))
 	@option("announcement_id", str,
@@ -224,7 +226,7 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /announcements list
 # ------------------------------------------------------------------------
-	@announcements.command(name="list", guild_only=True,
+	@announcements.command(name="list",
 		name_localizations=loc.command_names("announcements", "list"),
 		description_localizations=loc.command_descriptions("announcements", "list"))
 	@option("visible", bool, default=False,
@@ -267,7 +269,7 @@ class AnnouncementsAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /announcements toggle
 # ------------------------------------------------------------------------
-	@announcements.command(name="toggle", guild_only=True,
+	@announcements.command(name="toggle",
 		name_localizations=loc.command_names("announcements", "toggle"),
 		description_localizations=loc.command_descriptions("announcements", "toggle"))
 	@option("state", str,

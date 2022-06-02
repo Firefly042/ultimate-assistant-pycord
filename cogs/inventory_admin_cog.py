@@ -37,6 +37,8 @@ class InventoryAdminCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	inventory_admin = SlashCommandGroup("inv_admin", "Admin inventory management",
+		default_member_permissions=discord.Permissions(administrator=True),
+		guild_only=True,
 		name_localizations=loc.group_names("inv_admin"),
 		description_localizations=loc.group_descriptions("inv_admin"))
 
@@ -47,7 +49,7 @@ class InventoryAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv_admin take
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="take", guild_only=True,
+	@inventory_admin.command(name="take",
 		name_localizations=loc.command_names("inv_admin", "take"),
 		description_localizations=loc.command_descriptions("inv_admin", "take"))
 	@option("player", discord.Member,
@@ -82,7 +84,7 @@ class InventoryAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv_admin give
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="give", guild_only=True,
+	@inventory_admin.command(name="give",
 		name_localizations=loc.command_names("inv_admin", "give"),
 		description_localizations=loc.command_descriptions("inv_admin", "give"))
 	@option("recipient", discord.Member,
@@ -123,7 +125,7 @@ class InventoryAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv_admin view
 # ------------------------------------------------------------------------
-	@inventory_admin.command(name="view", guild_only=True,
+	@inventory_admin.command(name="view",
 		name_localizations=loc.command_names("inv_admin", "view"),
 		description_localizations=loc.command_descriptions("inv_admin", "view"))
 	@option("player", discord.Member,

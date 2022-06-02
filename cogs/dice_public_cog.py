@@ -41,6 +41,7 @@ class DicePublicCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	dice = SlashCommandGroup("roll", "Dice rolling (d20 and custom)",
+		guild_only=True,
 		name_localizations=loc.group_names("roll"),
 		description_localizations=loc.group_descriptions("roll"))
 
@@ -82,7 +83,7 @@ class DicePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /roll new
 # ------------------------------------------------------------------------
-	@dice.command(name="new", guild_only=True,
+	@dice.command(name="new",
 		name_localizations=loc.command_names("roll", "new"),
 		description_localizations=loc.command_descriptions("roll", "new"))
 	@option("name", str,
@@ -130,7 +131,7 @@ class DicePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /roll rm
 # ------------------------------------------------------------------------
-	@dice.command(name="rm", guild_only=True,
+	@dice.command(name="rm",
 		name_localizations=loc.command_names("roll", "rm"),
 		description_localizations=loc.command_descriptions("roll", "rm"))
 	@option("name", str,
@@ -158,7 +159,7 @@ class DicePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /roll custom
 # ------------------------------------------------------------------------
-	@dice.command(name="custom", guild_only=True,
+	@dice.command(name="custom",
 		name_localizations=loc.command_names("roll", "custom"),
 		description_localizations=loc.command_descriptions("roll", "custom"))
 	@option("name", str,
@@ -203,7 +204,7 @@ class DicePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /roll list
 # ------------------------------------------------------------------------
-	@dice.command(name="list", guild_only=True,
+	@dice.command(name="list",
 		name_localizations=loc.command_names("roll", "list"),
 		description_localizations=loc.command_descriptions("roll", "list"))
 	@option("visible", bool, default=False,

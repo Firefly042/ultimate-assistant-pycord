@@ -31,6 +31,7 @@ class InvestigationPublicCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	investigate = SlashCommandGroup("investigate", "Player investigation",
+		guild_only=True,
 		name_localizations=loc.group_names("investigate"),
 		description_localizations=loc.group_descriptions("investigate"))
 
@@ -41,7 +42,7 @@ class InvestigationPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate here
 # ------------------------------------------------------------------------
-	@investigate.command(name="here", guild_only=True,
+	@investigate.command(name="here",
 		name_localizations=loc.command_names("investigate", "here"),
 		description_localizations=loc.command_descriptions("investigate", "here"))
 	@option("name", str,
@@ -70,7 +71,7 @@ class InvestigationPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate take
 # ------------------------------------------------------------------------
-	@investigate.command(name="take", guild_only=True,
+	@investigate.command(name="take",
 		name_localizations=loc.command_names("investigate", "take"),
 		description_localizations=loc.command_descriptions("investigate", "take"))
 	@option("name", str,

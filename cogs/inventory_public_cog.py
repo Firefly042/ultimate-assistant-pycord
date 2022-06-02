@@ -37,6 +37,7 @@ class InventoryPublicCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	inventory = SlashCommandGroup("inv", "Player inventory management",
+		guild_only=True,
 		name_localizations=loc.group_names("inv"),
 		description_localizations=loc.group_descriptions("inv"))
 
@@ -55,7 +56,7 @@ class InventoryPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv take
 # ------------------------------------------------------------------------
-	@inventory.command(name="take", guild_only=True,
+	@inventory.command(name="take",
 		name_localizations=loc.command_names("inv", "take"),
 		description_localizations=loc.command_descriptions("inv", "take"))
 	@option("item", str,
@@ -93,7 +94,7 @@ class InventoryPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv drop
 # ------------------------------------------------------------------------
-	@inventory.command(name="drop", guild_only=True,
+	@inventory.command(name="drop",
 		name_localizations=loc.command_names("inv", "drop"),
 		description_localizations=loc.command_descriptions("inv", "drop"))
 	@option("item", str,
@@ -124,7 +125,7 @@ class InventoryPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv give
 # ------------------------------------------------------------------------
-	@inventory.command(name="give", guild_only=True,
+	@inventory.command(name="give",
 		name_localizations=loc.command_names("inv", "give"),
 		description_localizations=loc.command_descriptions("inv", "give"))
 	@option("recipient", discord.Member,
@@ -186,7 +187,7 @@ class InventoryPublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /inv view
 # ------------------------------------------------------------------------
-	@inventory.command(name="view", guild_only=True,
+	@inventory.command(name="view",
 		name_localizations=loc.command_names("inv", "view"),
 		description_localizations=loc.command_descriptions("inv", "view"))
 	@option("visible", bool, default=False,

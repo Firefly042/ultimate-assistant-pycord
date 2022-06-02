@@ -34,6 +34,7 @@ class MessagePublicCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	message = SlashCommandGroup("msg", "Private messaging",
+		guild_only=True,
 		name_localizations=loc.group_names("msg"),
 		description_localizations=loc.group_descriptions("msg"))
 
@@ -44,7 +45,7 @@ class MessagePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /msg whisper
 # ------------------------------------------------------------------------
-	@message.command(name="whisper", guild_only=True,
+	@message.command(name="whisper",
 		name_localizations=loc.command_names("msg", "whisper"),
 		description_localizations=loc.command_descriptions("msg", "whisper"))
 	@option("player", discord.Member,
@@ -115,7 +116,7 @@ class MessagePublicCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /msg anon
 # ------------------------------------------------------------------------
-	@message.command(name="anon", guild_only=True,
+	@message.command(name="anon",
 		name_localizations=loc.command_names("msg", "anon"),
 		description_localizations=loc.command_descriptions("msg", "anon"))
 	@option("player", discord.Member, description="Character to privately message")

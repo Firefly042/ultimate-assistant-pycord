@@ -3,6 +3,7 @@ Author @Firefly#7113
 Admin messaging commands
 """
 
+import discord
 from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
@@ -31,6 +32,8 @@ class MessageAdminCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	message_admin = SlashCommandGroup("msg_admin", "Admin messaging management",
+		default_member_permissions=discord.Permissions(administrator=True),
+		guild_only=True,
 		name_localizations=loc.group_names("msg_admin"),
 		description_localizations=loc.group_descriptions("msg_admin"))
 
@@ -41,7 +44,7 @@ class MessageAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /msg_admin anon
 # ------------------------------------------------------------------------
-	@message_admin.command(name="anon", guild_only=True,
+	@message_admin.command(name="anon",
 		name_localizations=loc.command_names("msg_admin", "anon"),
 		description_localizations=loc.command_descriptions("msg_admin", "anon"))
 	@option("toggle", str,
@@ -74,7 +77,7 @@ class MessageAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /msg_admin channels
 # ------------------------------------------------------------------------
-	@message_admin.command(name="channels", guild_only=True,
+	@message_admin.command(name="channels",
 		name_localizations=loc.command_names("msg_admin", "channels"),
 		description_localizations=loc.command_descriptions("msg_admin", "channels"))
 	@option("visible", bool, default=False,

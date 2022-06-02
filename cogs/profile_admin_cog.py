@@ -32,10 +32,14 @@ class ProfileAdminCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	profile_admin = SlashCommandGroup("profile_admin", "Admin profile setup",
+		default_member_permissions=discord.Permissions(administrator=True),
+		guild_only=True,
 		name_localizations=loc.group_names("profile_admin"),
 		description_localizations=loc.group_descriptions("profile_admin"))
 
 	profile_admin_edit = profile_admin.create_subgroup("edit", "Admin profile editing")
+	profile_admin_edit.default_member_permissions=  discord.Permissions(administrator=True)
+	profile_admin_edit.guild_only=True,
 	profile_admin_edit.name_localizations = loc.group_names("profile_admin_edit")
 	profile_admin_edit.description_localizations = loc.group_descriptions("profile_admin_edit")
 
@@ -46,7 +50,7 @@ class ProfileAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /profile_admin new
 # ------------------------------------------------------------------------
-	@profile_admin.command(name="new", guild_only=True,
+	@profile_admin.command(name="new",
 		name_localizations=loc.command_names("profile_admin", "new"),
 		description_localizations=loc.command_descriptions("profile_admin", "new"))
 	@option("player", discord.Member,
@@ -95,7 +99,7 @@ class ProfileAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /profile_admin edit text
 # ------------------------------------------------------------------------
-	@profile_admin_edit.command(name="text", guild_only=True,
+	@profile_admin_edit.command(name="text",
 		name_localizations=loc.command_names("profile_admin_edit", "text"),
 		description_localizations=loc.command_descriptions("profile_admin_edit", "text"))
 	@option("player", discord.Member,
@@ -141,7 +145,7 @@ class ProfileAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /profile_admin edit channel
 # ------------------------------------------------------------------------
-	@profile_admin_edit.command(name="channel", guild_only=True,
+	@profile_admin_edit.command(name="channel",
 		name_localizations=loc.command_names("profile_admin_edit", "channel"),
 		description_localizations=loc.command_descriptions("profile_admin_edit", "channel"))
 	@option("player", discord.Member,
@@ -172,7 +176,7 @@ class ProfileAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /profile_admin rm
 # ------------------------------------------------------------------------
-	@profile_admin.command(name="rm", guild_only=True,
+	@profile_admin.command(name="rm",
 		name_localizations=loc.command_names("profile_admin", "rm"),
 		description_localizations=loc.command_descriptions("profile_admin", "rm"))
 	@option("player", discord.Member,
@@ -199,7 +203,7 @@ class ProfileAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /profile_admin disable
 # ------------------------------------------------------------------------
-	@profile_admin.command(name="disable", guild_only=True,
+	@profile_admin.command(name="disable",
 		name_localizations=loc.command_names("profile_admin", "disable"),
 		description_localizations=loc.command_descriptions("profile_admin", "disable"))
 	@option("player", discord.Member,

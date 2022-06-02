@@ -37,6 +37,8 @@ class InvestigationAdminCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	investigate_admin = SlashCommandGroup("investigate_admin", "Admin investigation management",
+		default_member_permissions=discord.Permissions(administrator=True),
+		guild_only=True,
 		name_localizations=loc.group_names("investigate_admin"),
 		description_localizations=loc.group_descriptions("investigate_admin"))
 
@@ -47,7 +49,7 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate_admin new
 # ------------------------------------------------------------------------
-	@investigate_admin.command(name="new", guild_only=True,
+	@investigate_admin.command(name="new",
 		name_localizations=loc.command_names("investigate_admin", "new"),
 		description_localizations=loc.command_descriptions("investigate_admin", "new"))
 	@option("channel", discord.TextChannel,
@@ -109,7 +111,7 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate_admin rm
 # ------------------------------------------------------------------------
-	@investigate_admin.command(name="rm", guild_only=True,
+	@investigate_admin.command(name="rm",
 		name_localizations=loc.command_names("investigate_admin", "rm"),
 		description_localizations=loc.command_descriptions("investigate_admin", "rm"))
 	@option("channel", discord.TextChannel,
@@ -136,7 +138,7 @@ class InvestigationAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /investigate_admin list
 # ------------------------------------------------------------------------
-	@investigate_admin.command(name="list", guild_only=True,
+	@investigate_admin.command(name="list",
 		name_localizations=loc.command_names("investigate_admin", "list"),
 		description_localizations=loc.command_descriptions("investigate_admin", "list"))
 	@option("visible", bool, default=False,
