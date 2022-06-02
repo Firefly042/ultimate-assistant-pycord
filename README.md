@@ -2,7 +2,7 @@
 <a href='https://ko-fi.com/X8X4C9DD1' target='_blank'><img style='border:0px;height:48px;' src='./images/badge-donation.png' border='0' alt='Invite to your server' /></a>
 <a href='https://discord.gg/VZYKBptWFJ' target='_blank'><img style='border:0px;height:48px;' src='./images/badge-server.png' border='0' alt='Support server' /></a>
 
-*Last updated: 26 May 2022*
+*Last updated: 02 June 2022*
 
 # Introduction
 Ultimate Assistant is a discord bot maintained by user @Firefly#7113. It aims to provide simple yet versatile utilities for discord-hosted rpgs ranging from asynchronous thread-style games to traditional sitdown tabletops. The bot includes a highly customizable profile system, automated/scheduled posting, flexible dice commands, inventories, and investigatable objects. 
@@ -26,7 +26,7 @@ https://user-images.githubusercontent.com/17179785/170972686-8af19ead-1c15-4c94-
 
 
 # Getting Started
-1. With discord's permissions v2 update, admin permissions are now in the hands of server moderators. To grey out commands for non-players and non-admins, moderators should *heavily* consider using the Integration settings in their server settings like so:
+1. With discord's permissions v2 update, server administrators can now decide which roles can use specific command groups. To prevent abuse from non-players, it is highly recommended to enable the player-centric groups for your player role. By default, all admin groups are set to admin-only, but can be enabled for other roles as moderaters see fit.
 
 https://user-images.githubusercontent.com/17179785/170972711-5fca82c4-eecd-4943-a1fa-82ba92884946.mp4
 

@@ -33,6 +33,8 @@ class DiceAdminCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	dice_admin = SlashCommandGroup("roll_admin", "Dice rolling (admin)",
+		default_member_permissions=discord.Permissions(administrator=True),
+		guild_only=True,
 		name_localizations=loc.group_names("roll_admin"),
 		description_localizations=loc.group_descriptions("roll_admin"))
 
@@ -43,7 +45,7 @@ class DiceAdminCog(commands.Cog):
 # ------------------------------------------------------------------------
 # /roll list
 # ------------------------------------------------------------------------
-	@dice_admin.command(name="list", guild_only=True,
+	@dice_admin.command(name="list",
 		name_localizations=loc.command_names("roll_admin", "list"),
 		description_localizations=loc.command_descriptions("roll_admin", "list"))
 	@option("player", discord.Member,description="Active character to view",

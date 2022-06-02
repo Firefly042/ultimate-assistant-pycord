@@ -35,6 +35,7 @@ class ProfilePublicCog(commands.Cog):
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
 	profile = SlashCommandGroup("profile", "Character profiles",
+		guild_only=True,
 		name_localizations=loc.group_names("profile"),
 		description_localizations=loc.group_descriptions("profile"))
 
