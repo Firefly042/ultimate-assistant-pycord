@@ -81,7 +81,7 @@ class InventoryPublicCog(commands.Cog):
 		# Be sure to enforce embed limits
 		if (desc):
 			desc = desc[:256]
-		updated = db.add_item(ctx.guild.id, ctx.interaction.user.id, item[:64], amount, desc)
+		updated = db.add_item(ctx.guild.id, ctx.interaction.user.id, item[:64], amount=amount, desc=desc)
 
 		if (not updated):
 			error = loc.common_res("no-character", ctx.interaction.locale)
@@ -112,7 +112,7 @@ class InventoryPublicCog(commands.Cog):
 	async def drop(self, ctx, item, amount, visible):
 		"""Remove one or more of an item from your inventory (case sensitive)"""
 
-		updated = db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount)
+		updated = db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount=amount)
 
 		if (not updated):
 			error = loc.response("inv", "drop", "error-missing", ctx.interaction.locale)
@@ -136,6 +136,10 @@ class InventoryPublicCog(commands.Cog):
 		description="Case sensitive item to give",
 		name_localizations=loc.option_names("inv", "give", "item"),
 		description_localizations=loc.option_descriptions("inv", "give", "item"))
+	@option("recipient_name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-recipient-name"),
+		description_localizations=loc.common("inactive-char-desc"))
 	@option("amount", int, default=1, min_value=1, max_value=999,
 		description="Amount to give, detault 1",
 		name_localizations=loc.option_names("inv", "give", "amount"),
@@ -145,7 +149,7 @@ class InventoryPublicCog(commands.Cog):
 		name_localizations=loc.option_names("inv", "give", "visible"),
 		description_localizations=loc.option_descriptions("inv", "give", "visible")
 		)
-	async def give(self, ctx, recipient, item, amount, visible):
+	async def give(self, ctx, recipient, item, recipient_name, amount, visible):
 		"""Give another active character one or more of an item in your inventory"""
 
 		# Try to get inventory
@@ -171,7 +175,7 @@ class InventoryPublicCog(commands.Cog):
 
 
 		# Check that sender is valid by attempting to udpate
-		recipient_updated = db.add_item(ctx.guild.id, recipient.id, item, amount, sender_inv[item]["desc"])
+		recipient_updated = db.add_item(ctx.guild.id, recipient.id, item, name=recipient_name, amount=amount, desc=sender_inv[item]["desc"])
 
 		if (not recipient_updated):
 			error = loc.response("inv", "give", "error-recipient", ctx.interaction.locale).format(recipient.name)
@@ -179,7 +183,7 @@ class InventoryPublicCog(commands.Cog):
 			return
 
 		# Remove from sender inventory
-		db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount)
+		db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount=amount)
 
 		res = loc.response("inv", "give", "res1", ctx.interaction.locale).format(amount=amount, item=item, name=recipient.name)
 		await ctx.respond(res, ephemeral=not visible)

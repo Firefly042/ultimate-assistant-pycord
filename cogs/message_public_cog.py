@@ -56,13 +56,17 @@ class MessagePublicCog(commands.Cog):
 		description="Message to send, limit 1500 characters",
 		name_localizations=loc.option_names("msg", "whisper", "message"),
 		description_localizations=loc.option_descriptions("msg", "whisper", "message"))
-	async def whisper(self, ctx, player, message):
+	@option("recipient_name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-recipient-name"),
+		description_localizations=loc.common("inactive-char-desc"))
+	async def whisper(self, ctx, player, message, recipient_name):
 		"""Non-anonymously message another player's designated channel. Sends receipt to your channel"""
 
 		sender = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
 		# Query for recipient info
-		recipient = db.get_active_char(ctx.guild.id, player.id)
+		recipient = db.get_character(ctx.guild.id, player.id, recipient_name) if recipient_name else db.get_active_char(ctx.guild.id, player.id)
 
 		# Attempt to fetch channel (recipient)
 		try:
@@ -121,7 +125,11 @@ class MessagePublicCog(commands.Cog):
 		description_localizations=loc.command_descriptions("msg", "anon"))
 	@option("player", discord.Member, description="Character to privately message")
 	@option("message", str, description="Message to send. Limit 1500 characters")
-	async def anon(self, ctx, player, message):
+	@option("recipient_name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-recipient-name"),
+		description_localizations=loc.common("inactive-char-desc"))
+	async def anon(self, ctx, player, message, recipient_name):
 		"""Anonymously message another player's designated channel. Sends receipt to your channel"""
 
 		# Check if command is enabled
@@ -133,9 +141,8 @@ class MessagePublicCog(commands.Cog):
 
 		sender = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
-		# God I hope discord implements dynamic command perms soon
 		# Query for recipient info
-		recipient = db.get_active_char(ctx.guild.id, player.id)
+		recipient = db.get_character(ctx.guild.id, player.id, recipient_name) if recipient_name else db.get_active_char(ctx.guild.id, player.id)
 
 		# Attempt to fetch channel (recipient)
 		try:
