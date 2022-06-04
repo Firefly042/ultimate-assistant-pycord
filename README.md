@@ -24,6 +24,8 @@ https://user-images.githubusercontent.com/17179785/170972660-da1b695d-f49a-43e9-
 
 https://user-images.githubusercontent.com/17179785/170972686-8af19ead-1c15-4c94-9823-e7eb4edbd529.mp4
 
+https://user-images.githubusercontent.com/17179785/172017420-64a26db8-aa25-46ba-87ac-0bb9b24de8b2.mp4
+
 
 # Getting Started
 1. With discord's permissions v2 update, server administrators can now decide which roles can use specific command groups. To prevent abuse from non-players, it is highly recommended to enable the player-centric groups for your player role. By default, all admin groups are set to admin-only, but can be enabled for other roles as moderaters see fit.
