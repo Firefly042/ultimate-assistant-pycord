@@ -21,6 +21,67 @@ from localization import loc
 # ------------------------------------------------------------------------
 DATE_STRING = "%Y%m%d%H%M"
 
+class InputModal(discord.ui.Modal):
+	def __init__(self, ctx, channel, start_year, start_month, start_day, start_hour, start_minute, interval):
+		super().__init__(title=loc.response("announcements", "new", "modal-title", ctx.interaction.locale))
+
+		self.ctx = ctx
+		self.channel = channel
+		self.start_year = start_year
+		self.start_month = start_month
+		self.start_day = start_day
+		self.start_hour = start_hour
+		self.start_minute = start_minute
+		self.interval = interval
+
+		self.add_item(discord.ui.InputText(
+			style=discord.InputTextStyle.multiline,
+			label=loc.response("announcements", "new", "modal-placeholder", ctx.interaction.locale),
+			min_length=1,
+			max_length=1024))
+
+
+	async def callback(self, interaction):
+		"""Validate input and add to database"""
+
+		message = self.children[0].value
+
+		# Limit announcements to 25 per guild
+		existing_announcements = db.get_guild_announcements(self.ctx.guild.id)
+
+		if (len(existing_announcements) == 25):
+			error = loc.response("announcements", "new", "error-limit", self.ctx.interaction.locale)
+			await interaction.response.send_message(error, ephemeral=True)
+			return
+
+		# Get guild timezone
+		guild_info = db.get_guild_info(self.ctx.guild.id)
+		guild_tz = guild_info["Timezone"]
+
+		# Create datetime object in guild's tz. Exception for ValueError
+		try:
+			guild_time = datetime(year=self.start_year, month=self.start_month, day=self.start_day, hour=self.start_hour, minute=self.start_minute)
+		except ValueError:
+			error = loc.response("announcements", "new", "error-date", self.ctx.interaction.locale)
+			await interaction.response.send_message(error, ephemeral=True)
+			return
+
+		# Convert to utc
+		utc_time = guild_time - timedelta(hours=guild_tz)
+
+		# Confirm that this is a later time
+		utc_now = datetime.utcnow()
+		if (utc_time <= utc_now):
+			error = loc.response("announcements", "new", "error-past", self.ctx.interaction.locale)
+			await interaction.response.send_message(error, ephemeral=True)
+			return
+
+		# Add to db using interaction snowflake as ID
+		db.add_announcement(self.ctx.interaction.id, self.ctx.guild.id, self.channel.id, message[:1024], self.interval, int(utc_time.strftime(DATE_STRING)))
+
+		res = loc.response("announcements", "new", "res1", self.ctx.interaction.locale).format(self.ctx.interaction.id)
+		await interaction.response.send_message(res, ephemeral=True)
+
 
 # ------------------------------------------------------------------------
 # COG
@@ -164,41 +225,10 @@ class AnnouncementsAdminCog(commands.Cog):
 	async def new(self, ctx, channel, start_year, start_month, start_day, start_hour, start_minute, interval, message):
 		"""Define a new scheduled/repeated announcement (using your server's set timezone)"""
 
-		# Limit announcements to 25 per guild
-		existing_announcements = db.get_guild_announcements(ctx.guild.id)
+		# Modal input for content
+		modal = InputModal(ctx, channel, start_year, start_month, start_day, start_hour, start_minute, interval)
+		await ctx.send_modal(modal)
 
-		if (len(existing_announcements) == 25):
-			error = loc.response("announcements", "new", "error-limit", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
-			return
-
-		# Get guild timezone
-		guild_info = db.get_guild_info(ctx.guild.id)
-		guild_tz = guild_info["Timezone"]
-
-		# Create datetime object in guild's tz. Exception for ValueError
-		try:
-			guild_time = datetime(year=start_year, month=start_month, day=start_day, hour=start_hour, minute=start_minute)
-		except ValueError:
-			error = loc.response("announcements", "new", "error-date", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
-			return
-
-		# Convert to utc
-		utc_time = guild_time - timedelta(hours=guild_tz)
-
-		# Confirm that this is a later time
-		utc_now = datetime.utcnow()
-		if (utc_time <= utc_now):
-			error = loc.response("announcements", "new", "error-past", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
-			return
-
-		# Add to db using interaction snowflake as ID
-		db.add_announcement(ctx.interaction.id, ctx.guild.id, channel.id, message[:1024], interval, int(utc_time.strftime(DATE_STRING)))
-
-		res = loc.response("announcements", "new", "res1", ctx.interaction.locale).format(ctx.interaction.id)
-		await ctx.respond(res, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /announcements rm
