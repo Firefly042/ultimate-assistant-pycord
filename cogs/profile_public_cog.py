@@ -15,6 +15,60 @@ from localization import loc
 
 from utils import utils
 
+
+# ------------------------------------------------------------------------
+# COMPONENT CLASSES AND CONSTANTS
+# ------------------------------------------------------------------------
+class InputModal(discord.ui.Modal):
+	def __init__(self, ctx, name):
+		super().__init__(title=loc.response("profile_embed", "desc", "modal-title", ctx.interaction.locale))
+
+		self.ctx = ctx
+		self.name = name
+
+		self.add_item(discord.ui.InputText(
+			style=discord.InputTextStyle.multiline,
+			label=loc.response("profile_embed", "desc", "modal-placeholder", ctx.interaction.locale),
+			min_length=1,
+			max_length=4000))
+
+
+	async def callback(self, interaction):
+		"""Submit input and edit character database entry"""
+		# Get previous content, if any
+		try:
+			previous_content = db.get_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name)["ProfileDesc"]
+		except TypeError:
+			error = loc.common_res("no-character", self.ctx.interaction.locale)
+			await interaction.response.send_message(error, ephemeral=True)
+			return
+
+		# Enforce embed length limits
+		content = self.children[0].value
+
+		# Update db, no uniqueness risks
+		char_updated = db.update_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name, "ProfileDesc", content)
+
+		# Notify if char not found
+		if (not char_updated):
+			error = loc.response("profile_embed", "desc", "error-missing", self.ctx.interaction.locale)
+			await interaction.response.send_message(error, ephemeral=True)
+			return
+
+
+		# Attempt to send embed and warn if limits have been exceeded
+		try:
+			res = loc.response("profile_embed", "desc", "res1", self.ctx.interaction.locale)
+			embed = utils.get_profile_embed(self.ctx.guild.id, self.ctx.interaction.user.id, self.name)
+			await interaction.response.send_message(res, embed=embed, ephemeral=True)
+		except:
+			error = loc.response("profile_embed", "desc", "error-length", self.ctx.interaction.locale)
+			await interaction.response.send_message(error, ephemeral=True)
+			db.update_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name, "ProfileDesc", previous_content)
+
+		self.stop()
+
+
 # ------------------------------------------------------------------------
 # COG
 # ------------------------------------------------------------------------
@@ -173,43 +227,12 @@ class ProfilePublicCog(commands.Cog):
 		description="Your character's display name",
 		name_localizations=loc.option_names("profile_embed", "desc", "name"),
 		description_localizations=loc.option_descriptions("profile_embed", "desc", "name"))
-	@option("content", str,
-		description="Up to 4096 characters",
-		name_localizations=loc.option_names("profile_embed", "desc", "content"),
-		description_localizations=loc.option_descriptions("profile_embed", "desc", "content"))
-	async def profile_embed_desc(self, ctx, name, content):
+	async def profile_embed_desc(self, ctx, name):
 		"""Add or edit profile embed description"""
 
-		# Get previous content, if any
-		try:
-			previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ProfileDesc"]
-		except TypeError:
-			error = loc.common_res("no-character", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
-			return
-
-		# Enforce embed length limits
-		content = content[:4096]
-
-		# Update db, no uniqueness risks
-		char_updated = db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileDesc", content)
-
-		# Notify if char not found
-		if (not char_updated):
-			error = loc.response("profile_embed", "desc", "error-missing", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
-			return
-
-
-		# Attempt to send embed and warn if limits have been exceeded
-		try:
-			res = loc.response("profile_embed", "desc", "res1", ctx.interaction.locale)
-			embed = utils.get_profile_embed(ctx.guild.id, ctx.interaction.user.id, name)
-			await ctx.respond(res, embed=embed, ephemeral=True)
-		except:
-			error = loc.response("profile_embed", "desc", "error-length", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
-			db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileDesc", previous_content)
+		# Modal input for content
+		modal = InputModal(ctx, name)
+		await ctx.send_modal(modal)
 
 # ------------------------------------------------------------------------
 # /profile swap
