@@ -65,6 +65,8 @@
                     "error-limit": "You may not have more than 25 automatic posts!",
                     "error-date": "Please enter a valid date! Did you enter a nonexistent day like 30th Feb?",
                     "error-past": "Please enter a time and date in the future!",
+                    "modal-title": "Post Content",
+                    "modal-placeholder": "1024 character maximum",
                     "res1": "Set automatic post (ID {})."
                 }
             },
@@ -1000,12 +1002,14 @@
                     },
                     "content": {
                         "name": "content",
-                        "description": "Up to 4096 characters"
+                        "description": "Up to 4000 characters"
                     }
                 },
                 "responses": {
                     "error-missing": "Could not find a character with that name for you!",
                     "error-length": "Your embed has exceeded the maximum length of 6000. Reverting.",
+                    "modal-title": "Enter a description",
+                    "modal-placeholder": "4000 character maximum",
                     "res1": "Updated"
                 }
             }
