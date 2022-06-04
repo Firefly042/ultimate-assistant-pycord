@@ -9,7 +9,7 @@ import atexit
 
 import discord
 
-from config import TESTING_SERVERS
+# from config import TESTING_SERVERS
 import db
 
 
@@ -22,7 +22,7 @@ bot_intents = discord.Intents.default()
 # ------------------------------------------------------------------------
 # Instantiate bot
 # ------------------------------------------------------------------------
-# bot = discord.Bot(debug_guilds=TESTING_SERVERS, intents=bot_intents, activity=discord.Game(name="CHECK PROFILE DESCRIPTION"))
+# bot = discord.Bot(debug_guilds=[os.getenv("DEVELOPER_SERVER")], intents=bot_intents, activity=discord.Game(name="CHECK PROFILE DESCRIPTION"))
 
 bot = discord.Bot(intents=bot_intents, activity=discord.Game(name="CHECK PROFILE DESCRIPTION"))
 
@@ -63,9 +63,6 @@ print(f"{passed_announcements} announcements updated")
 # ------------------------------------------------------------------------
 # Run bot
 # ------------------------------------------------------------------------
-tokenfile = open("TOKEN.txt", 'r', encoding='utf-8')
-with tokenfile:
-	token = tokenfile.readline()
-	tokenfile.close()
+token = os.getenv("TOKEN")
 
 bot.run(token)
