@@ -4,7 +4,13 @@
 
 		"visible-desc": "Set to 'True' for a permanent, visible response.",
 
-		"visible-name": "visible"
+		"visible-name": "visible",
+
+		"inactive-char-name": "name",
+
+		"inactive-char-desc": "The registered display name of the character, if not active",
+
+		"inactive-recipient-name":"recipient_name"
 	},
 
 	"announcements": {
@@ -141,17 +147,17 @@
 		"commands": {
 			"list": {
 				"name": "list",
-				"description": "View a player's active character's custom rolls",
+				"description": "View a character's custom rolls",
 
 				"options": {
 					"player": {
 						"name": "player",
-						"description": "Active character to view"
+						"description": "User or character to view"
 					}
 				},
 
 				"responses": {
-					"error-missing": "That player does not have an active character!",
+					"error-missing": "Cannot find specified character!",
 
 					"res1": "__Custom Rolls for {}__"
 				}
@@ -294,7 +300,7 @@
 
 			"give": {
 				"name": "give",
-				"description": "Give currency to an active character",
+				"description": "Give currency to a character",
 
 				"options": {
 					"player": {
@@ -307,7 +313,7 @@
 				},
 
 				"responses": {
-					"error-missing": "Could not find an active character for {}.",
+					"error-missing": "Could not find specified character for {}.",
 
 					"res1": "Gave {amount} to {name}."
 				}
@@ -315,7 +321,7 @@
 
 			"take": {
 				"name": "take",
-				"description": "Take currency from an active character",
+				"description": "Take currency from a character",
 
 				"options": {
 					"player": {
@@ -328,7 +334,7 @@
 				},
 
 				"responses": {
-					"error-missing": "Could not find an active character for {}.",
+					"error-missing": "Could not find specified character for {}.",
 
 					"res1": "Took {amount} from {name}."
 				}
@@ -354,7 +360,7 @@
 
 			"view": {
 				"name": "view",
-				"description": "View currency of an active character",
+				"description": "View currency of a character",
 
 				"options": {
 					"player": {
@@ -363,7 +369,7 @@
 				},
 
 				"responses": {
-					"error-missing": "Could not find an active character for {}.",
+					"error-missing": "Could not find specified character for {}.",
 
 					"res1": "{name} has {amount} {units}."
 				}
@@ -472,7 +478,7 @@
 
 			"give": {
 				"name": "give",
-				"description": "Give another active character some of your own currency",
+				"description": "Give another character some of your own currency",
 
 				"options": {
 					"recipient": {
@@ -492,7 +498,7 @@
 				"responses": {
 					"error-amount": "You only have {amount} {units}!",
 
-					"error-missingrecipient": "{} does not have an active character!",
+					"error-missingrecipient": "{} does not have the specified character!",
 
 					"res1": "{sender} gives {recipient} {amount} {units}."
 				}
@@ -517,7 +523,7 @@
 				"options": {
 					"player": {
 						"name": "player",
-						"description": "Active character to take from"
+						"description": "Character to take from"
 					},
 					"item": {
 						"name": "item",
@@ -530,7 +536,7 @@
 				},
 
 				"responses": {
-					"error-missing": "That player is not holding any of that item! (Or you did not specify a player with an active character)",
+					"error-missing": "That player is not holding any of that item! (Or you did not specify a valid character)",
 
 					"res1": "Took {amount} {item} from {name}."
 				}
@@ -543,7 +549,7 @@
 				"options": {
 					"recipient": {
 						"name": "recipient",
-						"description": "Active character to give item to"
+						"description": "Character to give item to"
 					},
 					"item": {
 						"name": "item",
@@ -560,7 +566,7 @@
 				},
 
 				"responses": {
-					"error-missing": "That user does not have an active character!",
+					"error-missing": "That user does not the specified character!",
 
 					"res1": "Gave {amount} {item} to {name}."
 				}
@@ -568,17 +574,17 @@
 
 			"view": {
 				"name": "view",
-				"description": "View a specified player's inventory (active character only)",
+				"description": "View a specified player's inventory",
 
 				"options": {
 					"player": {
 						"name": "player",
-						"description": "Player with an active character"
+						"description": "The player"
 					}
 				},
 
 				"responses": {
-					"error-missing": "That user does not have an active character!",
+					"error-missing": "That user does not have the specified character!",
 
 					"error-nothing": "That player has nothing in their inventory",
 
@@ -641,7 +647,7 @@
 
 			"give": {
 				"name": "give",
-				"description": "Give another active character one or more of an item in your inventory",
+				"description": "Give another character one or more of an item in your inventory",
 
 				"options": {
 					"recipient": {
@@ -667,7 +673,7 @@
 
 					"error-amount": "You do not have enough {}!",
 
-					"error-recipient": "{} does not have an active character!",
+					"error-recipient": "{} does not have the specified character!",
 
 					"res1": "Gave {amount} {item} to {name}."
 				}
@@ -889,7 +895,7 @@
 				"responses": {
 					"error-channel": "Missing or invalid channel for {}! Did you forget to grant viewing permissions?",
 
-					"error-char": "That user does not have an active character!",
+					"error-char": "That user does not have the specified character!",
 
 					"error-perms": "Missing permissions in recipient channel!",
 
@@ -923,7 +929,7 @@
 
 					"error-channel": "Missing or invalid channel for {}! Did you forget to grant viewing permissions?",
 
-					"error-char": "That user does not have an active character!",
+					"error-char": "That user does not have the specified character!",
 
 					"error-perms": "Missing permissions in recipient channel!",
 
