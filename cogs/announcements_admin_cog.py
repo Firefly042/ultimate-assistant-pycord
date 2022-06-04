@@ -218,11 +218,7 @@ class AnnouncementsAdminCog(commands.Cog):
 		description="Posting interval between 1 hour and 30 days (5040 hours)",
 		name_localizations=loc.option_names("announcements", "new", "interval"),
 		description_localizations=loc.option_descriptions("announcements", "new", "interval"))
-	@option("message", str,
-		description="Message, maximum 1024 characters",
-		name_localizations=loc.option_names("announcements", "new", "message"),
-		description_localizations=loc.option_descriptions("announcements", "new", "message"))
-	async def new(self, ctx, channel, start_year, start_month, start_day, start_hour, start_minute, interval, message):
+	async def new(self, ctx, channel, start_year, start_month, start_day, start_hour, start_minute, interval):
 		"""Define a new scheduled/repeated announcement (using your server's set timezone)"""
 
 		# Modal input for content
