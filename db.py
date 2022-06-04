@@ -165,6 +165,15 @@ def increase_currency_single(guild_id, player_id, amount):
 	return (cs.rowcount > 0)
 
 
+def increase_currency_inactive(guild_id, player_id, amount, name):
+	"""Same as above but for inctive character"""
+
+	cs.execute("UPDATE Characters SET Currency = Currency + ? WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (amount, guild_id, player_id, name))
+	conn.commit()
+
+	return (cs.rowcount > 0)
+
+
 def decrease_currency_single(guild_id, player_id, amount):
 	"""Decrease for active character"""
 
@@ -177,6 +186,19 @@ def decrease_currency_single(guild_id, player_id, amount):
 
 	return (cs.rowcount > 0)
 
+
+def decrease_currency_inactive(guild_id, player_id, amount, name):
+	"""Same as above but for inactive character"""
+
+	try:
+		cs.execute("UPDATE Characters SET Currency = Currency - ? WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (amount, guild_id, player_id, name))
+	except sqlite3.IntegrityError:
+		cs.execute("UPDATE Characters SET Currency = Currency - ? WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (amount, guild_id, player_id, name))
+
+	conn.commit()
+
+	return (cs.rowcount > 0)
+	
 
 def increase_currency_all(guild_id, amount):
 	"""Increase amount for all active characters"""
@@ -258,11 +280,14 @@ def get_random_item(guild_id):
 # ------------------------------------------------------------------------
 # Inventory
 # ------------------------------------------------------------------------
-def add_item(guild_id, player_id, item, amount=1, desc=None):
+def add_item(guild_id, player_id, item, name=None, amount=1, desc=None):
 	"""Adds item to inventory JSON string"""
 
 	# Get current inventory dictionary string
-	cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
+	if (name):
+		cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (guild_id, player_id, name))
+	else:
+		cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
 
 	# Convert string to dict (error if nonexistent)
 	try:
@@ -283,18 +308,24 @@ def add_item(guild_id, player_id, item, amount=1, desc=None):
 	inventory_str = utils.dict_to_str(inventory)
 
 	# Write and commit back to db
-	cs.execute("UPDATE Characters SET Inventory = ? WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (inventory_str, guild_id, player_id))
+	if (name):
+		cs.execute("UPDATE Characters SET Inventory = ? WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (inventory_str, guild_id, player_id, name))
+	else:
+		cs.execute("UPDATE Characters SET Inventory = ? WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (inventory_str, guild_id, player_id))
 
 	conn.commit()
 
 	return (cs.rowcount > 0)
 
 
-def remove_item(guild_id, player_id, item, amount=1):
+def remove_item(guild_id, player_id, item, name=None, amount=1):
 	"""Removes item from JSON string"""
 
 	# Get current inventory dictionary string
-	cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
+	if (name):
+		cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (guild_id, player_id, name))
+	else:
+		cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
 
 	# Convert string to dict (error if nonexistent)
 	try:
@@ -318,17 +349,23 @@ def remove_item(guild_id, player_id, item, amount=1):
 	inventory_str = utils.dict_to_str(inventory)
 
 	# Write and commit back to db
-	cs.execute("UPDATE Characters SET Inventory = ? WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (inventory_str, guild_id, player_id))
+	if (name):
+		cs.execute("UPDATE Characters SET Inventory = ? WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (inventory_str, guild_id, player_id, name))
+	else:
+		cs.execute("UPDATE Characters SET Inventory = ? WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (inventory_str, guild_id, player_id))
 
 	conn.commit()
 
 	return (cs.rowcount > 0)
 
 
-def get_inventory(guild_id, player_id):
+def get_inventory(guild_id, player_id, name=None):
 	"""Return dictionary"""
 
-	cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
+	if (name):
+		cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (guild_id, player_id, name))
+	else:
+		cs.execute("SELECT Inventory FROM Characters WHERE GuildID = ? AND PlayerID = ? AND Active = 1 LIMIT 1;", (guild_id, player_id))
 
 	# Convert string to dict (error if nonexistent)
 	return utils.str_to_dict(cs.fetchone()["Inventory"])
