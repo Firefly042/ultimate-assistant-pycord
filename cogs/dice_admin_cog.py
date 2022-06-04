@@ -51,14 +51,18 @@ class DiceAdminCog(commands.Cog):
 	@option("player", discord.Member,description="Active character to view",
 		name_localizations=loc.option_names("roll_admin", "list", "player"),
 		description_localizations=loc.option_descriptions("roll_admin", "list", "player"))
+	@option("name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-char-name"),
+		description_localizations=loc.common("inactive-char-desc"))
 	@option("visible", bool, default=False,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
 		description_localizations=loc.common("visible-desc"))
-	async def roll_list(self, ctx, player, visible):
+	async def roll_list(self, ctx, player, name, visible):
 		"""View a player's active character's custom rolls"""
 
-		char = db.get_active_char(ctx.guild.id, player.id)
+		char = db.get_character(ctx.guild.id, player.id, name) if name else db.get_active_char(ctx.guild.id, player.id)
 
 		try:
 			rolls = utils.str_to_dict(char['CustomRolls'])

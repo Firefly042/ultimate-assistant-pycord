@@ -101,10 +101,14 @@ class GachaAdminCog(commands.Cog):
 		description="Amount to give",
 		name_localizations=loc.option_names("gacha_admin_currency", "give", "amount"),
 		description_localizations=loc.option_descriptions("gacha_admin_currency", "give", "amount"))
-	async def admin_currency_give(self, ctx, player, amount):
+	@option("name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-char-name"),
+		description_localizations=loc.common("inactive-char-desc"))
+	async def admin_currency_give(self, ctx, player, amount, name):
 		"""Give currency to an active character"""
 
-		char_updated = db.increase_currency_single(ctx.guild.id, player.id, amount)
+		char_updated = db.increase_currency_inactive(ctx.guild.id, player.id, amount, name) if name else db.increase_currency_single(ctx.guild.id, player.id, amount)
 
 		if (not char_updated):
 			error = loc.response("gacha_admin_currency", "give", "error-missing", ctx.interaction.locale).format(player.name)
@@ -126,10 +130,14 @@ class GachaAdminCog(commands.Cog):
 		description="Amount to take",
 		name_localizations=loc.option_names("gacha_admin_currency", "take", "amount"),
 		description_localizations=loc.option_descriptions("gacha_admin_currency", "take", "amount"))
-	async def admin_currency_take(self, ctx, player, amount):
+	@option("name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-char-name"),
+		description_localizations=loc.common("inactive-char-desc"))
+	async def admin_currency_take(self, ctx, player, amount, name):
 		"""Take currency from an active character"""
 
-		char_updated = db.decrease_currency_single(ctx.guild.id, player.id, amount)
+		char_updated = db.decrease_currency_inactive(ctx.guild.id, player.id, amount, name) if name else db.decrease_currency_single(ctx.guild.id, player.id, amount)
 
 		if (not char_updated):
 			error = loc.response("gacha_admin_currency", "take", "error-missing", ctx.interaction.locale).format(player.name)
@@ -170,15 +178,21 @@ class GachaAdminCog(commands.Cog):
 		description_localizations=loc.command_descriptions("gacha_admin_currency", "view"))
 	@option("player", discord.Member,
 		name_localizations=loc.option_names("gacha_admin_currency", "view", "player"))
+	@option("name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-char-name"),
+		description_localizations=loc.common("inactive-char-desc"))
 	@option("visible", bool, default=False,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
 		description_localizations=loc.common("visible-desc"))
-	async def admin_currency_view(self, ctx, player, visible):
+	async def admin_currency_view(self, ctx, player, name, visible):
 		"""View currency of an active character"""
 
-		char = db.get_active_char(ctx.guild.id, player.id)
+		char = db.get_character(ctx.guild.id, player.id, name) if name else db.get_active_char(ctx.guild.id, player.id)
+
 		currency_name = db.get_guild_info(ctx.guild.id)["CurrencyName"]
+
 		try:
 			res = loc.response("gacha_admin_currency", "view", "res1", ctx.interaction.locale).format(name=char["Name"], amount=char["Currency"], units=currency_name)
 			await ctx.respond(res, ephemeral=not visible)

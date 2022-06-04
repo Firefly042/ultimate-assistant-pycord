@@ -60,6 +60,10 @@ class InventoryAdminCog(commands.Cog):
 		description="Case sensitive item name",
 		name_localizations=loc.option_names("inv_admin", "take", "item"),
 		description_localizations=loc.option_descriptions("inv_admin", "take", "item"))
+	@option("name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-char-name"),
+		description_localizations=loc.common("inactive-char-desc"))
 	@option("amount", int, default=1, min_value=1, max_value=9999,
 		description="Amount to take (default 1)",
 		name_localizations=loc.option_names("inv_admin", "take", "amount"),
@@ -68,10 +72,10 @@ class InventoryAdminCog(commands.Cog):
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
 		description_localizations=loc.common("visible-desc"))
-	async def take(self, ctx, player, item, amount, visible):
+	async def take(self, ctx, player, item, name, amount, visible):
 		"""Take one or more of an item from a player's inventory"""
 
-		updated = db.remove_item(ctx.guild.id, player.id, item, amount)
+		updated = db.remove_item(ctx.guild.id, player.id, item, name=name, amount=amount)
 
 		if (not updated):
 			error = loc.response("inv_admin", "take", "error-missing", ctx.interaction.locale)
@@ -95,6 +99,10 @@ class InventoryAdminCog(commands.Cog):
 		description="Case sensitive item to give",
 		name_localizations=loc.option_names("inv_admin", "give", "item"),
 		description_localizations=loc.option_descriptions("inv_admin", "give", "item"))
+	@option("recipient_name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-recipient-name"),
+		description_localizations=loc.common("inactive-char-desc"))
 	@option("amount", int, default=1, min_value=1, max_value=999,
 		name_localizations=loc.option_names("inv_admin", "give", "amount"),
 		description_localizations=loc.option_descriptions("inv_admin", "give", "amount"))
@@ -106,13 +114,13 @@ class InventoryAdminCog(commands.Cog):
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
 		description_localizations=loc.common("visible-desc"))
-	async def give(self, ctx, recipient, item, amount, desc, visible):
+	async def give(self, ctx, recipient, item, recipient_name, amount, desc, visible):
 		"""Add one or more of an item to a player's inventory. Description optional"""
 
 		# Be sure to enforce embed limits
 		if (desc):
 			desc = desc[:256]
-		updated = db.add_item(ctx.guild.id, recipient.id, item[:64], amount, desc)
+		updated = db.add_item(ctx.guild.id, recipient.id, item[:64], name=recipient_name, amount=amount, desc=desc)
 
 		if (not updated):
 			error = loc.response("inv_admin", "give", "error-missing", ctx.interaction.locale)
@@ -132,15 +140,19 @@ class InventoryAdminCog(commands.Cog):
 		description="Player with an active character",
 		name_localizations=loc.option_names("inv_admin", "view", "player"),
 		description_localizations=loc.option_descriptions("inv_admin", "view", "player"))
+	@option("name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-char-name"),
+		description_localizations=loc.common("inactive-char-desc"))
 	@option("visible", bool, default=False,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
 		description_localizations=loc.common("visible-desc"))
-	async def view(self, ctx, player, visible):
+	async def view(self, ctx, player, name, visible):
 		"""View a specified player's inventory (active character only)"""
 
 		try:
-			inventory = db.get_inventory(ctx.guild.id, player.id)
+			inventory = db.get_inventory(ctx.guild.id, player.id, name)
 			hex_color = db.get_active_char(ctx.guild.id, player.id)["HexColor"]
 		except TypeError:
 			error = loc.response("inv_admin", "view", "error-missing", ctx.interaction.locale)

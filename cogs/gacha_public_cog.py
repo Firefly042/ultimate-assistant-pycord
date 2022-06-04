@@ -139,18 +139,22 @@ class GachaPublicCog(commands.Cog):
 		description_localizations=loc.option_descriptions("currency", "give", "recipient"))
 	@option("amount", int, min_value=1, max_value=999,
 		description="How much you will give",
-		name_localizations=loc.command_names("currency", "give"),
-		description_localizations=loc.command_descriptions("currency", "give"))
+		name_localizations=loc.option_names("currency", "give", "amount"),
+		description_localizations=loc.option_descriptions("currency", "give","amount"))
+	@option("recipient_name", str, default=None,
+		description="The registered display name of the character, if not active",
+		name_localizations=loc.common("inactive-recipient-name"),
+		description_localizations=loc.common("inactive-char-desc"))
 	@option("visible", bool, default=False,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
 		description_localizations=loc.common("visible-desc"))
-	async def currency_give(self, ctx, recipient, amount, visible):
+	async def currency_give(self, ctx, recipient, amount, recipient_name, visible):
 		"""Give another active character some of your own currency."""
 
 		# Get values
 		sender = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
-		receiver= db.get_active_char(ctx.guild.id, recipient.id)
+		receiver = db.get_character(ctx.guild.id, recipient.id, recipient_name) if recipient_name else db.get_active_char(ctx.guild.id, recipient.id)
 
 		# Check that sender is valid
 		try:
@@ -177,9 +181,14 @@ class GachaPublicCog(commands.Cog):
 			return
 
 		# Adjust DB
-		db.increase_currency_single(ctx.guild.id, recipient.id, amount)
+		if (recipient_name):
+			db.increase_currency_inactive(ctx.guild.id, recipient.id, amount, recipient_name)
+		else:
+			db.increase_currency_single(ctx.guild.id, recipient.id, amount)
+		
 		db.decrease_currency_single(ctx.guild.id, ctx.interaction.user.id, amount)
 
 		# Send response
 		res = loc.response("currency", "give", "res1", ctx.interaction.locale).format(sender=sender["Name"], recipient=receiver["Name"], amount=amount, units=currency_name)
 		await ctx.respond(res, ephemeral=not visible)
+ 
