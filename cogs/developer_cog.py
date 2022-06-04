@@ -3,6 +3,8 @@ Author @Firefly#7113
 Developer-only commands
 """
 
+import os
+
 import discord
 from discord import option
 from discord.commands import SlashCommandGroup
@@ -33,7 +35,7 @@ class DeveloperCog(commands.Cog):
 		# This whole thing will break if this is run before the bot logs in
 		await self.bot.wait_until_ready()
 
-		dev_user = await self.bot.fetch_user(DEVELOPER_ID)
+		dev_user = await self.bot.fetch_user(os.getenv("DEVELOPER_ID"))
 		self.dm_channel = await dev_user.create_dm()
 
 
@@ -41,7 +43,7 @@ class DeveloperCog(commands.Cog):
 # Command groups
 # Change the decorator to @<name>.command()
 # ------------------------------------------------------------------------
-	dev = SlashCommandGroup("dev", "Developer only", guild_ids=[DEVELOPER_SERVER])
+	dev = SlashCommandGroup("dev", "Developer only", guild_ids=[os.getenv("DEVELOPER_SERVER")])
 
 
 # ------------------------------------------------------------------------
