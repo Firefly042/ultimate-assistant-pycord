@@ -11,7 +11,6 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 import db
-from config import DEVELOPER_SERVER, DEVELOPER_ID
 
 
 # ------------------------------------------------------------------------

@@ -9,7 +9,6 @@ import atexit
 
 import discord
 
-# from config import TESTING_SERVERS
 import db
 
 
