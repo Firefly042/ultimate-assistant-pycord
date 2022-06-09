@@ -735,7 +735,7 @@
                     "error-perms": "Missing permissions in recipient channel!",
                     "warning-perms": "Messaged {}, but missing permissions in your channel!",
                     "res1": "Messaged {}.",
-                    "receiver-title": "Message from {}",
+                    "receiver-title": "Message to {recipient} from {sender}",
                     "sender-receipt": "Message to {}"
                 }
             },
@@ -759,7 +759,7 @@
                     "error-perms": "Missing permissions in recipient channel!",
                     "warning-perms": "Messaged {}, but missing permissions in your channel!",
                     "res1": "Messaged {}.",
-                    "receiver-title": "Anonymous message!",
+                    "receiver-title": "{} has received an anonymous message!",
                     "sender-receipt": "Anonymous message to {}"
                 }
             }

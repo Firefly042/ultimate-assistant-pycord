@@ -95,7 +95,7 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Attempt to send to recipient channel
-		title_r = loc.response("msg", "whisper", "receiver-title", ctx.interaction.locale).format(sender["Name"])
+		title_r = loc.response("msg", "whisper", "receiver-title", ctx.interaction.locale).format(recipient=recipient["Name"], sender=sender["Name"])
 		embed_r = discord.Embed(color=embed_s_color, title=title_r, description=message[:1500])
 		try:
 			await channel_r.send(content=f"<@{player.id}>", embed=embed_r)
@@ -170,7 +170,7 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Attempt to send to recipient channel
-		title_r = loc.response("msg", "anon", "receiver-title", ctx.interaction.locale)
+		title_r = loc.response("msg", "anon", "receiver-title", ctx.interaction.locale).format(recipient["Name"])
 		embed_r = discord.Embed(title=title_r, description=message[:1500])
 		try:
 			await channel_r.send(content=f"<@{player.id}>", embed=embed_r)

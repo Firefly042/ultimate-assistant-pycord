@@ -907,7 +907,7 @@
 
 					"res1": "Messaged {}.",
 
-					"receiver-title": "Message from {}", 
+					"receiver-title": "Message to {recipient} from {sender}", 
 
 					"sender-receipt": "Message to {}"
 				}
@@ -941,7 +941,7 @@
 
 					"res1": "Messaged {}.",
 
-					"receiver-title": "Anonymous message!",
+					"receiver-title": "{} has received an anonymous message!",
 
 					"sender-receipt": "Anonymous message to {}"
 				}
