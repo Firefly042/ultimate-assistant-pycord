@@ -153,7 +153,10 @@ class InventoryAdminCog(commands.Cog):
 
 		try:
 			inventory = db.get_inventory(ctx.guild.id, player.id, name)
-			hex_color = db.get_active_char(ctx.guild.id, player.id)["HexColor"]
+			if (name):
+				hex_color = db.get_character(ctx.guild.id, player.id, name)["HexColor"]
+			else:
+				hex_color = db.get_active_char(ctx.guild.id, player.id)["HexColor"]
 		except TypeError:
 			error = loc.response("inv_admin", "view", "error-missing", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)

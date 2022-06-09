@@ -166,7 +166,7 @@ def increase_currency_single(guild_id, player_id, amount):
 
 
 def increase_currency_inactive(guild_id, player_id, amount, name):
-	"""Same as above but for inctive character"""
+	"""Same as above but for inactive character"""
 
 	cs.execute("UPDATE Characters SET Currency = Currency + ? WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (amount, guild_id, player_id, name))
 	conn.commit()
@@ -193,7 +193,7 @@ def decrease_currency_inactive(guild_id, player_id, amount, name):
 	try:
 		cs.execute("UPDATE Characters SET Currency = Currency - ? WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (amount, guild_id, player_id, name))
 	except sqlite3.IntegrityError:
-		cs.execute("UPDATE Characters SET Currency = Currency - ? WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (amount, guild_id, player_id, name))
+		cs.execute("UPDATE Characters SET Currency = 0 WHERE GuildID = ? AND PlayerID = ? AND Name = ? LIMIT 1;", (guild_id, player_id, name))
 
 	conn.commit()
 
