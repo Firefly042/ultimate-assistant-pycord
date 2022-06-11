@@ -130,9 +130,15 @@ class ProfilePublicCog(commands.Cog):
 
 		# Get previous image content
 		if (field_to_change == "ThumbnailURL"):
-			previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ThumbnailURL"]
+			try:
+				previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ThumbnailURL"]
+			except TypeError: # Will yield zero updates and display correct error
+				pass
 		elif (field_to_change == "ImageURL"):
-			previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ImageURL"]
+			try:
+				previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ImageURL"]
+			except TypeError: # Will yield zero updates and display correct error
+				pass
 
 		# Update db values. No name changes so uniqueness is not an issue
 		char_updated = db.update_character(ctx.guild.id, ctx.interaction.user.id, name, field_to_change, new_value)
