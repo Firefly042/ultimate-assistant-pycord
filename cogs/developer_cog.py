@@ -61,20 +61,20 @@ class DeveloperCog(commands.Cog):
 		await self.dm_channel.send(f"Removed from **{guild.name}** ({guild.id})")
 
 
-	# @commands.Cog.listener()
-	# async def on_application_command_error(self, ctx, exception):
-	# 	"""DM developer"""
+	@commands.Cog.listener()
+	async def on_application_command_error(self, ctx, exception):
+		"""DM developer"""
 
-	# 	msg = f"**GuildID**: {ctx.guild.id}\n"
-	# 	msg += f"**ChannelID**: {ctx.channel.id}\n"
-	# 	msg += f"**UserID**: {ctx.interaction.user.id}\n"
-	# 	msg += f"**Command**: /{ctx.command.qualified_name}\n"
-	# 	if (ctx.selected_options):
-	# 		msg += "**Options**: "
-	# 		msg += ", ".join([f"{opt['name']}: {opt['value']}" for opt in ctx.selected_options]) + "\n"
-	# 	msg += f"**Exception**: {exception}\n--------------------------------------------"
+		msg = f"**GuildID**: {ctx.guild.id}\n"
+		msg += f"**ChannelID**: {ctx.channel.id}\n"
+		msg += f"**UserID**: {ctx.interaction.user.id}\n"
+		msg += f"**Command**: /{ctx.command.qualified_name}\n"
+		if (ctx.selected_options):
+			msg += "**Options**: "
+			msg += ", ".join([f"{opt['name']}: {opt['value']}" for opt in ctx.selected_options]) + "\n"
+		msg += f"**Exception**: {exception}\n--------------------------------------------"
 
-	# 	await self.dm_channel.send(msg[:1024])
+		await self.dm_channel.send(msg[:1024])
 
 
 # ------------------------------------------------------------------------
