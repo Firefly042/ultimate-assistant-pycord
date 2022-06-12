@@ -97,13 +97,13 @@ class DBConnection:
 	async def edit_guild(self, guild_id, field, value):
 		"""Edit any existing field in the db. Definitely do not allow direct user access to this."""
 
-		await self.conn.execute(f"UPDATE GuildInfo SET {field} = $1 WHERE GuildID = $2;", value, guild_id)
+		await self.conn.execute(f"UPDATE guildinfo SET {field} = $1 WHERE guildid = $2;", value, guild_id)
 
 
 	async def get_guild_info(self, guild_id):
 		"""Returns a single row"""
 
-		data = await self.conn.fetchrow("SELECT * FROM GuildInfo WHERE GuildID = $1;", guild_id)
+		data = await self.conn.fetchrow("SELECT * FROM guildinfo WHERE guildid = $1;", guild_id)
 		return data
 
 
@@ -114,7 +114,7 @@ class DBConnection:
 		"""Register new character to database"""
 
 		try:
-			await self.conn.execute("INSERT INTO Characters (GuildID, PlayerID, Name, Surname, ChannelID) VALUES ($1, $2, $3, $4, $5);", guild_id, player_id, name, surname, channel_id)
+			await self.conn.execute("INSERT INTO characters (guildid, playerid, name, surname, channelid) VALUES ($1, $2, $3, $4, $5);", guild_id, player_id, name, surname, channel_id)
 		except pgexceptions.UniqueViolationError as error:
 			raise Exception("IntegrityError") from error
 
@@ -122,7 +122,7 @@ class DBConnection:
 	async def remove_character(self, guild_id, player_id, name):
 		"""Removes character. Returns False if nothing changed"""
 
-		rowcount = await self.conn.execute("DELETE FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Name = $3 RETURNING 1;", guild_id, player_id, name)
+		rowcount = await self.conn.execute("DELETE FROM characters WHERE guildid = $1 AND playerid = $2 AND name = $3 RETURNING 1;", guild_id, player_id, name)
 
 		return (int(rowcount[7:]) > 0)
 
@@ -130,19 +130,19 @@ class DBConnection:
 	async def set_active_character(self, guild_id, player_id, name):
 		"""Called on profile switch"""
 
-		rowcount = await self.conn.execute("UPDATE Characters SET Active = true WHERE GuildID = $1 AND PlayerID = $2 AND Name = $3;", guild_id, player_id, name)
+		rowcount = await self.conn.execute("UPDATE characters SET active = true WHERE guildid = $1 AND playerid = $2 AND name = $3;", guild_id, player_id, name)
 
 		if (int(rowcount[7:]) < 1):
 			raise Exception("Cannot swap into nonexistent character")
 
-		await self.conn.execute("UPDATE Characters SET Active = false WHERE GuildID = $1 AND PlayerID = $2 AND Name != $3;", guild_id, player_id, name)
+		await self.conn.execute("UPDATE characters SET active = false WHERE guildid = $1 AND playerid = $2 AND name != $3;", guild_id, player_id, name)
 
 
 	async def update_character(self, guild_id, player_id, name, field, value):
 		"""Edit any existing Character field in the db. Definitely do not allow direct user access to this."""
 
 		try:
-			rowcount = await self.conn.execute(f"UPDATE Characters SET {field} = $1 WHERE GuildID = $2 AND PlayerID = $3 AND Name = $4;", value, guild_id, player_id, name)
+			rowcount = await self.conn.execute(f"UPDATE characters SET {field} = $1 WHERE guildid = $2 AND playerid = $3 AND name = $4;", value, guild_id, player_id, name)
 		except pgexceptions.UniqueViolationError as error:
 			raise Exception("IntegrityError") from error
 
@@ -152,7 +152,7 @@ class DBConnection:
 	async def get_character(self, guild_id, player_id, name):
 		"""Returns dictionary character info"""
 
-		data = await self.conn.fetchrow("SELECT * FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Name = $3 LIMIT 1", guild_id, player_id, name)
+		data = await self.conn.fetchrow("SELECT * FROM characters WHERE guildid = $1 AND playerid = $2 AND name = $3 LIMIT 1", guild_id, player_id, name)
 		
 		return data
 
@@ -160,13 +160,13 @@ class DBConnection:
 	async def get_active_char(self, guild_id, player_id):
 		"""Returns active character"""
 
-		data = await self.conn.fetchrow("SELECT * FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Active = true LIMIT 1;", guild_id, player_id)	
+		data = await self.conn.fetchrow("SELECT * FROM characters WHERE guildid = $1 AND playerid = $2 AND active = true LIMIT 1;", guild_id, player_id)	
 		return data
 
 	async def get_all_chars(self, guild_id):
 		"""Returns all character info for a single guild"""
 
-		data = await self.conn.fetch("SELECT * FROM Characters WHERE GuildID = $1;", guild_id)
+		data = await self.conn.fetch("SELECT * FROM characters WHERE guildid = $1;", guild_id)
 		return data
 
 
@@ -177,9 +177,9 @@ class DBConnection:
 		"""Increase for active character"""
 
 		try:
-			rowcount = await self.conn.execute("UPDATE Characters SET Currency = Currency + $1 WHERE GuildID = $2 AND PlayerID = $3 AND Active = true RETURNING 1;", amount, guild_id, player_id)
+			rowcount = await self.conn.execute("UPDATE characters SET currency = currency + $1 WHERE guildid = $2 AND playerid = $3 AND active = true RETURNING 1;", amount, guild_id, player_id)
 		except pgexceptions.CheckViolationError:
-			rowcount = await self.conn.execute("UPDATE Characters SET Currency = 32000 WHERE GuildID = $1 AND PlayerID = $2 AND Active = true RETURNING 1;", guild_id, player_id)
+			rowcount = await self.conn.execute("UPDATE characters SET currency = 32000 WHERE guildid = $1 AND playerid = $2 AND active = true RETURNING 1;", guild_id, player_id)
 
 		return (int(rowcount[7:]) > 0)
 
@@ -188,9 +188,9 @@ class DBConnection:
 		"""Same as above but for inactive character"""
 
 		try:
-			rowcount = await self.conn.execute("UPDATE Characters SET Currency = Currency + $1 WHERE GuildID = $2 AND PlayerID = $3 AND Name = $4;", amount, guild_id, player_id, name)
+			rowcount = await self.conn.execute("UPDATE characters SET currency = currency + $1 WHERE guildid = $2 AND playerid = $3 AND name = $4;", amount, guild_id, player_id, name)
 		except pgexceptions.CheckViolationError:
-			rowcount = await self.conn.execute("UPDATE Characters SET Currency = 32000 WHERE GuildID = $1 AND PlayerID = $2 AND Name = $3;", guild_id, player_id, name)
+			rowcount = await self.conn.execute("UPDATE characters SET currency = 32000 WHERE guildid = $1 AND playerid = $2 AND name = $3;", guild_id, player_id, name)
 
 		return (int(rowcount[7:])  > 0)
 
@@ -199,9 +199,9 @@ class DBConnection:
 		"""Decrease for active character"""
 
 		try:
-			rowcount = await self.conn.execute("UPDATE Characters SET Currency = Currency - $1 WHERE GuildID = $2 AND PlayerID = $3 AND Active = true;", amount, guild_id, player_id)
+			rowcount = await self.conn.execute("UPDATE characters SET currency = currency - $1 WHERE guildid = $2 AND playerid = $3 AND active = true;", amount, guild_id, player_id)
 		except pgexceptions.CheckViolationError:
-			rowcount = await self.conn.execute("UPDATE Characters SET Currency = 0 WHERE GuildID = $1 AND PlayerID = $2 AND Active = true;", guild_id, player_id)
+			rowcount = await self.conn.execute("UPDATE characters SET currency = 0 WHERE guildid = $1 AND playerid = $2 AND active = true;", guild_id, player_id)
 
 		return (int(rowcount[7:]) > 0)
 
@@ -210,9 +210,9 @@ class DBConnection:
 		"""Same as above but for inactive character"""
 
 		try:
-			rowcount = await self.conn.execute("UPDATE Characters SET Currency = Currency - $1 WHERE GuildID = $2 AND PlayerID = $3 AND Name = $4;", amount, guild_id, player_id, name)
+			rowcount = await self.conn.execute("UPDATE characters SET currency = currency - $1 WHERE guildid = $2 AND playerid = $3 AND name = $4;", amount, guild_id, player_id, name)
 		except pgexceptions.CheckViolationError:
-			rowcount = await self.conn.execute("UPDATE Characters SET Currency = 0 WHERE GuildID = $1 AND PlayerID = $2 AND Name = $3;", guild_id, player_id, name)
+			rowcount = await self.conn.execute("UPDATE characters SET currency = 0 WHERE guildid = $1 AND playerid = $2 AND name = $3;", guild_id, player_id, name)
 
 		return (int(rowcount[7:])  > 0)
 
@@ -220,7 +220,7 @@ class DBConnection:
 	async def increase_currency_all(self, guild_id, amount):
 		"""Increase amount for all active characters"""
 
-		rowcount = await self.conn.execute("UPDATE Characters SET Currency = Currency + $1 WHERE GuildID = $2 AND Active = true;", amount, guild_id)
+		rowcount = await self.conn.execute("UPDATE characters SET currency = currency + $1 WHERE guildid = $2 AND active = true;", amount, guild_id)
 
 		return (int(rowcount[7:]) > 0)
 
@@ -230,7 +230,7 @@ class DBConnection:
 	async def get_all_gacha(self, guild_id):
 		"""Returns every item for a guild"""
 
-		data = await self.conn.fetch("SELECT * FROM Gacha WHERE GuildID = $1;", guild_id)
+		data = await self.conn.fetch("SELECT * FROM gacha WHERE guildid = $1;", guild_id)
 		return data
 
 
@@ -238,7 +238,7 @@ class DBConnection:
 		"""Register a new gacha item"""
 
 		try:
-			await self.conn.execute("INSERT INTO Gacha (GuildID, Name, Description, Amount, AmountRemaining, ThumbnailURL) VALUES($1, $2, $3, $4, $5, $6);", guild_id, name, desc, amount, amount, thumbnail)
+			await self.conn.execute("INSERT INTO gacha (guildid, name, description, amount, amountremaining, thumbnailurl) VALUES($1, $2, $3, $4, $5, $6);", guild_id, name, desc, amount, amount, thumbnail)
 		except pgexceptions.UniqueViolationError as error:
 			raise Exception("IntegrityError") from error
 
@@ -247,14 +247,14 @@ class DBConnection:
 		"""Get a single item, uniquely identified"""
 
 
-		data = await self.conn.fetchrow("SELECT * FROM Gacha WHERE GuildID = $1 AND Name = $2 LIMIT 1;", guild_id, name)
+		data = await self.conn.fetchrow("SELECT * FROM gacha WHERE guildid = $1 AND name = $2 LIMIT 1;", guild_id, name)
 		return data
 
 
 	async def remove_gacha_item(self, guild_id, name):
 		"""Removes single gacha item. Returns true if deletion happened"""
 
-		rowcount = await self.conn.execute("DELETE FROM Gacha WHERE GuildID = $1 AND Name = $2 RETURNING 1;", guild_id, name)
+		rowcount = await self.conn.execute("DELETE FROM gacha WHERE guildid = $1 AND name = $2 RETURNING 1;", guild_id, name)
 
 		return (int(rowcount[7:]) > 0)
 
@@ -262,7 +262,7 @@ class DBConnection:
 	async def remove_all_gacha(self, guild_id):
 		"""Removes all gacha items for a guild"""
 
-		await self.conn.execute("DELETE FROM Gacha WHERE GuildID = $1;", guild_id)
+		await self.conn.execute("DELETE FROM gacha WHERE guildid = $1;", guild_id)
 
 
 	async def get_random_item(self, guild_id):
@@ -271,18 +271,18 @@ class DBConnection:
 		Decrements and removes as needed
 		"""
 
-		item = await self.conn.fetchrow("SELECT * FROM Gacha WHERE GuildID = $1 ORDER BY RANDOM() LIMIT 1;", guild_id)
+		item = await self.conn.fetchrow("SELECT * FROM gacha WHERE guildid = $1 ORDER BY RANDOM() LIMIT 1;", guild_id)
 
 		if (item["amount"]):
 			new_amount = item["amountremaining"]-1
 
 			# Deletion case
 			if (new_amount < 1):
-				await self.conn.execute("DELETE FROM Gacha WHERE GuildID = $1 AND Name = $2;", guild_id, item["name"])
+				await self.conn.execute("DELETE FROM gacha WHERE guildid = $1 AND name = $2;", guild_id, item["name"])
 				return item
 
 			# Reduction case
-			await self.conn.execute("UPDATE Gacha SET AmountRemaining = $1 WHERE GuildID = $2 AND Name = $3;", new_amount, guild_id, item["name"])
+			await self.conn.execute("UPDATE gacha SET amountremaining = $1 WHERE guildid = $2 AND name = $3;", new_amount, guild_id, item["name"])
 
 		return item
 
@@ -294,9 +294,9 @@ class DBConnection:
 		"""Adds item to inventory JSON string"""
 
 		if (name):
-			inventory = await self.conn.fetchval("SELECT Inventory FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Name = $3;", guild_id, player_id, name)
+			inventory = await self.conn.fetchval("SELECT inventory FROM characters WHERE guildid = $1 AND playerid = $2 AND name = $3;", guild_id, player_id, name)
 		else:
-			inventory = await self.conn.fetchval("SELECT Inventory FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Active = true;", guild_id, player_id)
+			inventory = await self.conn.fetchval("SELECT inventory FROM characters WHERE guildid = $1 AND playerid = $2 AND active = true;", guild_id, player_id)
 
 		# Add or edit amount
 		try:
@@ -331,9 +331,9 @@ class DBConnection:
 
 		# Get current inventory dictionary string
 		if (name):
-			inventory = await self.conn.fetchval("SELECT Inventory FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Name = $3;", guild_id, player_id, name)
+			inventory = await self.conn.fetchval("SELECT inventory FROM characters WHERE guildid = $1 AND playerid = $2 AND name = $3;", guild_id, player_id, name)
 		else:
-			inventory = await self.conn.fetchval("SELECT Inventory FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Active = true;", guild_id, player_id)
+			inventory = await self.conn.fetchval("SELECT inventory FROM characters WHERE guildid = $1 AND playerid = $2 AND active = true;", guild_id, player_id)
 
 		try:
 			inventory =utils.str_to_dict(inventory)
@@ -356,9 +356,9 @@ class DBConnection:
 
 		# Write to database
 		if (name):
-			rowcount = await self.conn.execute("UPDATE Characters SET Inventory = $1 WHERE GuildID = $2 AND PlayerID = $3 AND Name = $4;", inventory, guild_id, player_id, name)
+			rowcount = await self.conn.execute("UPDATE characters SET inventory = $1 WHERE guildid = $2 AND playerid = $3 AND name = $4;", inventory, guild_id, player_id, name)
 		else:
-			rowcount = await self.conn.execute("UPDATE Characters SET Inventory = $1 WHERE GuildID = $2 AND PlayerID = $3 AND Active = true;", inventory, guild_id, player_id)
+			rowcount = await self.conn.execute("UPDATE characters SET inventory = $1 WHERE guildid = $2 AND playerid = $3 AND active = true;", inventory, guild_id, player_id)
 
 
 		return (int(rowcount[7:]) > 0)
@@ -368,9 +368,9 @@ class DBConnection:
 		"""Return dictionary"""
 
 		if (name):
-			inventory = await self.conn.fetchval("SELECT Inventory FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Name = $3;", guild_id, player_id, name)
+			inventory = await self.conn.fetchval("SELECT inventory FROM characters WHERE guildid = $1 AND playerid = $2 AND name = $3;", guild_id, player_id, name)
 		else:
-			inventory = await self.conn.fetchval("SELECT Inventory FROM Characters WHERE GuildID = $1 AND PlayerID = $2 AND Active = true;", guild_id, player_id)
+			inventory = await self.conn.fetchval("SELECT inventory FROM characters WHERE guildid = $1 AND playerid = $2 AND active = true;", guild_id, player_id)
 
 		# Convert string to dict (error if nonexistent)
 		return utils.str_to_dict(inventory)
@@ -543,18 +543,5 @@ class DBConnection:
 # ------------------------------------------------------------------------
 # Test work
 # ------------------------------------------------------------------------
-# loop = asyncio.get_event_loop()
 
 db = DBConnection()
-
-# loop.run_until_complete(db.add_announcement(12474859, 405186895371567116, 461265486655520788, "This is\nanother message.", 24, 202209111430))
-
-
-# names = ["item 1", "item"]
-# names = utils.dict_to_str(names)
-
-# data = loop.run_until_complete(db.get_all_investigations(437627669648113664))
-
-# print(data)
-
-# loop.run_until_complete(db.disconnect())
