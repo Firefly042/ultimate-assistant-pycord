@@ -40,24 +40,24 @@ class DefaultCog(commands.Cog):
 # Crontabs appear to execute in a LIFO stack order
 # Do not need to be explicitly started
 # ------------------------------------------------------------------------
-	@staticmethod
-	@aiocron.crontab('0 1 * * *')
-	async def backup_db():
-		"""
-		Backs up the database once every 24 hours at 1AM, server time
-		Files older than 30 days will be removed
-		"""
+	# @staticmethod
+	# @aiocron.crontab('0 1 * * *')
+	# async def backup_db():
+	# 	"""
+	# 	Backs up the database once every 24 hours at 1AM, server time
+	# 	Files older than 30 days will be removed
+	# 	"""
 
-		today = datetime.date.today()
-		fname = f"./db_backups/{today}.db"
-		shutil.copy("main.db", fname)
+	# 	today = datetime.date.today()
+	# 	fname = f"./db_backups/{today}.db"
+	# 	shutil.copy("main.db", fname)
 
-		for file in os.listdir("./db_backups"):
-			fpath = os.path.join("./db_backups", file)
-			mod_date = datetime.datetime.fromtimestamp(os.path.getmtime(fpath))
+	# 	for file in os.listdir("./db_backups"):
+	# 		fpath = os.path.join("./db_backups", file)
+	# 		mod_date = datetime.datetime.fromtimestamp(os.path.getmtime(fpath))
 
-			if (file.endswith(".db") and datetime.datetime.now() - mod_date > datetime.timedelta(days=30)):
-				os.remove(fpath)
+	# 		if (file.endswith(".db") and datetime.datetime.now() - mod_date > datetime.timedelta(days=30)):
+	# 			os.remove(fpath)
 
 
 # ------------------------------------------------------------------------
