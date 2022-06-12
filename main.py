@@ -5,7 +5,6 @@ Original template by @Firefly#7113, April 2022
 
 import os
 import shutil
-import asyncio_atexit
 import asyncio
 import atexit
 
