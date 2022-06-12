@@ -7,8 +7,6 @@ import json
 
 import discord
 
-import db
-
 
 def str_to_dict(json_str):
 	"""JSON compatible string to python dict"""
@@ -25,35 +23,35 @@ def hex_to_color(hex_code):
 	return int(hex_code, 16)
 
 
-def get_profile_embed(guild_id, player_id, name):
-	"""Queries database and returns a discord.Embed"""
+def get_profile_embed(char):
+	"""Returns a discord.Embed (char from queried database)"""
 
-	char = db.get_character(guild_id, player_id, name)
+	# char = await db.get_character(guild_id, player_id, name)
 
 	# Check that anything was returned
 	try:
-		name = char["Name"]
+		name = char["name"]
 	except TypeError as error:
 		raise Exception("Cannot find character") from error
 
 	# Title and color
-	if (char["Surname"]):
-		name += " " + char["Surname"]
+	if (char["surname"]):
+		name += " " + char["surname"]
 
-	embed = discord.Embed(title=name, color=hex_to_color(char["HexColor"]))
+	embed = discord.Embed(title=name, color=hex_to_color(char["hexcolor"]))
 
 	# Description if it exists
-	if (char["ProfileDesc"]):
-		embed.description = char["ProfileDesc"]
+	if (char["profiledesc"]):
+		embed.description = char["profiledesc"]
 
 	# Thumbnail and image if they exist
-	if (char["ThumbnailURL"]):
-		embed.set_thumbnail(url=char["ThumbnailURL"])
-	if (char["ImageURL"]):
-		embed.set_image(url=char["ImageURL"])
+	if (char["thumbnailurl"]):
+		embed.set_thumbnail(url=char["thumbnailurl"])
+	if (char["imageurl"]):
+		embed.set_image(url=char["imageurl"])
 
 	# Fields
-	profile_fields = str_to_dict(char["ProfileFields"])
+	profile_fields = str_to_dict(char["profilefields"])
 	for key in profile_fields.keys():
 		embed.add_field(name=key, value=profile_fields[key], inline=False)
 
@@ -68,10 +66,10 @@ def get_profile_embed(guild_id, player_id, name):
 def get_gacha_embed(item):
 	"""Does not query db, returns embed"""
 
-	embed = discord.Embed(title=item["Name"])
-	embed.description = item["Desc"]
+	embed = discord.Embed(title=item["name"])
+	embed.description = item["description"]
 
-	if (item["ThumbnailURL"]):
-		embed.set_thumbnail(url=item["ThumbnailURL"])
+	if (item["thumbnailurl"]):
+		embed.set_thumbnail(url=item["thumbnailurl"])
 
 	return embed

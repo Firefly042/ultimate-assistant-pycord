@@ -8,7 +8,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 
 from utils import utils
 from localization import loc
@@ -43,7 +43,7 @@ class DiceAdminCog(commands.Cog):
 # Commands
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
-# /roll list
+# /roll_admin list
 # ------------------------------------------------------------------------
 	@dice_admin.command(name="list",
 		name_localizations=loc.command_names("roll_admin", "list"),
@@ -62,16 +62,16 @@ class DiceAdminCog(commands.Cog):
 	async def roll_list(self, ctx, player, name, visible):
 		"""View a player's active character's custom rolls"""
 
-		char = db.get_character(ctx.guild.id, player.id, name) if name else db.get_active_char(ctx.guild.id, player.id)
+		char = await db.get_character(ctx.guild.id, player.id, name) if name else await db.get_active_char(ctx.guild.id, player.id)
 
 		try:
-			rolls = utils.str_to_dict(char['CustomRolls'])
+			rolls = utils.str_to_dict(char['customrolls'])
 		except TypeError:
 			error = loc.response("roll_admin", "list", "error-missing", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		msg = loc.response("roll_admin", "list", "res1", ctx.interaction.locale).format(char["Name"])
+		msg = loc.response("roll_admin", "list", "res1", ctx.interaction.locale).format(char["name"])
 		for name in sorted(rolls.keys()):
 			msg += f"\n**{name}**: {rolls[name]}"
 

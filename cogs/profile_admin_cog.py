@@ -8,7 +8,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 
@@ -80,14 +80,14 @@ class ProfileAdminCog(commands.Cog):
 
 		# Add to db, catches uniqueness error
 		try:
-			db.new_character(ctx.guild.id, player.id, name, surname, channel_id)
+			await db.new_character(ctx.guild.id, player.id, name, surname, channel_id)
 		except:
 			error = loc.response("profile_admin", "new", "error-duplicate", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Set it as active character for the player
-		db.set_active_character(ctx.guild.id, player.id, name)
+		await db.set_active_character(ctx.guild.id, player.id, name)
 
 		# Discord response (success)
 		if (not surname):
@@ -126,7 +126,7 @@ class ProfileAdminCog(commands.Cog):
 
 		# Update character, catches uniqueness error. Returns true or false if anything was changed
 		try:
-			char_updated = db.update_character(ctx.guild.id, player.id, name, field_to_change, new_value)
+			char_updated = await db.update_character(ctx.guild.id, player.id, name, field_to_change, new_value)
 		except:
 			error = loc.response("profile_admin_edit", "text", "error-duplicate", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
@@ -161,7 +161,7 @@ class ProfileAdminCog(commands.Cog):
 		"""Add or edit a character's associated channel"""
 
 		# No need to check for uniqueness because no name changes
-		char_updated = db.update_character(ctx.guild.id, player.id, name, "ChannelID", channel.id)
+		char_updated = await db.update_character(ctx.guild.id, player.id, name, "ChannelID", channel.id)
 
 		# Notify if nothing was changed (char not found)
 		if (not char_updated):
@@ -190,7 +190,7 @@ class ProfileAdminCog(commands.Cog):
 	async def profile_admin_rm(self, ctx, player, name):
 		"""Unregister a character"""
 
-		char_removed = db.remove_character(ctx.guild.id, player.id, name)
+		char_removed = await db.remove_character(ctx.guild.id, player.id, name)
 
 		if (not char_removed):
 			error = loc.response("profile_admin", "rm", "error-missing", ctx.interaction.locale)
@@ -218,7 +218,7 @@ class ProfileAdminCog(commands.Cog):
 		"""Set a character to inactive (disabling the player's ability to use commands)"""
 
 		# No need to check for uniqueness because no name changes
-		char_updated = db.update_character(ctx.guild.id, player.id, name, "Active", 0)
+		char_updated = await db.update_character(ctx.guild.id, player.id, name, "Active", False)
 
 		# Notify if nothing was changed (char not found)
 		if (not char_updated):

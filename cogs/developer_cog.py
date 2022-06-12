@@ -10,7 +10,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 
 
 # ------------------------------------------------------------------------
@@ -61,20 +61,20 @@ class DeveloperCog(commands.Cog):
 		await self.dm_channel.send(f"Removed from **{guild.name}** ({guild.id})")
 
 
-	@commands.Cog.listener()
-	async def on_application_command_error(self, ctx, exception):
-		"""DM developer"""
+	# @commands.Cog.listener()
+	# async def on_application_command_error(self, ctx, exception):
+	# 	"""DM developer"""
 
-		msg = f"**GuildID**: {ctx.guild.id}\n"
-		msg += f"**ChannelID**: {ctx.channel.id}\n"
-		msg += f"**UserID**: {ctx.interaction.user.id}\n"
-		msg += f"**Command**: /{ctx.command.qualified_name}\n"
-		if (ctx.selected_options):
-			msg += "**Options**: "
-			msg += ", ".join([f"{opt['name']}: {opt['value']}" for opt in ctx.selected_options]) + "\n"
-		msg += f"**Exception**: {exception}\n--------------------------------------------"
+	# 	msg = f"**GuildID**: {ctx.guild.id}\n"
+	# 	msg += f"**ChannelID**: {ctx.channel.id}\n"
+	# 	msg += f"**UserID**: {ctx.interaction.user.id}\n"
+	# 	msg += f"**Command**: /{ctx.command.qualified_name}\n"
+	# 	if (ctx.selected_options):
+	# 		msg += "**Options**: "
+	# 		msg += ", ".join([f"{opt['name']}: {opt['value']}" for opt in ctx.selected_options]) + "\n"
+	# 	msg += f"**Exception**: {exception}\n--------------------------------------------"
 
-		await self.dm_channel.send(msg[:1024])
+	# 	await self.dm_channel.send(msg[:1024])
 
 
 # ------------------------------------------------------------------------
@@ -101,7 +101,7 @@ class DeveloperCog(commands.Cog):
 
 		bot_guild_ids = [str(guild.id) for guild in self.bot.guilds]
 
-		n_removed = db.remove_guilds(bot_guild_ids)
+		n_removed = await db.remove_guilds(bot_guild_ids)
 
 		await ctx.respond(f"Removed {n_removed} non-member guilds from database")
 
@@ -110,8 +110,15 @@ class DeveloperCog(commands.Cog):
 # /dev test
 # ------------------------------------------------------------------------
 	@dev.command(name="test")
-	@option("input", str)
-	async def test(self, ctx, input):
+	async def test(self, ctx):
 		"""Dev test"""
-		
-		await ctx.respond("test")
+		embed = discord.Embed(
+			title="Isaac Adams",
+			description="This is Isaac.")
+
+		embed.add_field(name="Author", value="<@367692200030502912>")
+		embed.add_field(name="Image Credit", value="arisu (anc)")
+		embed.set_footer(text="ID: 234612983")
+		embed.set_image(url="https://media.discordapp.net/attachments/958828954314223706/963872744641011734/isaac.png")
+
+		await ctx.respond(embed=embed)

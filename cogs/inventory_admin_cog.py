@@ -10,7 +10,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 from utils import utils
@@ -75,7 +75,7 @@ class InventoryAdminCog(commands.Cog):
 	async def take(self, ctx, player, item, name, amount, visible):
 		"""Take one or more of an item from a player's inventory"""
 
-		updated = db.remove_item(ctx.guild.id, player.id, item, name=name, amount=amount)
+		updated = await db.remove_item(ctx.guild.id, player.id, item, name=name, amount=amount)
 
 		if (not updated):
 			error = loc.response("inv_admin", "take", "error-missing", ctx.interaction.locale)
@@ -120,7 +120,7 @@ class InventoryAdminCog(commands.Cog):
 		# Be sure to enforce embed limits
 		if (desc):
 			desc = desc[:256]
-		updated = db.add_item(ctx.guild.id, recipient.id, item[:64], name=recipient_name, amount=amount, desc=desc)
+		updated = await db.add_item(ctx.guild.id, recipient.id, item[:64], name=recipient_name, amount=amount, desc=desc)
 
 		if (not updated):
 			error = loc.response("inv_admin", "give", "error-missing", ctx.interaction.locale)
@@ -152,8 +152,12 @@ class InventoryAdminCog(commands.Cog):
 		"""View a specified player's inventory (active character only)"""
 
 		try:
-			inventory = db.get_inventory(ctx.guild.id, player.id, name)
-			hex_color = db.get_active_char(ctx.guild.id, player.id)["HexColor"]
+			inventory = await db.get_inventory(ctx.guild.id, player.id, name)
+			if (name):
+				char_info = await db.get_character(ctx.guild.id, player.id, name)
+			else:
+				char_info = await db.get_active_char(ctx.guild.id, player.id)
+			hex_color = char_info["hexcolor"]
 		except TypeError:
 			error = loc.response("inv_admin", "view", "error-missing", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)

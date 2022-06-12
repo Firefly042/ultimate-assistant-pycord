@@ -10,7 +10,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 from utils import utils
@@ -66,7 +66,7 @@ class GachaAdminCog(commands.Cog):
 		# Reasonable limit
 		name = name[:32]
 		
-		db.edit_guild(ctx.guild.id, "CurrencyName", name)
+		await db.edit_guild(ctx.guild.id, "currencyname", name)
 
 		res = loc.response("gacha_admin_currency", "name", "res1", ctx.interaction.locale).format(name)
 		await ctx.respond(res)
@@ -84,7 +84,7 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_cost(self, ctx, amount):
 		"""Set the cost of a single gacha use"""
 
-		db.edit_guild(ctx.guild.id, "GachaCost", amount)
+		await db.edit_guild(ctx.guild.id, "GachaCost", amount)
 
 		res = loc.response("gacha_admin_currency", "cost", "res1", ctx.interaction.locale).format(amount)
 		await ctx.respond(res)
@@ -108,7 +108,7 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_give(self, ctx, player, amount, name):
 		"""Give currency to an active character"""
 
-		char_updated = db.increase_currency_inactive(ctx.guild.id, player.id, amount, name) if name else db.increase_currency_single(ctx.guild.id, player.id, amount)
+		char_updated = await db.increase_currency_inactive(ctx.guild.id, player.id, amount, name) if name else await db.increase_currency_single(ctx.guild.id, player.id, amount)
 
 		if (not char_updated):
 			error = loc.response("gacha_admin_currency", "give", "error-missing", ctx.interaction.locale).format(player.name)
@@ -137,7 +137,7 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_take(self, ctx, player, amount, name):
 		"""Take currency from an active character"""
 
-		char_updated = db.decrease_currency_inactive(ctx.guild.id, player.id, amount, name) if name else db.decrease_currency_single(ctx.guild.id, player.id, amount)
+		char_updated = await db.decrease_currency_inactive(ctx.guild.id, player.id, amount, name) if name else await db.decrease_currency_single(ctx.guild.id, player.id, amount)
 
 		if (not char_updated):
 			error = loc.response("gacha_admin_currency", "take", "error-missing", ctx.interaction.locale).format(player.name)
@@ -160,7 +160,7 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_give_all(self, ctx, amount):
 		"""Give currency to all active characters"""
 
-		chars_updated = db.increase_currency_all(ctx.guild.id, amount)
+		chars_updated = await db.increase_currency_all(ctx.guild.id, amount)
 
 		if (not chars_updated):
 			error = loc.response("gacha_admin_currency", "give_all", "error-missing", ctx.interaction.locale)
@@ -189,12 +189,13 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_view(self, ctx, player, name, visible):
 		"""View currency of an active character"""
 
-		char = db.get_character(ctx.guild.id, player.id, name) if name else db.get_active_char(ctx.guild.id, player.id)
+		char = await db.get_character(ctx.guild.id, player.id, name) if name else await db.get_active_char(ctx.guild.id, player.id)
 
-		currency_name = db.get_guild_info(ctx.guild.id)["CurrencyName"]
+		guild_info = await db.get_guild_info(ctx.guild.id)
+		currency_name = guild_info["currencyname"]
 
 		try:
-			res = loc.response("gacha_admin_currency", "view", "res1", ctx.interaction.locale).format(name=char["Name"], amount=char["Currency"], units=currency_name)
+			res = loc.response("gacha_admin_currency", "view", "res1", ctx.interaction.locale).format(name=char["name"], amount=char["currency"], units=currency_name)
 			await ctx.respond(res, ephemeral=not visible)
 		except:
 			error = loc.response("gacha_admin_currency", "view", "error-missing", ctx.interaction.locale).format(player.name)
@@ -213,12 +214,13 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_view_all(self, ctx, visible):
 		"""View currency for all characters (active and inactive)"""
 
-		chars = db.get_all_chars(ctx.guild.id)
-		currency_name = db.get_guild_info(ctx.guild.id)["CurrencyName"]
+		chars = await db.get_all_chars(ctx.guild.id)
+		guild_info = await db.get_guild_info(ctx.guild.id)
+		currency_name = guild_info["currencyname"]
 
 		msg = f"__{currency_name}__\n"
 		for char in chars:
-			msg += f"{char['Name']}: {char['Currency']}\n"
+			msg += f"{char['name']}: {char['currency']}\n"
 
 		await ctx.respond(msg[:1800], ephemeral=not visible)
 
@@ -253,14 +255,14 @@ class GachaAdminCog(commands.Cog):
 
 		# Add if possible
 		try:
-			db.add_gacha(ctx.guild.id, name, desc, amount, thumbnail)
+			await db.add_gacha(ctx.guild.id, name, desc, amount, thumbnail)
 		except:
 			error = loc.response("gacha_admin", "add", "error-duplicate", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Attempt to send gacha embed
-		item = db.get_single_gacha(ctx.guild.id, name)
+		item = await db.get_single_gacha(ctx.guild.id, name)
 		try:
 			embed = utils.get_gacha_embed(item)
 			if (not amount):
@@ -271,7 +273,7 @@ class GachaAdminCog(commands.Cog):
 		except discord.HTTPException:
 			error = loc.response("gacha_admin", "add", "error-url", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
-			db.remove_gacha_item(ctx.guild.id, name)
+			await db.remove_gacha_item(ctx.guild.id, name)
 
 # ------------------------------------------------------------------------
 # /gacha_admin rm
@@ -286,7 +288,7 @@ class GachaAdminCog(commands.Cog):
 	async def gacha_admin_rm(self, ctx, name):
 		"""Remove an item from gacha by name"""
 
-		item_removed = db.remove_gacha_item(ctx.guild.id, name)
+		item_removed = await db.remove_gacha_item(ctx.guild.id, name)
 
 		if (not item_removed):
 			error = loc.response("gacha_admin", "rm", "error-missing", ctx.interaction.locale)
@@ -309,7 +311,7 @@ class GachaAdminCog(commands.Cog):
 	async def gacha_admin_list(self, ctx, visible):
 		"""List all gacha items"""
 
-		items = db.get_all_gacha(ctx.guild.id)
+		items = await db.get_all_gacha(ctx.guild.id)
 
 		# Handle no items case
 		if (len(items) == 0):
@@ -318,7 +320,7 @@ class GachaAdminCog(commands.Cog):
 			return
 
 		# Order chars by name, error if no characters
-		items = sorted(items, key=lambda d: d["Name"])
+		items = sorted(items, key=lambda d: d["name"])
 
 		# To stay safely within limits, we'll allow up to 35 items per embed
 		n_embeds = math.ceil(len(items) / 35)
@@ -332,12 +334,12 @@ class GachaAdminCog(commands.Cog):
 				except IndexError:
 					break
 
-				if (item["Amount"]):
-					amnt_str = f"({item['AmountRemaining']} / {item['Amount']})"
+				if (item["amount"]):
+					amnt_str = f"({item['amountremaining']} / {item['amount']})"
 				else:
 					amnt_str = ""
 
-				msg_i += f"**{item['Name']}** {amnt_str} - {item['Desc'][:32]} \n"
+				msg_i += f"**{item['name']}** {amnt_str} - {item['description'][:32]} \n"
 
 			embeds[i].description = msg_i[:3900]
 

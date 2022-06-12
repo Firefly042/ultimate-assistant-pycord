@@ -13,7 +13,7 @@ from discord.ext import commands
 
 import aiocron
 
-import db
+from db import db
 from localization import loc
 
 # ------------------------------------------------------------------------
@@ -47,7 +47,7 @@ class InputModal(discord.ui.Modal):
 		message = self.children[0].value
 
 		# Limit announcements to 25 per guild
-		existing_announcements = db.get_guild_announcements(self.ctx.guild.id)
+		existing_announcements = await db.get_guild_announcements(self.ctx.guild.id)
 
 		if (len(existing_announcements) == 25):
 			error = loc.response("announcements", "new", "error-limit", self.ctx.interaction.locale)
@@ -55,8 +55,8 @@ class InputModal(discord.ui.Modal):
 			return
 
 		# Get guild timezone
-		guild_info = db.get_guild_info(self.ctx.guild.id)
-		guild_tz = guild_info["Timezone"]
+		guild_info = await db.get_guild_info(self.ctx.guild.id)
+		guild_tz = guild_info["timezone"]
 
 		# Create datetime object in guild's tz. Exception for ValueError
 		try:
@@ -77,7 +77,7 @@ class InputModal(discord.ui.Modal):
 			return
 
 		# Add to db using interaction snowflake as ID
-		db.add_announcement(self.ctx.interaction.id, self.ctx.guild.id, self.channel.id, message[:1024], self.interval, int(utc_time.strftime(DATE_STRING)))
+		await db.add_announcement(self.ctx.interaction.id, self.ctx.guild.id, self.channel.id, message[:1024], self.interval, int(utc_time.strftime(DATE_STRING)))
 
 		res = loc.response("announcements", "new", "res1", self.ctx.interaction.locale).format(self.ctx.interaction.id)
 		await interaction.response.send_message(res, ephemeral=True)
@@ -125,16 +125,17 @@ class AnnouncementsAdminCog(commands.Cog):
 		"""Send out announcements to channels"""
 
 		utc_now = datetime.utcnow()
-		announcements = db.get_current_announcements(utc_now)
+		announcements = await db.get_current_announcements(utc_now)
 
 		for announcement in announcements:
 			# Check if announcements enabled
-			guild_id = announcement["GuildID"]
+			guild_id = announcement["guildid"]
 
 			try:
-				enabled = db.get_guild_info(guild_id)["AnnouncementsEnabled"]
+				guild_info = await db.get_guild_info(guild_id)
+				enabled = guild_info["announcementsenabled"]
 			# Announcement registered but guild not in guildinfo
-			except TypeError: 
+			except TypeError:
 				continue
 
 			# Skip if disabled
@@ -143,13 +144,13 @@ class AnnouncementsAdminCog(commands.Cog):
 
 			# Attempt to fetch channel
 			try:
-				channel = await self.bot.fetch_channel(announcement["ChannelID"])
+				channel = await self.bot.fetch_channel(announcement["channelid"])
 			except discord.HTTPException:
 				continue
 
 			# Attempt to post
 			try:
-				await channel.send(content=announcement["Message"])
+				await channel.send(content=announcement["message"])
 			finally:
 				continue
 
@@ -178,7 +179,7 @@ class AnnouncementsAdminCog(commands.Cog):
 	async def timezone(self, ctx, utc_offset):
 		"""Set timezone for server relative to UTC/GMT. Half/Quarter hours not supported"""
 
-		db.edit_guild(ctx.guild.id, "Timezone", utc_offset)
+		await db.edit_guild(ctx.guild.id, "timezone", utc_offset)
 
 		tz_str = f"UTC+{utc_offset}" if (utc_offset >= 0) else f"UTC{utc_offset}"
 		res = loc.response("announcements", "tz", "res1", ctx.interaction.locale).format(tz_str)
@@ -239,7 +240,7 @@ class AnnouncementsAdminCog(commands.Cog):
 	async def remove(self, ctx, announcement_id):
 		"""Remove an announcement by its id (obtained with /announcements list)"""
 
-		announcement_removed = db.remove_announcement(ctx.guild.id, int(announcement_id))
+		announcement_removed = await db.remove_announcement(ctx.guild.id, int(announcement_id))
 
 		if (not announcement_removed):
 			error = loc.response("announcements", "rm", "error-id", ctx.interaction.locale)
@@ -262,7 +263,7 @@ class AnnouncementsAdminCog(commands.Cog):
 	async def list(self, ctx, visible):
 		"""List your server's automated posts in chronological order"""
 
-		announcements = db.get_guild_announcements(ctx.guild.id)
+		announcements = await db.get_guild_announcements(ctx.guild.id)
 
 		# Return if no announcements
 		if (len(announcements) == 0):
@@ -271,21 +272,22 @@ class AnnouncementsAdminCog(commands.Cog):
 			return
 
 		# Get timezone for conversion
-		timezone = db.get_guild_info(ctx.guild.id)["Timezone"]
+		guild_info = await db.get_guild_info(ctx.guild.id)
+		timezone = guild_info["timezone"]
 
 		# Order announcements by next posting
-		announcements = sorted(announcements, key=lambda d: d["NextPosting"])
+		announcements = sorted(announcements, key=lambda d: d["nextposting"])
 
 		# Embed
 		res_title = loc.response("announcements", "list", "res-title", ctx.interaction.locale).format(ctx.guild.name)
 		embed = discord.Embed(title=res_title[:128])
 		for announcement in announcements:
-			post_time_utc = datetime.strptime(str(announcement['NextPosting']), DATE_STRING)
+			post_time_utc = datetime.strptime(str(announcement['nextposting']), DATE_STRING)
 			post_time_guild = post_time_utc + timedelta(hours=timezone)
 			post_time_str = post_time_guild.strftime("%d %b %Y, %H:%M")
 
-			title = loc.response("announcements", "list", "res-field", ctx.interaction.locale).format(start_time=post_time_str, amount=announcement["Interval"], id=announcement["ID"])
-			value = loc.response("announcements", "list", "res-value", ctx.interaction.locale).format(announcement["ChannelID"]) + "\n" + announcement["Message"][:128]
+			title = loc.response("announcements", "list", "res-field", ctx.interaction.locale).format(start_time=post_time_str, amount=announcement["interval"], id=announcement["id"])
+			value = loc.response("announcements", "list", "res-value", ctx.interaction.locale).format(announcement["channelid"]) + "\n" + announcement["message"][:128]
 
 			embed.add_field(name=title, value=value, inline=False)
 
@@ -307,11 +309,11 @@ class AnnouncementsAdminCog(commands.Cog):
 		"""Disable announcements from being posted until turned back on"""
 
 		if (state == "RUN"):
-			val =1
+			val = True
 			res = loc.response("announcements", "toggle", "res1", ctx.interaction.locale)
 		else:
-			val = 0
+			val = False
 			res = loc.response("announcements", "toggle", "res2", ctx.interaction.locale)
 
-		db.toggle_guild_announcements(ctx.guild.id, val)
+		await db.toggle_guild_announcements(ctx.guild.id, val)
 		await ctx.respond(res)

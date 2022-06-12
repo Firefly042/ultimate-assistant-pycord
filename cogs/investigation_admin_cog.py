@@ -10,7 +10,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 from utils import utils
@@ -102,7 +102,7 @@ class InvestigationAdminCog(commands.Cog):
 		names = [name, name_2, name_3, name_4, name_5, name_6, name_7, name_8]
 		names = utils.dict_to_str([name for name in names if name])
 
-		db.add_investigation(ctx.guild.id, channel.id, names, desc, stealable)
+		await db.add_investigation(ctx.guild.id, channel.id, names, desc, stealable)
 
 		res = loc.response("investigate_admin", "new", "res1", ctx.interaction.locale).format(names=names, channel=channel.id)
 		await ctx.respond(res)
@@ -125,7 +125,7 @@ class InvestigationAdminCog(commands.Cog):
 	async def remove(self, ctx, channel, name):
 		"""Remove an investigatable item from a specified channel by name"""
 
-		removed = db.remove_investigation(ctx.guild.id, channel.id, name)
+		removed = await db.remove_investigation(ctx.guild.id, channel.id, name)
 		if (not removed):
 			error = loc.response("investigate_admin", "rm", "error-missing", ctx.interaction.locale).format(name=name, channel=channel.id)
 			await ctx.respond(error, ephemeral=True)
@@ -148,14 +148,14 @@ class InvestigationAdminCog(commands.Cog):
 	async def list(self, ctx, visible):
 		"""List investigations"""
 
-		items = db.get_all_investigations(ctx.guild.id)
+		items = await db.get_all_investigations(ctx.guild.id)
 
 		if (len(items) == 0):
 			error = loc.response("investigate_admin", "list", "error-none", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		channels = list({item["ChannelID"] for item in items})
+		channels = list({item["channelid"] for item in items})
 
 		# To stay safely within limits, we'll allow up to 10 items per embed
 		n_embeds = math.ceil(len(channels) / 10)
@@ -174,14 +174,14 @@ class InvestigationAdminCog(commands.Cog):
 
 				title = f"#{channel_name}"
 
-				channel_items = [item for item in items if item["ChannelID"] == channels[j]]
+				channel_items = [item for item in items if item["channelid"] == channels[j]]
 
 				desc = ""
 				for item in channel_items:
-					if (item["TakenBy"]):
-						desc += loc.response("investigate_admin", "list", "item-taken", ctx.interaction.locale).format(item["TakenBy"])
+					if (item["takenby"]):
+						desc += loc.response("investigate_admin", "list", "item-taken", ctx.interaction.locale).format(item["takenby"])
 
-					desc += item["Names"] + "\n"
+					desc += item["names"] + "\n"
 
 				embeds[i].add_field(name=title, value=desc[:256], inline=False)
 

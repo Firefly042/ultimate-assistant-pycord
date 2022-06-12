@@ -7,7 +7,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 
@@ -56,15 +56,15 @@ class InvestigationPublicCog(commands.Cog):
 	async def here(self, ctx, name, visible):
 		"""Investigate an item in current channel"""
 
-		item = db.get_investigation(ctx.guild.id, ctx.channel.id, name)
+		item = await db.get_investigation(ctx.guild.id, ctx.channel.id, name)
 
 		# Nonexistent item, or taken item
-		if (not item or item["TakenBy"]):
+		if (not item or item["takenby"]):
 			error = loc.response("investigate", "here", "error-missing", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		message = f"**{name}**\n{item['Desc']}"
+		message = f"**{name}**\n{item['description']}"
 		await ctx.respond(message, ephemeral=not visible)
 
 
@@ -85,20 +85,20 @@ class InvestigationPublicCog(commands.Cog):
 	async def take(self, ctx, name, visible):
 		"""Take an item in current channel, if allowed"""
 
-		item = db.get_investigation(ctx.guild.id, ctx.channel.id, name)
+		item = await db.get_investigation(ctx.guild.id, ctx.channel.id, name)
 
-		if (not item or item["TakenBy"]):
+		if (not item or item["takenby"]):
 			error = loc.response("investigate", "take", "error-missing", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		if (not item["Stealable"]):
+		if (not item["stealable"]):
 			error = loc.response("investigate", "take", "error-forbidden", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
 			return
 
 		# Add to player inventory
-		updated = db.add_item(ctx.guild.id, ctx.interaction.user.id, name, desc=item["Desc"])
+		updated = await db.add_item(ctx.guild.id, ctx.interaction.user.id, name, desc=item["description"])
 
 		if (not updated):
 			error = loc.common_res("no-character", ctx.interaction.locale)
@@ -106,7 +106,8 @@ class InvestigationPublicCog(commands.Cog):
 			return
 
 		# Update the investigation
-		db.set_investigation_taken(ctx.guild.id, ctx.channel.id, name, ctx.interaction.user.id)
+		character = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		await db.set_investigation_taken(ctx.guild.id, ctx.channel.id, name, character["name"])
 
 		# Respond
 		res = loc.response("investigate", "take", "res1", ctx.interaction.locale).format(name)

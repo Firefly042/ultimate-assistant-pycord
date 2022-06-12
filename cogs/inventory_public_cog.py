@@ -10,7 +10,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 from utils import utils
@@ -81,7 +81,7 @@ class InventoryPublicCog(commands.Cog):
 		# Be sure to enforce embed limits
 		if (desc):
 			desc = desc[:256]
-		updated = db.add_item(ctx.guild.id, ctx.interaction.user.id, item[:64], amount=amount, desc=desc)
+		updated = await db.add_item(ctx.guild.id, ctx.interaction.user.id, item[:64], amount=amount, desc=desc)
 
 		if (not updated):
 			error = loc.common_res("no-character", ctx.interaction.locale)
@@ -112,7 +112,7 @@ class InventoryPublicCog(commands.Cog):
 	async def drop(self, ctx, item, amount, visible):
 		"""Remove one or more of an item from your inventory (case sensitive)"""
 
-		updated = db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount=amount)
+		updated = await db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount=amount)
 
 		if (not updated):
 			error = loc.response("inv", "drop", "error-missing", ctx.interaction.locale)
@@ -154,7 +154,7 @@ class InventoryPublicCog(commands.Cog):
 
 		# Try to get inventory
 		try:
-			sender_inv = db.get_inventory(ctx.guild.id, ctx.interaction.user.id)
+			sender_inv = await db.get_inventory(ctx.guild.id, ctx.interaction.user.id)
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
@@ -175,7 +175,7 @@ class InventoryPublicCog(commands.Cog):
 
 
 		# Check that sender is valid by attempting to udpate
-		recipient_updated = db.add_item(ctx.guild.id, recipient.id, item, name=recipient_name, amount=amount, desc=sender_inv[item]["desc"])
+		recipient_updated = await db.add_item(ctx.guild.id, recipient.id, item, name=recipient_name, amount=amount, desc=sender_inv[item]["desc"])
 
 		if (not recipient_updated):
 			error = loc.response("inv", "give", "error-recipient", ctx.interaction.locale).format(recipient.name)
@@ -183,7 +183,7 @@ class InventoryPublicCog(commands.Cog):
 			return
 
 		# Remove from sender inventory
-		db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount=amount)
+		await db.remove_item(ctx.guild.id, ctx.interaction.user.id, item, amount=amount)
 
 		res = loc.response("inv", "give", "res1", ctx.interaction.locale).format(amount=amount, item=item, name=recipient.name)
 		await ctx.respond(res, ephemeral=not visible)
@@ -202,8 +202,8 @@ class InventoryPublicCog(commands.Cog):
 		"""View your inventory"""
 
 		try:
-			inventory = db.get_inventory(ctx.guild.id, ctx.interaction.user.id)
-			hex_color = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)["HexColor"]
+			inventory = await db.get_inventory(ctx.guild.id, ctx.interaction.user.id)
+			hex_color = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)["hexcolor"]
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)

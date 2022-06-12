@@ -10,7 +10,7 @@ from discord.ext import commands
 
 import d20
 
-import db
+from db import db
 
 from utils import utils
 from localization import loc
@@ -114,7 +114,7 @@ class DicePublicCog(commands.Cog):
 
 		# Add to db
 		try:
-			updated = db.add_roll(ctx.guild.id, ctx.interaction.user.id, name, dice)
+			updated = await db.add_roll(ctx.guild.id, ctx.interaction.user.id, name, dice)
 		except:
 			error = loc.response("roll", "new", "error-limit", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
@@ -143,7 +143,7 @@ class DicePublicCog(commands.Cog):
 
 		# Remove from db
 		try:
-			db.rm_roll(ctx.guild.id, ctx.interaction.user.id, name)
+			await db.rm_roll(ctx.guild.id, ctx.interaction.user.id, name)
 		except KeyError:
 			error = loc.response("roll", "rm", "error-missing", ctx.interaction.locale).format(name.lower())
 			await ctx.respond(error, ephemeral=True)
@@ -175,10 +175,10 @@ class DicePublicCog(commands.Cog):
 
 		name = name.lower()
 
-		char = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		char = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
 		try:
-			rolls = utils.str_to_dict(char['CustomRolls'])
+			rolls = utils.str_to_dict(char['customrolls'])
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
@@ -193,11 +193,11 @@ class DicePublicCog(commands.Cog):
 			return
 
 		# Fancy stuff
-		char = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
-		hex_color = utils.hex_to_color(char['HexColor'])
+		char = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		hex_color = utils.hex_to_color(char['hexcolor'])
 
 		# Result
-		desc = loc.response("roll", "custom", "res1", ctx.interaction.locale).format(name=char["Name"], dice=name)
+		desc = loc.response("roll", "custom", "res1", ctx.interaction.locale).format(name=char["name"], dice=name)
 		embed = discord.Embed(color=hex_color, title=f"**{desc}**"[:128], description=f"{str(res)[:2048]}")
 		await ctx.respond(embed=embed, ephemeral=not visible)
 
@@ -214,10 +214,10 @@ class DicePublicCog(commands.Cog):
 	async def roll_list(self, ctx, visible):
 		"""View your custom rolls"""
 
-		char = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		char = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
 		try:
-			rolls = utils.str_to_dict(char['CustomRolls'])
+			rolls = utils.str_to_dict(char['customrolls'])
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)

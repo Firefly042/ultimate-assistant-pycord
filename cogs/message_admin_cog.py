@@ -8,7 +8,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 
@@ -56,19 +56,19 @@ class MessageAdminCog(commands.Cog):
 		"""Enable or disable anonymous messaging. All players will need a private channel to use these."""
 
 		if (toggle == "OFF"):
-			db.edit_guild(ctx.guild.id, "AnonPermitted", 0)
+			await db.edit_guild(ctx.guild.id, "AnonPermitted", False)
 
 			res = loc.response("msg_admin", "anon", "res1", ctx.interaction.locale)
 			await ctx.respond(res)
 			return
 
 		# Toggle on if chosen, but warn if any characters have not been assigned private channels
-		db.edit_guild(ctx.guild.id, "AnonPermitted", 1)
+		await db.edit_guild(ctx.guild.id, "AnonPermitted", True)
 		msg = loc.response("msg_admin", "anon", "res2", ctx.interaction.locale)
 
-		chars = db.get_all_chars(ctx.guild.id)
+		chars = await db.get_all_chars(ctx.guild.id)
 
-		if chars_without_channels := [char['Name'] for char in chars if not char['ChannelID']]:
+		if chars_without_channels := [char['name'] for char in chars if not char['channelid']]:
 			name_list = ", ".join(chars_without_channels)
 			msg += loc.response("msg_admin", "anon", "warning", ctx.interaction.locale).format(name_list)
 
@@ -87,17 +87,17 @@ class MessageAdminCog(commands.Cog):
 	async def channels(self, ctx, visible):
 		"""List characters and their associated messaging channels"""
 
-		chars = db.get_all_chars(ctx.guild.id)
+		chars = await db.get_all_chars(ctx.guild.id)
 
 		# Alphabetize
-		chars = sorted(chars, key=lambda d: d['Name'])
+		chars = sorted(chars, key=lambda d: d['name'])
 
 		# Iterate
 		msg =  loc.response("msg_admin", "channels", "res1", ctx.interaction.locale)
 		for char in chars:
-			if (char['ChannelID']):
-				msg += f"\n{char['Name']}: <#{char['ChannelID']}>"
+			if (char['channelid']):
+				msg += f"\n{char['name']}: <#{char['channelid']}>"
 			else:
-				msg += loc.response("msg_admin", "channels", "res2", ctx.interaction.locale).format(char["Name"])
+				msg += loc.response("msg_admin", "channels", "res2", ctx.interaction.locale).format(char["name"])
 
 		await ctx.respond(msg[:1800], ephemeral=not visible)

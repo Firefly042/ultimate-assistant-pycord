@@ -8,7 +8,7 @@ from discord import slash_command, option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 from utils import utils
@@ -56,16 +56,16 @@ class GachaPublicCog(commands.Cog):
 		"""Draw an item from the gacha. Costs at least 1 currency"""
 
 		# Character info
-		char = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		char = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
 		# Guild info
-		guild_info = db.get_guild_info(ctx.guild.id)
-		currency_name = guild_info["CurrencyName"]
-		cost = guild_info["GachaCost"]
+		guild_info = await db.get_guild_info(ctx.guild.id)
+		currency_name = guild_info["currencyname"]
+		cost = guild_info["gachacost"]
 
 		# Get currency amount, returns TypeError if no character
 		try:
-			currency = char["Currency"]
+			currency = char["currency"]
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
@@ -79,7 +79,7 @@ class GachaPublicCog(commands.Cog):
 
 		# Proceed
 		try:
-			item = db.get_random_item(ctx.guild.id)
+			item = await db.get_random_item(ctx.guild.id)
 
 			msg = loc.nongroup_res("gacha", "res1", ctx.interaction.locale).format(amount=str(currency-cost), units=currency_name)
 
@@ -89,7 +89,7 @@ class GachaPublicCog(commands.Cog):
 				await ctx.respond(content=msg+"\n[IMAGE URL ERROR]", ephemeral=not visible)
 
 			# Reduce currency
-			db.decrease_currency_single(ctx.guild.id, ctx.interaction.user.id, cost)
+			await db.decrease_currency_single(ctx.guild.id, ctx.interaction.user.id, cost)
 
 		# No items
 		except TypeError as error:
@@ -98,7 +98,7 @@ class GachaPublicCog(commands.Cog):
 			return
 
 		# Add to player inventory
-		db.add_item(ctx.guild.id, ctx.interaction.user.id, item["Name"], desc=item["Desc"])
+		await db.add_item(ctx.guild.id, ctx.interaction.user.id, item["name"], desc=item["description"])
 
 # ------------------------------------------------------------------------
 # /currency view
@@ -113,18 +113,19 @@ class GachaPublicCog(commands.Cog):
 	async def currency_view(self, ctx, visible):
 		"""View how much currency you have"""
 
-		char = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		char = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
 		try:
-			amount = char['Currency']
+			amount = char['currency']
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		currency_name = db.get_guild_info(ctx.guild.id)['CurrencyName']
+		guild_info = await db.get_guild_info(ctx.guild.id)
+		currency_name = guild_info['currencyname']
 
-		res = loc.response("currency", "view", "res1", ctx.interaction.locale).format(name=char["Name"], amount=amount, units=currency_name)
+		res = loc.response("currency", "view", "res1", ctx.interaction.locale).format(name=char["name"], amount=amount, units=currency_name)
 		await ctx.respond(res, ephemeral=not visible)
 
 # ------------------------------------------------------------------------
@@ -153,18 +154,19 @@ class GachaPublicCog(commands.Cog):
 		"""Give another active character some of your own currency."""
 
 		# Get values
-		sender = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
-		receiver = db.get_character(ctx.guild.id, recipient.id, recipient_name) if recipient_name else db.get_active_char(ctx.guild.id, recipient.id)
+		sender = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		receiver = await db.get_character(ctx.guild.id, recipient.id, recipient_name) if recipient_name else await db.get_active_char(ctx.guild.id, recipient.id)
 
 		# Check that sender is valid
 		try:
-			sender_amount = sender['Currency']
+			sender_amount = sender['currency']
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		currency_name = db.get_guild_info(ctx.guild.id)['CurrencyName']
+		guild_info = await db.get_guild_info(ctx.guild.id)
+		currency_name = guild_info['currencyname']
 
 		# Check if amount is valid
 		if (sender_amount < amount):
@@ -174,7 +176,7 @@ class GachaPublicCog(commands.Cog):
 
 		# Check if recipient is valid
 		try:
-			_ = receiver['Currency']
+			_ = receiver['currency']
 		except TypeError:
 			error = loc.response("currency", "give", "error-missingrecipient", ctx.interaction.locale).format(recipient.name)
 			await ctx.respond(error, ephemeral=True)
@@ -182,13 +184,13 @@ class GachaPublicCog(commands.Cog):
 
 		# Adjust DB
 		if (recipient_name):
-			db.increase_currency_inactive(ctx.guild.id, recipient.id, amount, recipient_name)
+			await db.increase_currency_inactive(ctx.guild.id, recipient.id, amount, recipient_name)
 		else:
-			db.increase_currency_single(ctx.guild.id, recipient.id, amount)
+			await db.increase_currency_single(ctx.guild.id, recipient.id, amount)
 		
-		db.decrease_currency_single(ctx.guild.id, ctx.interaction.user.id, amount)
+		await db.decrease_currency_single(ctx.guild.id, ctx.interaction.user.id, amount)
 
 		# Send response
-		res = loc.response("currency", "give", "res1", ctx.interaction.locale).format(sender=sender["Name"], recipient=receiver["Name"], amount=amount, units=currency_name)
+		res = loc.response("currency", "give", "res1", ctx.interaction.locale).format(sender=sender["name"], recipient=receiver["name"], amount=amount, units=currency_name)
 		await ctx.respond(res, ephemeral=not visible)
  

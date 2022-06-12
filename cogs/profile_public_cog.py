@@ -10,7 +10,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 from utils import utils
@@ -37,7 +37,8 @@ class InputModal(discord.ui.Modal):
 		"""Submit input and edit character database entry"""
 		# Get previous content, if any
 		try:
-			previous_content = db.get_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name)["ProfileDesc"]
+			char_info = await db.get_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name)
+			previous_content = char_info["profiledesc"]
 		except TypeError:
 			error = loc.common_res("no-character", self.ctx.interaction.locale)
 			await interaction.response.send_message(error, ephemeral=True)
@@ -47,7 +48,7 @@ class InputModal(discord.ui.Modal):
 		content = self.children[0].value
 
 		# Update db, no uniqueness risks
-		char_updated = db.update_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name, "ProfileDesc", content)
+		char_updated = await db.update_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name, "ProfileDesc", content)
 
 		# Notify if char not found
 		if (not char_updated):
@@ -59,12 +60,13 @@ class InputModal(discord.ui.Modal):
 		# Attempt to send embed and warn if limits have been exceeded
 		try:
 			res = loc.response("profile_embed", "desc", "res1", self.ctx.interaction.locale)
-			embed = utils.get_profile_embed(self.ctx.guild.id, self.ctx.interaction.user.id, self.name)
+			char = await db.get_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name)
+			embed = utils.get_profile_embed(char)
 			await interaction.response.send_message(res, embed=embed, ephemeral=True)
 		except:
 			error = loc.response("profile_embed", "desc", "error-length", self.ctx.interaction.locale)
 			await interaction.response.send_message(error, ephemeral=True)
-			db.update_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name, "ProfileDesc", previous_content)
+			await db.update_character(self.ctx.guild.id, self.ctx.interaction.user.id, self.name, "ProfileDesc", previous_content)
 
 		self.stop()
 
@@ -128,14 +130,23 @@ class ProfilePublicCog(commands.Cog):
 				await ctx.respond(error, ephemeral=True)
 				return
 
-		# Get previous image content
+		# Get previous image content	
 		if (field_to_change == "ThumbnailURL"):
-			previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ThumbnailURL"]
+			char_info = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+			previous_content = char_info["thumbnailurl"]
+			try:
+				previous_content = char_info["thumbnailurl"]
+			except TypeError: # Will yield zero updates and display correct error
+				pass
 		elif (field_to_change == "ImageURL"):
-			previous_content = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ImageURL"]
+			char_info = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+			try:
+				previous_content = char_info["imageurl"]
+			except TypeError: # Will yield zero updates and display correct error
+				pass
 
 		# Update db values. No name changes so uniqueness is not an issue
-		char_updated = db.update_character(ctx.guild.id, ctx.interaction.user.id, name, field_to_change, new_value)
+		char_updated = await db.update_character(ctx.guild.id, ctx.interaction.user.id, name, field_to_change, new_value)
 
 		# Notify if no changes (char not found)
 		if (not char_updated):
@@ -145,13 +156,14 @@ class ProfilePublicCog(commands.Cog):
 
 		# Preview embed, warn and revert if malformed image URL
 		try:
-			embed = utils.get_profile_embed(ctx.guild.id, ctx.interaction.user.id, name)
+			char = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+			embed = utils.get_profile_embed(char)
 			res = loc.response("profile_embed", "edit", "res1", ctx.interaction.locale)
 			await ctx.respond(res, embed=embed, ephemeral=True)
 		except discord.HTTPException:
 			error = loc.response("profile_embed", "edit", "error-url", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
-			db.update_character(ctx.guild.id, ctx.interaction.user.id, name, field_to_change, previous_content)
+			await db.update_character(ctx.guild.id, ctx.interaction.user.id, name, field_to_change, previous_content)
 
 # ------------------------------------------------------------------------
 # /profile embed field
@@ -176,8 +188,8 @@ class ProfilePublicCog(commands.Cog):
 
 		# Get existing fields from db and convert to python dict
 		try:
-			fields = db.get_character(ctx.guild.id, ctx.interaction.user.id, name)["ProfileFields"]
-			fields = utils.str_to_dict(fields)
+			char_info = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+			fields = utils.str_to_dict(char_info["profilefields"])
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
@@ -197,7 +209,7 @@ class ProfilePublicCog(commands.Cog):
 		fields[field_title] = field_content
 
 		# Update db, no uniqueness risks
-		char_updated = db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileFields", utils.dict_to_str(fields))
+		char_updated = await db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileFields", utils.dict_to_str(fields))
 
 		# Notify if char not found
 		if (not char_updated):
@@ -208,14 +220,15 @@ class ProfilePublicCog(commands.Cog):
 
 		# Attempt to send embed and warn if limits have been exceeded
 		try:
-			embed = utils.get_profile_embed(ctx.guild.id, ctx.interaction.user.id, name)
+			char = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+			embed = utils.get_profile_embed(char)
 			res = loc.response("profile_embed", "field", "res1", ctx.interaction.locale)
 			await ctx.respond(res, embed=embed, ephemeral=True)
 		except:
 			error = loc.response("profile_embed", "field", "error-length", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			fields.pop(field_title)
-			db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileFields", utils.dict_to_str(fields))
+			await db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileFields", utils.dict_to_str(fields))
 
 # ------------------------------------------------------------------------
 # /profile embed desc
@@ -252,7 +265,7 @@ class ProfilePublicCog(commands.Cog):
 		"""Set your active character"""
 
 		try:
-			db.set_active_character(ctx.guild.id, ctx.interaction.user.id, name)
+			await db.set_active_character(ctx.guild.id, ctx.interaction.user.id, name)
 		except:
 			error = loc.response("profile", "swap", "error-missing", ctx.interaction.locale).format(name)
 			await ctx.respond(error, ephemeral=True)
@@ -274,9 +287,9 @@ class ProfilePublicCog(commands.Cog):
 	async def profile_current(self, ctx, visible):
 		"""Check your active character"""
 
-		char = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		char = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 		try:
-			res = loc.response("profile", "current", "res1", ctx.interaction.locale).format(char["Name"])
+			res = loc.response("profile", "current", "res1", ctx.interaction.locale).format(char["name"])
 			await ctx.respond(res, ephemeral=not visible)
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
@@ -304,7 +317,8 @@ class ProfilePublicCog(commands.Cog):
 		"""View a character's profile"""
 
 		try:
-			embed = utils.get_profile_embed(ctx.guild.id, player.id, name)
+			char = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+			embed = utils.get_profile_embed(char)
 		except:
 			error = loc.response("profile", "view", "error-missing", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
@@ -315,7 +329,6 @@ class ProfilePublicCog(commands.Cog):
 		except discord.HTTPException:
 			error = loc.response("profile", "view", "error-url", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
-
 
 # ------------------------------------------------------------------------
 # /profile list
@@ -330,14 +343,14 @@ class ProfilePublicCog(commands.Cog):
 	async def profile_list(self, ctx, visible):
 		"""Lists all registered characters for this server"""
 
-		all_chars = db.get_all_chars(ctx.guild.id)
+		all_chars = await db.get_all_chars(ctx.guild.id)
 
 		title = loc.response("profile", "list", "res1", ctx.interaction.locale).format(ctx.guild.name)
 		embed = discord.Embed(title=title)
 
 		# Order chars by name, error if no characters
 		try:
-			all_chars = sorted(all_chars, key=lambda d: d["Name"])
+			all_chars = sorted(all_chars, key=lambda d: d["name"])
 		except TypeError:
 			error = loc.response("profile", "list", "error-nochars", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
@@ -345,11 +358,11 @@ class ProfilePublicCog(commands.Cog):
 
 		msg = ""
 		for char in all_chars:
-			name = char["Name"]
-			if char["Surname"]:
-				name += " " + char["Surname"]
+			name = char["name"]
+			if char["surname"]:
+				name += " " + char["surname"]
 
-			player = f"<@{char['PlayerID']}>"
+			player = f"<@{char['playerid']}>"
 			msg += f"{name} ({player})\n"
 
 		embed.description = msg[:3900]

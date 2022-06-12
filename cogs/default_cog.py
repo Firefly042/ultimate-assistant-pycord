@@ -11,7 +11,7 @@ from discord.ext import commands
 
 import aiocron
 
-import db
+from db import db
 
 
 # ------------------------------------------------------------------------
@@ -70,10 +70,10 @@ class DefaultCog(commands.Cog):
 		"""
 
 		bot_guilds = [guild.id for guild in self.bot.guilds]
-		db_guilds = db.get_all_guild_ids()
+		db_guilds = await db.get_all_guild_ids()
 		bot_guilds_not_in_db = [i for i in bot_guilds if i not in db_guilds]
 
-		db.add_guilds(bot_guilds_not_in_db)
+		await db.add_guilds(bot_guilds_not_in_db)
 
 		print(f"Added {len(bot_guilds_not_in_db)} guilds to database")
 
@@ -81,7 +81,7 @@ class DefaultCog(commands.Cog):
 	@commands.Cog.listener()
 	async def on_guild_join(self, guild):
 		"""Add to db when bot is added to guild"""
-		db.add_guilds([guild.id])
+		await db.add_guilds([guild.id])
 
 
 # ------------------------------------------------------------------------

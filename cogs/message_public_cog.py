@@ -8,7 +8,7 @@ from discord import option
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import db
+from db import db
 from localization import loc
 
 from utils import utils
@@ -63,17 +63,17 @@ class MessagePublicCog(commands.Cog):
 	async def whisper(self, ctx, player, message, recipient_name):
 		"""Non-anonymously message another player's designated channel. Sends receipt to your channel"""
 
-		sender = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		sender = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
 		# Query for recipient info
-		recipient = db.get_character(ctx.guild.id, player.id, recipient_name) if recipient_name else db.get_active_char(ctx.guild.id, player.id)
+		recipient = await db.get_character(ctx.guild.id, player.id, recipient_name) if recipient_name else await db.get_active_char(ctx.guild.id, player.id)
 
 		# Attempt to fetch channel (recipient)
 		try:
-			channel_r = await ctx.guild.fetch_channel(recipient['ChannelID'])
-			embed_r_color = utils.hex_to_color(recipient['HexColor'])
+			channel_r = await ctx.guild.fetch_channel(recipient['channelid'])
+			embed_r_color = utils.hex_to_color(recipient['hexcolor'])
 		except discord.HTTPException:
-			error = loc.response("msg", "whisper", "error-channel", ctx.interaction.locale).format(recipient["Name"])
+			error = loc.response("msg", "whisper", "error-channel", ctx.interaction.locale).format(recipient["name"])
 			await ctx.respond(error, ephemeral=True)
 			return
 		except TypeError:
@@ -83,10 +83,10 @@ class MessagePublicCog(commands.Cog):
 
 		# Attempt to fetch channel (sender)
 		try:
-			channel_s = await ctx.guild.fetch_channel(sender['ChannelID'])
-			embed_s_color = utils.hex_to_color(sender['HexColor'])
+			channel_s = await ctx.guild.fetch_channel(sender['channelid'])
+			embed_s_color = utils.hex_to_color(sender['hexcolor'])
 		except discord.HTTPException:
-			error = loc.response("msg", "whisper", "error-channel", ctx.interaction.locale).format(sender["Name"])
+			error = loc.response("msg", "whisper", "error-channel", ctx.interaction.locale).format(sender["name"])
 			await ctx.respond(error, ephemeral=True)
 			return
 		except TypeError:
@@ -95,7 +95,7 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Attempt to send to recipient channel
-		title_r = loc.response("msg", "whisper", "receiver-title", ctx.interaction.locale).format(sender["Name"])
+		title_r = loc.response("msg", "whisper", "receiver-title", ctx.interaction.locale).format(recipient=recipient["name"], sender=sender["name"])
 		embed_r = discord.Embed(color=embed_s_color, title=title_r, description=message[:1500])
 		try:
 			await channel_r.send(content=f"<@{player.id}>", embed=embed_r)
@@ -105,16 +105,16 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Receipt to sender channel
-		title_s = loc.response("msg", "whisper", "sender-receipt", ctx.interaction.locale).format(recipient["Name"])
+		title_s = loc.response("msg", "whisper", "sender-receipt", ctx.interaction.locale).format(recipient["name"])
 		embed_s = discord.Embed(color=embed_r_color, title=title_s, description=message[:1500])
 		try:
 			await channel_s.send(embed=embed_s)
 		except discord.Forbidden:
-			warning = loc.response("msg", "whisper", "warning-perms", ctx.interaction.locale).format(recipient["Name"])
+			warning = loc.response("msg", "whisper", "warning-perms", ctx.interaction.locale).format(recipient["name"])
 			await ctx.respond(warning, ephemeral=True)
 			return
 
-		res = loc.response("msg", "whisper", "res1", ctx.interaction.locale).format(recipient["Name"])
+		res = loc.response("msg", "whisper", "res1", ctx.interaction.locale).format(recipient["name"])
 		await ctx.respond(res, ephemeral=True)
 
 # ------------------------------------------------------------------------
@@ -133,23 +133,24 @@ class MessagePublicCog(commands.Cog):
 		"""Anonymously message another player's designated channel. Sends receipt to your channel"""
 
 		# Check if command is enabled
-		enabled = db.get_guild_info(ctx.guild.id)["AnonPermitted"]
+		guild_info = await db.get_guild_info(ctx.guild.id)
+		enabled = guild_info["anonpermitted"]
 		if (not enabled):
 			error = loc.response("msg", "anon", "error-disabled", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
 
-		sender = db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+		sender = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
 		# Query for recipient info
-		recipient = db.get_character(ctx.guild.id, player.id, recipient_name) if recipient_name else db.get_active_char(ctx.guild.id, player.id)
+		recipient = await db.get_character(ctx.guild.id, player.id, recipient_name) if recipient_name else await db.get_active_char(ctx.guild.id, player.id)
 
 		# Attempt to fetch channel (recipient)
 		try:
-			channel_r = await ctx.guild.fetch_channel(recipient['ChannelID'])
-			embed_r_color = utils.hex_to_color(recipient['HexColor'])
+			channel_r = await ctx.guild.fetch_channel(recipient['channelid'])
+			embed_r_color = utils.hex_to_color(recipient['hexcolor'])
 		except discord.HTTPException:
-			error = loc.response("msg", "anon", "error-channel", ctx.interaction.locale).format(recipient["Name"])
+			error = loc.response("msg", "anon", "error-channel", ctx.interaction.locale).format(recipient["name"])
 			await ctx.respond(error, ephemeral=True)
 			return
 		except TypeError:
@@ -159,9 +160,9 @@ class MessagePublicCog(commands.Cog):
 
 		# Attempt to fetch channel (sender)
 		try:
-			channel_s = await ctx.guild.fetch_channel(sender['ChannelID'])
+			channel_s = await ctx.guild.fetch_channel(sender['channelid'])
 		except discord.HTTPException:
-			error = loc.response("msg", "anon", "error-channel", ctx.interaction.locale).format(sender["Name"])
+			error = loc.response("msg", "anon", "error-channel", ctx.interaction.locale).format(sender["name"])
 			await ctx.respond(error, ephemeral=True)
 			return
 		except TypeError:
@@ -170,7 +171,7 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Attempt to send to recipient channel
-		title_r = loc.response("msg", "anon", "receiver-title", ctx.interaction.locale)
+		title_r = loc.response("msg", "anon", "receiver-title", ctx.interaction.locale).format(recipient["name"])
 		embed_r = discord.Embed(title=title_r, description=message[:1500])
 		try:
 			await channel_r.send(content=f"<@{player.id}>", embed=embed_r)
@@ -180,14 +181,14 @@ class MessagePublicCog(commands.Cog):
 			return
 
 		# Receipt to sender channel
-		title_s = loc.response("msg", "anon", "sender-receipt", ctx.interaction.locale).format(recipient["Name"])
+		title_s = loc.response("msg", "anon", "sender-receipt", ctx.interaction.locale).format(recipient["name"])
 		embed_s = discord.Embed(color=embed_r_color, title=title_s, description=message[:1500])
 		try:
 			await channel_s.send(embed=embed_s)
 		except discord.Forbidden:
-			warning = loc.response("msg", "anon", "warning-perms", ctx.interaction.locale).format(recipient["Name"])
+			warning = loc.response("msg", "anon", "warning-perms", ctx.interaction.locale).format(recipient["name"])
 			await ctx.respond(warning, ephemeral=True)
 			return
 
-		res = loc.response("msg", "anon", "res1", ctx.interaction.locale).format(recipient["Name"])
+		res = loc.response("msg", "anon", "res1", ctx.interaction.locale).format(recipient["name"])
 		await ctx.respond(res, ephemeral=True)

@@ -5,11 +5,13 @@ Original template by @Firefly#7113, April 2022
 
 import os
 import shutil
+import asyncio_atexit
+import asyncio
 import atexit
 
 import discord
 
-import db
+from db import db
 
 
 # ------------------------------------------------------------------------
@@ -29,11 +31,14 @@ bot = discord.Bot(intents=bot_intents, activity=discord.Game(name="CHECK PROFILE
 # ------------------------------------------------------------------------
 # Bot shutdown/sigint
 # ------------------------------------------------------------------------
-@atexit.register
-def app_died():
-	"""Called on exit"""
+# @asyncio_atexit.register
+# async def app_died():
+# 	"""Called on exit"""
 
-	db.disconnect()
+# 	await db.disconnect()
+# 	loop.close()
+# 	# asyncio.get_event_loop().run_until_complete(db.disconnect())
+
 
 # ------------------------------------------------------------------------
 # Essential event listeners
@@ -55,7 +60,7 @@ for fname in os.listdir('./cogs'):
 # ------------------------------------------------------------------------
 # Update announcements
 # ------------------------------------------------------------------------
-passed_announcements = db.update_passed_announcements()
+passed_announcements = asyncio.get_event_loop().run_until_complete(db.update_passed_announcements())
 print(f"{passed_announcements} announcements updated")
 
 
