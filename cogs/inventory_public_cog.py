@@ -203,7 +203,8 @@ class InventoryPublicCog(commands.Cog):
 
 		try:
 			inventory = await db.get_inventory(ctx.guild.id, ctx.interaction.user.id)
-			hex_color = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)["hexcolor"]
+			char_info = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
+			hex_color = char_info["hexcolor"]
 		except TypeError:
 			error = loc.common_res("no-character", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
