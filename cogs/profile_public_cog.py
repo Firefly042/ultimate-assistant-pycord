@@ -124,7 +124,7 @@ class ProfilePublicCog(commands.Cog):
 
 		# Obligatory hex code regex validation, exits without attempting
 		if (field_to_change == "HexColor"):
-			match = re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', new_value)
+			match = re.search(r'^(?:[0-9a-fA-F]{6})$', new_value)
 			if (not match):
 				error = loc.response("profile_embed", "edit", "error-hex", ctx.interaction.locale).format(new_value)
 				await ctx.respond(error, ephemeral=True)
