@@ -160,12 +160,11 @@ class GachaAdminCog(commands.Cog):
 	async def admin_currency_give_all(self, ctx, amount):
 		"""Give currency to all active characters"""
 
-		chars_updated = await db.increase_currency_all(ctx.guild.id, amount)
+		chars = await db.get_all_chars(ctx.guild.id)
 
-		if (not chars_updated):
-			error = loc.response("gacha_admin_currency", "give_all", "error-missing", ctx.interaction.locale)
-			await ctx.respond(error, ephemeral=True)
-			return
+		# Seems suboptimal but asyncpg's 'executemany' fails if even one constraint violation occurs. The single increase method automatically corrects on constraint ciolation error.
+		for char in chars:
+			await db.increase_currency_inactive(ctx.guild.id, char["playerid"], amount, char["name"])
 
 		res = loc.response("gacha_admin_currency", "give_all", "res1", ctx.interaction.locale).format(amount)
 		await ctx.respond(res)
