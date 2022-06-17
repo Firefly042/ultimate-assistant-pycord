@@ -317,7 +317,7 @@ class ProfilePublicCog(commands.Cog):
 		"""View a character's profile"""
 
 		try:
-			char = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+			char = await db.get_character(ctx.guild.id, player.id, name)
 			embed = utils.get_profile_embed(char)
 		except:
 			error = loc.response("profile", "view", "error-missing", ctx.interaction.locale)
