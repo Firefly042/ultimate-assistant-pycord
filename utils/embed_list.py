@@ -27,8 +27,11 @@ class EmbedList(discord.ui.View):
 	async def on_timeout(self):
 		"""Disable and stop listening for interaction"""
 
-		self.disable_all_items()
-		await self.interaction.edit_original_message(view=self)
+		try:
+			self.disable_all_items()
+			await self.interaction.edit_original_message(view=self)
+		except discord.errors.NotFound:
+			return
 
 
 	# Previous page
