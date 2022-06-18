@@ -10,7 +10,23 @@
 
 		"inactive-char-desc": "The registered display name of the character, if not active",
 
-		"inactive-recipient-name":"recipient_name"
+		"inactive-recipient-name":"recipient_name",
+
+		"showcase-embed-footer": "ID: {id}",
+
+		"showcase-author-field": "Author",
+
+		"showcase-credit-field": "Image Credit",
+
+		"showcase-select-placeholder": "Select a character to view",
+
+		"showcase-flagged-footer": "Characters marked with * have been flagged as potentially inappropriate",
+
+		"showcase-not-author": "You are not the author of {id} (or ID does not exist)",
+
+		"showcase-updated": "Updated character",
+
+		"showcase-id-error": "Incorrect or nonexistent ID!"
 	},
 
 	"announcements": {
@@ -1246,6 +1262,302 @@
 					"modal-placeholder": "4000 character maximum",
 
 					"res1": "Updated"
+				}
+			}
+		}
+	},
+
+	"showcase": {
+		"group_name": "showcase",
+		"group_description": "Public character showcase",
+
+		"commands": {
+			"submit": {
+				"name": "submit",
+				"description": "Submit an original character to UA's public showcase. You will be prompted for a description.",
+
+				"options": {
+					"firstname": {
+						"name": "firstname",
+						"description": "The display name of character (64 character max)"
+					},
+					"surname": {
+						"name": "surname",
+						"description": "The surname of character (64 character max)"
+					},
+					"hex_color": {
+						"name": "hex_color",
+						"description": "Optional embed hex color (without '#')"
+					},
+					"image_url": {
+						"name": "image_url",
+						"description": "Optional image url. Credit must be provided, even to yourself."
+					},
+					"image_credit": {
+						"name": "image_credit",
+						"description": "Brief credit for image (128 character max)"
+					}
+				},
+
+				"responses": {
+					"error-banned": "You have been banned from submitting to the showcase!",
+
+					"error-hex": "{} is not a valid hex color!",
+					
+					"error-credit": "You must provide image credit, even to yourself!",
+
+					"modal-title": "Description",
+
+					"modal-label": "Enter a description for your character",
+
+					"error-url": "Cannot display that image url!",
+
+					"error-limit": "You have reached the limit of 100 showcase characters! Remove some to submit more.",
+
+					"res1": "Submitted!"
+				}
+			},
+
+			"edit": {
+				"name": "edit",
+				"description": "Edit your showcase's name, hex color, or image",
+
+				"options": {
+					"char_id": {
+						"name": "char_id",
+						"description": "The character's ID (found with /showcase mine)"
+					},
+					"field_to_change": {
+						"name": "field_to_change",
+						"choices": [
+							"Name",
+							"Surname",
+							"HexColor",
+							"ImageURL"
+						]
+					},
+					"new_value": {
+						"name": "new_value"
+					},
+					"image_credit": {
+						"name": "image_credit",
+						"description": "Required if changing image"
+					}
+				},
+
+				"responses": {
+					"error-not-owner": "You do not own character ID {id}!"
+				}
+			},
+
+			"mine": {
+				"name": "mine",
+				"description": "An overview of your showcase characters",
+
+				"responses": {
+					"error-none": "You have no showcase characters!"
+				}
+			},
+
+			"user": {
+				"name": "user",
+				"description": "An overview of a specified user's showcase characters",
+
+				"options": {
+					"user_tag": {
+						"name": "user_tag",
+						"description": "The discord user <@id> tag to search for"
+					},
+					"user_id": {
+						"name": "user_id",
+						"description": "The discord user id to search for"
+					}
+				},
+
+				"responses": {
+					"error-none": "That user has no showcase characters!",
+
+					"no-arg": "You must enter a user tag or user ID!"
+				}
+			},
+
+			"character": {
+				"name": "character",
+				"description": "Display a showcase character using their ID",
+
+				"options": {
+					"char_id": {
+						"name": "char_id",
+						"description": "The character's ID (found with /showcase search)"
+					}
+				}
+			},
+
+			"search": {
+				"name": "search",
+				"description": "Search by character name and/or surname",
+
+				"options": {
+					"name": {
+						"name": "name",
+						"description": "The character's first/given/display name"
+					},
+					"surname": {
+						"name": "surname",
+						"description": "The character's last/family name"
+					},
+					"exact": {
+						"name": "exact",
+						"description": "Set to 'True' to only receive exact matches"
+					}
+				},
+
+				"responses": {
+					"no-arg": "You must enter at least one search parameter (name or surname)!",
+
+					"error-none": "Your search returned no results",
+
+					"error-toomany": "Your search returned over 200 results! Try searching with `/showcase user`, exact search, or using both a name and a surname."
+				}
+			},
+
+			"rm": {
+				"name": "rm",
+				"description": "Remove a showcase by ID",
+
+				"options": {
+					"char_id": {
+						"name": "char_id",
+						"description": "Character's ID"
+					}
+				},
+
+				"responses": {
+					"res1": "Removed {id} from public showcase"
+				}
+			},
+
+			"report": {
+				"name": "report",
+				"description": "Report a showcase by ID",
+
+				"options": {
+					"char_id": {
+						"name": "char_id",
+						"description": "Character's ID"
+					},
+					"reason": {
+						"name": "reason",
+						"description": "Reason for report (NSFW, Hatespeech, Plagiarism, Other)",
+						"choices": [
+							"NSFW",
+							"Hatespeech",
+							"Plagiarism",
+							"Other"
+						]
+					},
+					"details": {
+						"name": "description",
+						"description": "Required for Plagiarism or Other (512 character maximum)"
+					}
+				},
+
+				"responses": {
+					"error-details": "You must provide details if selecting 'Plagiarism' or 'Other'",
+
+					"res1": "Reported {id}"
+				}
+			},
+
+			"random": {
+				"name": "random",
+				"description": "View up to 10 random showcases",
+
+				"options": {
+					"amount": {
+						"name": "amount",
+						"description": "The number of showcases to list"
+					},
+					"visible": {
+						"name": "visible",
+						"description": "Set to 'False' for a private response"
+					}
+				}
+			}
+		}
+	},
+
+	"showcase_edit": {
+		"group_name": "edit",
+		"group_description": "Edit existing showcase",
+
+		"commands": {
+			"basic": {
+				"name": "basic",
+				"description": "Edit character name, surname, or hex",
+
+				"options": {
+					"char_id": {
+						"name": "char_id",
+						"description": "Character's ID"
+					},
+					"field_to_change": {
+						"name": "field_to_change",
+						"description": "First name, surname, or hex",
+						"choices": [
+							"Name",
+							"Surname",
+							"HexColor"
+						]
+					},
+					"new_value": {
+						"name": "new_value",
+						"description": "New value"
+					}
+				},
+
+				"responses": {
+					"error-hex": "{} is not a valid hex!"
+				}
+			},
+
+			"image": {
+				"name": "image",
+				"description": "Edit showcase image and credit",
+
+				"options": {
+					"char_id": {
+						"name": "char_id",
+						"description": "Character's ID"
+					},
+					"new_value": {
+						"name": "new_value",
+						"description": "New URL"
+					},
+					"credit": {
+						"name": "credit",
+						"description": "Image credit"
+					}
+				},
+
+				"responses": {
+					"invalid-image": "That image URL cannot be displayed!"
+				}
+			},
+
+			"desc": {
+				"name": "desc",
+				"description": "Edit showcase description",
+
+				"options": {
+					"char_id": {
+						"name": "char_id",
+						"description": "Character's ID"
+					}
+				},
+
+				"responses": {
+					"modal-title": "Edit showcase description"
 				}
 			}
 		}
