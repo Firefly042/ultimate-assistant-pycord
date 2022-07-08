@@ -43,10 +43,6 @@ class DeveloperCog(commands.Cog):
 		except:
 			self.cmd_log = {}
 
-		@aiocron.crontab('5/15 * * * *')
-		async def every_fifteen_minutes():
-			await self.commit_log()
-
 		atexit.register(self.commit_log_at_exit)
 
 		print(f"Added {self.__class__.__name__}")
@@ -72,6 +68,7 @@ class DeveloperCog(commands.Cog):
 # Crontabs appear to execute in a LIFO stack order
 # Do not need to be explicitly started
 # ------------------------------------------------------------------------
+	@aiocron.crontab('5/15 * * * *')
 	async def commit_log(self):
 		"""Writes command log file"""
 
