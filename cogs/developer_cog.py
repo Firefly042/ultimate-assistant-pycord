@@ -35,19 +35,19 @@ class DeveloperCog(commands.Cog):
 		self.dm_channel = None # Cannot have async init
 		self.bot.loop.create_task(self.get_dm_channel()) # ...so instead we get it here
 
-		# Statistics logging
-		try:
-			fobject = open("command_log.json", "r", encoding="utf-8")
-			self.cmd_log = json.load(fobject)
-			fobject.close()
-		except:
-			self.cmd_log = {}
+		# Statistics logging (disabled)
+		# try:
+		# 	fobject = open("command_log.json", "r", encoding="utf-8")
+		# 	self.cmd_log = json.load(fobject)
+		# 	fobject.close()
+		# except:
+		# 	self.cmd_log = {}
 
-		@aiocron.crontab('5/15 * * * *')
-		async def every_fifteen_minutes():
-			await self.commit_log()
+		# @aiocron.crontab('5/15 * * * *')
+		# async def every_fifteen_minutes():
+		# 	await self.commit_log()
 
-		atexit.register(self.commit_log_at_exit)
+		# atexit.register(self.commit_log_at_exit)
 
 		print(f"Added {self.__class__.__name__}")
 
@@ -115,14 +115,15 @@ class DeveloperCog(commands.Cog):
 		await self.dm_channel.send(f"Removed from **{guild.name}** ({guild.id})")
 
 
-	@commands.Cog.listener()
-	async def on_application_command(self, ctx):
-		name = ctx.command.qualified_name
-		time = datetime.utcnow().strftime("%Y-%m-%d, %H:%M:%S")
-		if (name not in self.cmd_log.keys()):
-			self.cmd_log[name] = []
+	# Disabled logging
+	# @commands.Cog.listener()
+	# async def on_application_command(self, ctx):
+	# 	name = ctx.command.qualified_name
+	# 	time = datetime.utcnow().strftime("%Y-%m-%d, %H:%M:%S")
+	# 	if (name not in self.cmd_log.keys()):
+	# 		self.cmd_log[name] = []
 
-		self.cmd_log[name].append(time)
+	# 	self.cmd_log[name].append(time)
 
 
 	@commands.Cog.listener()
