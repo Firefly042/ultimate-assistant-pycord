@@ -95,14 +95,6 @@ HELP_EMBEDS = {
 
 			"Player": "`/investigate` - Investigate or take an item within a channel (visible only to player by default)"
 		}
-	},
-
-	"Showcase": {
-		"Description": "**NEW FEATURE. EXPECT BUGS**\nEnter up to 100 of your favorite characters into a public showcase for all to see! Conjure a résumé of characters at any time, search for other characters and users, or pull some random showcases!\n\nAll submissions are screened and may be flagged or removed if they violate the following terms:\n(1) NSFW is not permitted.\n(2) Hatespeech of any kind is not permitted.\n(3) Claims of plagiarism will be investigated.\n(4) Gore must be kept within reason (appropriate for 13 and under).\n(5) No links except for the default image link, which must be safe to open.\n(6) No monetary self-promotion or monetary promotion of others.\n\nFlagged characters will not show up in public searches. Repeated or severe offence may result in a ban from showcase submission.",
-		
-		"Fields": {
-			"Public": "`/showcase` - Submit or edit your own characters. Search for characters by user or character name/surname, or pull some random showcases. You may also report inappropriate showcases."
-		}
 	}
 }
 
@@ -127,50 +119,45 @@ class HelpMenu(discord.ui.View):
 			return
 
 
-	# Row 0 - Info, Profiles, Gacha, Inventory, Messaging
+	# Row 0 - Info, Profiles, Gacha, Inventory
 	@discord.ui.button(label="Info", row=0, style = discord.ButtonStyle.green)
 	async def info_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Info"], view=self)
 
-	# Row 0 - Info, Profiles, Gacha, Inventory, Messaging
+	# Row 0 - Info, Profiles, Gacha, Inventory
 	@discord.ui.button(label="Profiles", row=0, style = discord.ButtonStyle.green)
 	async def profile_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Profiles"], view=self)
 
-	# Row 0 - Info, Profiles, Gacha, Inventory, Messaging
+	# Row 0 - Info, Profiles, Gacha, Inventory
 	@discord.ui.button(label="Gacha", row=0, style = discord.ButtonStyle.green)
 	async def gacha_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Gacha"], view=self)
 
-	# Row 0 - Info, Profiles, Gacha, Inventory, Messaging
+	# Row 0 - Info, Profiles, Gacha, Inventory
 	@discord.ui.button(label="Inventory", row=0, style = discord.ButtonStyle.green)
 	async def inventory_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Inventory"], view=self)
 
-	# Row 0 - Info, Profiles, Gacha, Inventory, Messaging
-	@discord.ui.button(label="Messaging", row=0, style = discord.ButtonStyle.green)
+	# Row 1 - Messaging, Info, Profiles, Gacha, Inventory
+	@discord.ui.button(label="Messaging", row=1, style = discord.ButtonStyle.green)
 	async def messaging_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Messaging"], view=self)
 
-	# Row 1 - Automated Posts, Investigations, Showcase
+	# Row 1 - Messaging, Automated Posts, Investigations
 	@discord.ui.button(label="Dice", row=1, style = discord.ButtonStyle.green)
 	async def dice_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Dice"], view=self)
 
-	# Row 1 - Dice, Automated Posts, Investigations, Showcase
+	# Row 1 - Messaging, Dice, Automated Posts, Investigations
 	@discord.ui.button(label="Automated Posts", row=1, style = discord.ButtonStyle.green)
 	async def posting_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Automated Posts"], view=self)
 
-	# Row 1 - Dice, Automated Posts, Investigations, Showcase
+	# Row 1 - vDice, Automated Posts, Investigations
 	@discord.ui.button(label="Investigations", row=1, style = discord.ButtonStyle.green)
 	async def investigations_button_callback(self, _, interaction):
 		await interaction.response.edit_message(embed=self.embeds["Investigations"], view=self)
-
-	# Row 1 - Dice, Automated Posts, Investigations, Showcase
-	@discord.ui.button(label="Showcase", row=1, style = discord.ButtonStyle.green)
-	async def showcases_button_callback(self, _, interaction):
-		await interaction.response.edit_message(embed=self.embeds["Showcase"], view=self)
 
 
 # ------------------------------------------------------------------------

@@ -15,7 +15,6 @@ from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
 from db import db
-from showcase_db import db as showcase_db
 from localization import loc
 
 from utils import utils
@@ -173,44 +172,6 @@ class DeveloperCog(commands.Cog):
 
 		await ctx.respond(f"Removed {n_removed} non-member guilds from database")
 
-# ------------------------------------------------------------------------
-# /dev flag_showcase
-# ------------------------------------------------------------------------
-	@dev.command(name="flag_showcase")
-	@option("char_id", str)
-	@option("flag", bool, default=False)
-	async def flag_showcase(self, ctx, char_id, flag):
-		"""Flag a showcase character (set to True to unflag)"""
-
-		await showcase_db.flag_character(char_id, flag)
-		await ctx.respond(f"Flagged showcase {char_id} as {flag}")
-
-# ------------------------------------------------------------------------
-# /dev showcase_ban
-# ------------------------------------------------------------------------
-	@dev.command(name="showcase_ban")
-	@option("user_id", str)
-	@option("ban", bool, default=True)
-	async def showcase_ban(self, ctx, user_id, ban):
-		"""Ban or unban a user from the showcase (False to unban)"""
-
-		if (ban):
-			await showcase_db.add_banned_user(user_id)
-			await ctx.respond(f"Banned <@{user_id}> from showcase")
-		else:
-			await showcase_db.remove_banned_user(user_id)
-			await ctx.respond(f"Unbanned <@{user_id}> from showcase")
-
-# ------------------------------------------------------------------------
-# /dev showcase_rm
-# ------------------------------------------------------------------------
-	@dev.command(name="showcase_rm")
-	@option("char_id", str)
-	async def showcase_rm(self, ctx, char_id):
-		"""Ban or unban a user from the showcase (False to unban)"""
-
-		await showcase_db.dev_remove_character(char_id)
-		await ctx.respond(f"Removed {char_id} from showcase")
 
 # ------------------------------------------------------------------------
 # /dev test
