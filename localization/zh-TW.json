@@ -370,7 +370,7 @@
     },
     "gacha": {
         "name": "gacha",
-        "description": "Draw an item from the gacha. Costs at least 1 currency",
+        "description": "Draw an item from the gacha. Costs at least 1 currency. Visible by default.",
         "responses": {
             "error-currency": "You do not have enough {units}!",
             "error-none": "This server has no gacha items!",
