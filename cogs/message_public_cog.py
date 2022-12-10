@@ -63,6 +63,9 @@ class MessagePublicCog(commands.Cog):
 	async def whisper(self, ctx, player, message, recipient_name):
 		"""Non-anonymously message another player's designated channel. Sends receipt to your channel"""
 
+		# Defer the response since this can take some time
+		await ctx.defer(ephemeral=True)
+
 		sender = await db.get_active_char(ctx.guild.id, ctx.interaction.user.id)
 
 		# Query for recipient info
@@ -131,6 +134,9 @@ class MessagePublicCog(commands.Cog):
 		description_localizations=loc.common("inactive-char-desc"))
 	async def anon(self, ctx, player, message, recipient_name):
 		"""Anonymously message another player's designated channel. Sends receipt to your channel"""
+
+		# Defer the response since this can take some time
+		await ctx.defer(ephemeral=True)
 
 		# Check if command is enabled
 		guild_info = await db.get_guild_info(ctx.guild.id)
