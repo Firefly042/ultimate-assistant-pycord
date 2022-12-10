@@ -48,7 +48,7 @@ class GachaPublicCog(commands.Cog):
 	@slash_command(name="gacha",
 		name_localizations=loc.nongroup_names("gacha"),
 		description_localizations=loc.nongroup_descriptions("gacha"))
-	@option("visible", bool, default=False,
+	@option("visible", bool, default=True,
 		description="Set to 'True' for a permanent, visible response.",
 		name_localizations=loc.common("visible-name"),
 		description_localizations=loc.common("visible-desc"))

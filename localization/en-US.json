@@ -204,7 +204,9 @@
 				"responses": {
 					"error-format": "Invalid dice format!",
 
-					"error-amount": "Too many rolls!"
+					"error-amount": "Too many rolls!",
+
+					"error-value": "Invalid dice value!"
 				}
 			},
 
@@ -471,7 +473,7 @@
 
 	"gacha": {
 		"name": "gacha",
-		"description": "Draw an item from the gacha. Costs at least 1 currency",
+		"description": "Draw an item from the gacha. Costs at least 1 currency. Visible by default.",
 
 		"responses": {
 			"error-currency": "You do not have enough {units}!",

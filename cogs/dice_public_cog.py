@@ -76,6 +76,10 @@ class DicePublicCog(commands.Cog):
 			error = loc.response("roll", "dice", "error-amount", ctx.interaction.locale)
 			await ctx.respond(error, ephemeral=True)
 			return
+		except d20.errors.RollValueError:
+			error = loc.response("roll", "dice", "error-value", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			return
 
 		embed = discord.Embed(description=str(res)[:2048])
 		await ctx.respond(embed=embed, ephemeral=not visible)
