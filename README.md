@@ -2,7 +2,7 @@
 <a href='https://ko-fi.com/X8X4C9DD1' target='_blank'><img style='border:0px;height:48px;' src='./images/badge-donation.png' border='0' alt='Invite to your server' /></a>
 <a href='https://discord.gg/VZYKBptWFJ' target='_blank'><img style='border:0px;height:48px;' src='./images/badge-server.png' border='0' alt='Support server' /></a>
 
-*Last updated: 02 June 2022*
+*Last updated: 10 December 2022*
 
 # Introduction
 Ultimate Assistant is a discord bot maintained by user @Firefly#7113. It aims to provide simple yet versatile utilities for discord-hosted rpgs ranging from asynchronous thread-style games to traditional sitdown tabletops. The bot includes a highly customizable profile system, automated/scheduled posting, flexible dice commands, inventories, and investigatable objects. 
