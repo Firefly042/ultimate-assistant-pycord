@@ -204,7 +204,9 @@
 				"responses": {
 					"error-format": "Invalid dice format!",
 
-					"error-amount": "Too many rolls!"
+					"error-amount": "Too many rolls!",
+
+					"error-value": "Invalid dice value!"
 				}
 			},
 
