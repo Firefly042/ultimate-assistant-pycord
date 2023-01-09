@@ -240,7 +240,16 @@ class AnnouncementsAdminCog(commands.Cog):
 	async def remove(self, ctx, announcement_id):
 		"""Remove an announcement by its id (obtained with /announcements list)"""
 
-		announcement_removed = await db.remove_announcement(ctx.guild.id, int(announcement_id))
+		# id must resolve to int
+		try:
+			announcement_id = int(announcement_id)
+		except ValueError:
+			error = loc.response("announcements", "rm", "error-id", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			return
+
+
+		announcement_removed = await db.remove_announcement(ctx.guild.id, announcement_id)
 
 		if (not announcement_removed):
 			error = loc.response("announcements", "rm", "error-id", ctx.interaction.locale)
