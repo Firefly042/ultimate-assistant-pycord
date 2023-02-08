@@ -76,7 +76,7 @@ class EmbedFieldRemoveView(discord.ui.View):
 		super().__init__(timeout=60)
 
 		self.char = char
-		self.fields = utils.str_to_dict(self.char["ProfileFields"])
+		self.fields = utils.str_to_dict(self.char["profilefields"])
 
 		self.field_select = [c for c in self.children if c.custom_id == "field-select"][0]
 		self.field_select.options = self.get_field_names()
