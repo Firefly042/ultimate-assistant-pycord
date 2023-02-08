@@ -71,6 +71,58 @@ class InputModal(discord.ui.Modal):
 		self.stop()
 
 
+class EmbedFieldRemoveView(discord.ui.View):
+	def __init__(self, char):
+		super().__init__(timeout=60)
+
+		self.char = char
+		self.fields = utils.str_to_dict(self.char["ProfileFields"])
+
+		self.field_select = [c for c in self.children if c.custom_id == "field-select"][0]
+		self.field_select.options = self.get_field_names()
+
+		self.field_select.max_values = len(self.fields)
+
+
+	async def on_timeout(self):
+		self.stop()
+		try:
+			await self.message.delete()
+		except AttributeError:
+			return
+
+
+	def get_field_names(self):
+		options = []
+		for field_name in self.fields.keys():
+			options.append(discord.SelectOption(
+				label=field_name))
+
+		return options
+
+
+	@discord.ui.select(
+		custom_id="field-select",
+		row=0,
+		min_values=1)
+	async def field_select_callback(self, select, interaction):
+		for key in select.values:
+			self.fields.pop(key)
+
+		# Update character
+		char_updated = await db.update_character(self.char["guildid"], self.char["playerid"], self.char["name"], "ProfileFields", utils.dict_to_str(self.fields))
+
+		# Preview embed
+		char = await db.get_character(self.char["guildid"], self.char["playerid"], self.char["name"])
+		embed = utils.get_profile_embed(char)
+		res = loc.response("profile_embed", "remove", "res2", interaction.locale).format(", ".join(select.values))
+
+		# Response
+		select.disabled = True
+		self.clear_items()
+		await interaction.response.edit_message(content=res, embed=embed, view=self)
+
+
 # ------------------------------------------------------------------------
 # COG
 # ------------------------------------------------------------------------
@@ -246,6 +298,65 @@ class ProfilePublicCog(commands.Cog):
 		# Modal input for content
 		modal = InputModal(ctx, name)
 		await ctx.send_modal(modal)
+
+# ------------------------------------------------------------------------
+# /profile embed remove
+# ------------------------------------------------------------------------
+	@profile_embed.command(name="remove",
+		name_localizations=loc.command_names("profile_embed", "remove"),
+		description_localizations=loc.command_descriptions("profile_embed", "remove"))
+	@option("name", str,
+		description="Your character's display name",
+		name_localizations=loc.option_names("profile_embed", "remove", "name"),
+		description_localizations=loc.option_descriptions("profile_embed", "remove", "name"))
+	@option("component", str,
+		description="Embed component to remove (description or field)",
+		name_localizations=loc.option_names("profile_embed", "remove", "component"),
+		description_localizations=loc.option_descriptions("profile_embed", "remove", "component"),
+		choices=loc.choices("profile_embed", "remove", "component"))
+	async def profile_embed_remove(self, ctx, name, component):
+		"""Remove embed description for a character profile"""
+
+		await ctx.defer(ephemeral=True)
+
+		if (component == "Field"):	
+			# Use View and its callback
+			char = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+			if (char == None):
+				error = loc.response("profile_embed", "remove", "error-missing", ctx.interaction.locale)
+				await ctx.respond(error, ephemeral=True)
+				return
+
+			try:
+				view = EmbedFieldRemoveView(char)
+			except ValueError:
+				error = loc.response("profile_embed", "remove", "error-no-fields", ctx.interaction.locale)
+				await ctx.respond(error, ephemeral=True)
+				return
+
+			# Send View
+			await ctx.respond(
+				content=loc.response("profile_embed", "remove", "view-title", ctx.interaction.locale),
+				view=view,
+				ephemeral=True)
+			return
+
+		# Otherwise component == "Description"
+		char_updated = await db.update_character(ctx.guild.id, ctx.interaction.user.id, name, "ProfileDesc", None)
+
+		# Notify if no changes (char not found)
+		if (not char_updated):
+			error = loc.response("profile_embed", "remove", "error-missing", ctx.interaction.locale)
+			await ctx.respond(error, ephemeral=True)
+			return
+
+		# Preview embed
+		char = await db.get_character(ctx.guild.id, ctx.interaction.user.id, name)
+		embed = utils.get_profile_embed(char)
+		res = loc.response("profile_embed", "remove", "res1", ctx.interaction.locale)
+
+		# Response
+		await ctx.respond(res, embed=embed, ephemeral=True)
 
 # ------------------------------------------------------------------------
 # /profile swap
