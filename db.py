@@ -528,8 +528,6 @@ class DBConnection:
 				ID = announcement["id"]
 				interval = announcement["interval"]
 
-				print(ID)
-				print(announcement["nextposting"])
 				outdated_posting_str = str(int(announcement["nextposting"]))
 				outdated_posting_datetime = datetime.strptime(outdated_posting_str, parse_str)
 
