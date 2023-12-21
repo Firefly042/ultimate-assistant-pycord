@@ -527,10 +527,10 @@ class DBConnection:
 			for announcement in announcements:
 				ID = announcement["id"]
 				interval = announcement["interval"]
-				
-				outdated_posting_str = str(announcement["nextposting"])
+
 				print(ID)
-				print(outdated_posting_str)
+				print(announcement["nextposting"])
+				outdated_posting_str = str(int(announcement["nextposting"]))
 				outdated_posting_datetime = datetime.strptime(outdated_posting_str, parse_str)
 
 				hours_missed = (utc_time - outdated_posting_datetime).total_seconds() / 3600
