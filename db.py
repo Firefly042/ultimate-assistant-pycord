@@ -529,6 +529,7 @@ class DBConnection:
 				interval = announcement["interval"]
 				
 				outdated_posting_str = str(announcement["nextposting"])
+				print(outdated_posting_str)
 				outdated_posting_datetime = datetime.strptime(outdated_posting_str, parse_str)
 
 				hours_missed = (utc_time - outdated_posting_datetime).total_seconds() / 3600
